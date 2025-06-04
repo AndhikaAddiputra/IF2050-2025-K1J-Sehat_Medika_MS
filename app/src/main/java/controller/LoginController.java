@@ -4,13 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import model.DatabaseConnection;
 import view.PatientDashboardView;
@@ -54,7 +53,7 @@ public class LoginController {
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
 
-        String verifyLogin = "SELECT role FROM users WHERE username = ? AND password = ?";
+        String verifyLogin = "SELECT role FROM user WHERE username = ? AND password = ?";
 
         try {
             PreparedStatement statement = connectDB.prepareStatement(verifyLogin);
@@ -70,17 +69,17 @@ public class LoginController {
                 System.out.println("Login successful - role: " + role);
 
                 switch (role) {
-                    case "admin":
+                    case "ADMIN":
                         break;
-                    case "patient":
+                    case "PATIENT":
                         PatientDashboardView patientView = new PatientDashboardView();
                         patientView.start(new Stage());
                         break;
-                    case "doctor":
+                    case "DOCTOR":
                         break;
-                    case "receptionist":
+                    case "RECEPTIONIST":
                         break;
-                    case "pharmacist":
+                    case "PHARMACIST":
                         break;
                 }
                 ((Stage) masukButton.getScene().getWindow()).close();

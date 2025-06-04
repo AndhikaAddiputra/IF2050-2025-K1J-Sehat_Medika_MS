@@ -1,10 +1,10 @@
 package view;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class PatientDashboardView extends Application {
 
@@ -12,7 +12,7 @@ public class PatientDashboardView extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("patientDashboard.fxml"));
         Scene scene  = new Scene(root, 1200, 800);  
-        scene.getStylesheets().add(getClass().getResource("/resources/style.css").toExternalForm());     
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());     
         primaryStage.setTitle("Patient Dashboard - Sistem Informasi dan Manajemen Klinik Sehat Medika");
         primaryStage.setScene(scene);
         primaryStage.show();

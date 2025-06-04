@@ -11,7 +11,7 @@ public class DatabaseConnection {
     private Connection connection;
 
     public Connection getConnection() {
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties")) {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("data/db.properties")) {
             if (input == null) {
                 System.out.println("Sorry, unable to find db.properties");
                 return null;
