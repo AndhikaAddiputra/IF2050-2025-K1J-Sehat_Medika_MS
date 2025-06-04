@@ -67,4 +67,17 @@ public class User {
     public void setLastlogin(LocalDateTime lastlogin) {
         this.lastlogin = lastlogin;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", role=" + role +
+                ", lastlogin=" + lastlogin +
+                '}';
+    }
 }
