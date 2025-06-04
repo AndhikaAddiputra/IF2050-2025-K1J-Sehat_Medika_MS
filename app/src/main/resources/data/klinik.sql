@@ -244,3 +244,148 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- Mengatur variabel untuk tanggal dan waktu (opsional, untuk konsistensi)
+SET @current_time = NOW(); -- Atau waktu spesifik seperti '2025-06-04 14:00:00'
+SET @current_date = CURDATE(); -- Atau tanggal spesifik seperti '2025-06-04'
+SET @future_date_pass_exp = DATE_ADD(@current_date, INTERVAL 1 YEAR);
+SET @med_exp_date1 = DATE_ADD(@current_date, INTERVAL 2 YEAR);
+SET @med_exp_date2 = DATE_ADD(@current_date, INTERVAL 1 YEAR);
+SET @med_exp_date3 = DATE_ADD(@current_date, INTERVAL 3 YEAR);
+
+-- Mengatur variabel untuk tanggal dan waktu (opsional, untuk konsistensi)
+SET @current_time = NOW();
+SET @current_date = CURDATE();
+SET @future_date_pass_exp = DATE_ADD(@current_date, INTERVAL 1 YEAR);
+
+-- Gunakan schema yang sesuai
+USE `mydb`;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`User` (10 records)
+-- -----------------------------------------------------
+INSERT INTO `User` (`userId`, `username`, `password`, `email`, `role`, `lastLogin`, `isAdmin`, `isActive`, `passwordExpDate`, `dailyNotification`) VALUES
+('U001', 'dr_andi', 'hashed_pass1', 'andi.h@clinic.com', 'DOCTOR', @current_time, 0, 1, @future_date_pass_exp, 'Review new patient files'),
+('U002', 'dr_bella', 'hashed_pass2', 'bella.c@clinic.com', 'DOCTOR', @current_time, 0, 1, @future_date_pass_exp, 'Surgery schedule updated'),
+('U003', 'dr_chandra', 'hashed_pass3', 'chandra.d@clinic.com', 'DOCTOR', @current_time, 0, 1, @future_date_pass_exp, NULL),
+('U004', 'pat_diana', 'hashed_pass4', 'diana.e@mail.com', 'PATIENT', @current_time, 0, 1, @future_date_pass_exp, 'Appointment reminder'),
+('U005', 'pat_erik', 'hashed_pass5', 'erik.f@mail.com', 'PATIENT', @current_time, 0, 1, @future_date_pass_exp, NULL),
+('U006', 'pat_fara', 'hashed_pass6', 'fara.g@mail.com', 'PATIENT', @current_time, 0, 1, @future_date_pass_exp, 'Check lab results'),
+('U007', 'ph_gina', 'hashed_pass7', 'gina.h@clinic.com', 'PHARMACIST', @current_time, 0, 1, @future_date_pass_exp, 'Low stock alert'),
+('U008', 'rcp_hadi', 'hashed_pass8', 'hadi.i@clinic.com', 'RECEPTIONIST', @current_time, 0, 1, @future_date_pass_exp, 'Patient check-ins pending'),
+('U009', 'admin_ira', 'admin_pass9', 'ira.j@clinic.com', 'ADMIN', @current_time, 1, 1, @future_date_pass_exp, 'System backup complete'),
+('U010', 'pat_joko', 'hashed_pass10', 'joko.k@mail.com', 'PATIENT', @current_time, 0, 1, @future_date_pass_exp, NULL);
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Doctor` (3 records, using U001, U002, U003)
+-- -----------------------------------------------------
+INSERT INTO `Doctor` (`userId`, `doctorId`, `password`, `email`, `role`, `lastLogin`, `isActive`, `passwordExpDate`, `dailyNotification`) VALUES
+('U001', 'D001', 'doc_pass_andi', 'andi.h@clinic.com', 'DOCTOR', @current_time, 1, @future_date_pass_exp, 'Morning rounds at 8 AM'),
+('U002', 'D002', 'doc_pass_bella', 'bella.c@clinic.com', 'PHYSICIAN', @current_time, 1, @future_date_pass_exp, 'Consultation at 2 PM'),
+('U003', 'D003', 'doc_pass_chandra', 'chandra.d@clinic.com', 'DOCTOR', @current_time, 1, @future_date_pass_exp, 'Review X-Rays');
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Patient` (4 records, using U004, U005, U006, U010)
+-- -----------------------------------------------------
+INSERT INTO `Patient` (`userId`, `patientId`, `height`, `weight`, `bloodType`, `allergies`, `insuranceInfo`, `emergencyContact`) VALUES
+('U004', 'P001', 160.0, 55.0, 'A+', '{"penicillin": "severe", "nuts": "mild"}', '{"provider": "HealthGuard", "policyNo": "HG112233"}', '08111111111'),
+('U005', 'P002', 175.5, 70.2, 'B-', '{"dust": "moderate"}', '{"provider": "LifeSure", "policyNo": "LS445566"}', '08222222222'),
+('U006', 'P003', 155.2, 62.1, 'AB+', '[]', '{"provider": "WellCare", "policyNo": "WC778899"}', '08333333333'),
+('U010', 'P004', 180.0, 85.0, 'O+', '{"seafood": "mild"}', '{"provider": "HealthGuard", "policyNo": "HG112244"}', '08444444444');
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Pharmacist` (1 record, using U007)
+-- -----------------------------------------------------
+INSERT INTO `Pharmacist` (`userId`, `pharmacistId`, `licenseId`, `yearsExperience`, `speciality`, `isAvailable`) VALUES
+('U007', 'PH001', 'LICPHARMA001', 7, 'Pediatric Pharmacy', 1);
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Receptionist` (1 record, using U008)
+-- -----------------------------------------------------
+INSERT INTO `Receptionist` (`userId`, `receptionistId`, `station`, `status`, `officePhone`, `shiftStartTime`, `shiftEndTime`) VALUES
+('U008', 'R001', 'Main Lobby', 'ACTIVE', '021-777888', CONCAT(@current_date, ' 07:30:00'), CONCAT(@current_date, ' 16:30:00'));
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Medication` (10 records)
+-- -----------------------------------------------------
+INSERT INTO `Medication` (`medicationId`, `name`, `genericName`, `category`, `stockQuantity`, `mininumStockLevel`, `expirationDate`, `sideEffects`, `contraindication`) VALUES
+('MED001', 'Paracetamol 500mg', 'Paracetamol', 'Analgesic', 250, 50, DATE_ADD(@current_date, INTERVAL 2 YEAR), 'Rare: rash', 'Liver disease'),
+('MED002', 'Amoxicillin 250mg Cap', 'Amoxicillin', 'Antibiotic', 180, 40, DATE_ADD(@current_date, INTERVAL 1 YEAR), 'Nausea, diarrhea', 'Penicillin allergy'),
+('MED003', 'Loratadine 10mg Tab', 'Loratadine', 'Antihistamine', 120, 20, DATE_ADD(@current_date, INTERVAL 3 YEAR), 'Drowsiness', 'Hypersensitivity'),
+('MED004', 'Omeprazole 20mg Cap', 'Omeprazole', 'Proton Pump Inhibitor', 90, 25, DATE_ADD(@current_date, INTERVAL 1 YEAR), 'Headache', 'Clopidogrel use'),
+('MED005', 'Metformin 500mg Tab', 'Metformin', 'Antidiabetic', 200, 50, DATE_ADD(@current_date, INTERVAL 2 YEAR), 'GI upset', 'Renal impairment'),
+('MED006', 'Amlodipine 5mg Tab', 'Amlodipine', 'Calcium Channel Blocker', 150, 30, DATE_ADD(@current_date, INTERVAL 2 YEAR), 'Edema, dizziness', 'Severe hypotension'),
+('MED007', 'Salbutamol Inhaler', 'Salbutamol', 'Bronchodilator', 70, 15, DATE_ADD(@current_date, INTERVAL 1 YEAR), 'Tremor, tachycardia', 'Cardiac arrhythmias'),
+('MED008', 'Ibuprofen 400mg Tab', 'Ibuprofen', 'NSAID', 300, 60, DATE_ADD(@current_date, INTERVAL 3 YEAR), 'Gastric irritation', 'Active peptic ulcer'),
+('MED009', 'Cetirizine 10mg Tab', 'Cetirizine', 'Antihistamine', 110, 20, DATE_ADD(@current_date, INTERVAL 2 YEAR), 'Somnolence', 'Severe renal impairment'),
+('MED010', 'Simvastatin 20mg Tab', 'Simvastatin', 'Statin', 130, 30, DATE_ADD(@current_date, INTERVAL 1 YEAR), 'Myalgia', 'Active liver disease');
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Appointment` (10 records)
+-- -----------------------------------------------------
+INSERT INTO `Appointment` (`appointmentId`, `patientId`, `doctorId`, `date`, `patientIssue`, `queueNumber`, `status`) VALUES
+('APP001', 'P001', 'D001', CONCAT(@current_date, ' 09:00:00'), '{"symptom": "Flu-like symptoms", "duration": "2 days"}', 1, 'ONGOING'),
+('APP002', 'P002', 'D002', CONCAT(@current_date, ' 09:30:00'), '{"symptom": "Regular check-up"}', 2, 'ONGOING'),
+('APP003', 'P003', 'D001', CONCAT(@current_date, ' 10:00:00'), '{"symptom": "Skin rash", "location": "arms"}', 3, 'ONGOING'),
+('APP004', 'P004', 'D003', CONCAT(@current_date, ' 10:30:00'), '{"symptom": "Follow up for blood pressure"}', 4, 'ONGOING'),
+('APP005', 'P001', 'D002', DATE_ADD(@current_date, INTERVAL 1 DAY), '{"symptom": "Headache persistent"}', 1, 'ONGOING'),
+('APP006', 'P002', 'D001', DATE_ADD(@current_date, INTERVAL 1 DAY), '{"symptom": "Allergy consultation"}', 2, 'ONGOING'),
+('APP007', 'P003', 'D003', DATE_ADD(@current_date, INTERVAL 2 DAY), '{"symptom": "Stomach pain"}', 1, 'ONGOING'),
+('APP008', 'P004', 'D001', DATE_SUB(@current_date, INTERVAL 1 DAY), '{"symptom": "General weakness"}', 5, 'FINISHED'),
+('APP009', 'P001', 'D003', DATE_SUB(@current_date, INTERVAL 2 DAY), '{"symptom": "Vaccination inquiry"}', 6, 'FINISHED'),
+('APP010', 'P002', 'D002', DATE_SUB(@current_date, INTERVAL 3 DAY), '{"symptom": "Minor injury"}', 7, 'FINISHED');
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Prescription` (10 records)
+-- -----------------------------------------------------
+INSERT INTO `Prescription` (`prescriptionId`, `patientId`, `doctorId`, `itemId`, `date`, `instruction`, `diagnosis`) VALUES
+('PRES001', 'P001', 'D001', NULL, CONCAT(@current_date, ' 09:15:00'), 'Take twice daily after food', 'Common Cold'),
+('PRES002', 'P002', 'D002', NULL, CONCAT(@current_date, ' 09:45:00'), 'Apply cream thinly on affected area', 'Eczema'),
+('PRES003', 'P003', 'D001', NULL, CONCAT(@current_date, ' 10:15:00'), 'One tablet daily before sleep', 'Allergic Rhinitis'),
+('PRES004', 'P004', 'D003', NULL, CONCAT(@current_date, ' 10:45:00'), 'Monitor blood pressure', 'Hypertension Stage 1'),
+('PRES005', 'P001', 'D002', DATE_ADD(@current_date, INTERVAL 1 DAY), 'As needed for pain, max 3 times a day', 'Migraine'),
+('PRES006', 'P002', 'D001', DATE_ADD(@current_date, INTERVAL 1 DAY), 'Complete full course of antibiotics', 'Bacterial Infection'),
+('PRES007', 'P003', 'D003', DATE_ADD(@current_date, INTERVAL 2 DAY), 'Take with a full glass of water', 'Gastritis'),
+('PRES008', 'P004', 'D001', DATE_SUB(@current_date, INTERVAL 1 DAY), 'Use inhaler when breathless', 'Asthma'),
+('PRES009', 'P001', 'D003', DATE_SUB(@current_date, INTERVAL 2 DAY), 'One tablet every morning', 'Hyperlipidemia'),
+('PRES010', 'P002', 'D002', DATE_SUB(@current_date, INTERVAL 3 DAY), 'Rest and elevate injured limb', 'Sprain');
+
+-- -----------------------------------------------------
+-- Table `mydb`.`PrescriptionItem` (approx. 15 records for 10 prescriptions)
+-- -----------------------------------------------------
+-- itemId di sini saya coba petakan ke Medication.medicationId
+INSERT INTO `PrescriptionItem` (`prescriptionId`, `itemId`, `dosage`, `frequency`, `duration`, `notes`) VALUES
+('PRES001', 'MED001', 1, 2, '3 days', '{"advice": "Drink warm fluids"}'),
+('PRES001', 'MED008', 1, 2, '3 days', '{"advice": "For fever and pain"}'),
+('PRES002', 'MED003', 1, 1, '7 days', '{"advice": "Avoid scratching"}'), -- Loratadine for Eczema related itch
+('PRES003', 'MED009', 1, 1, '14 days', '{"advice": "Take at night"}'), -- Cetirizine
+('PRES004', 'MED006', 1, 1, '30 days', '{"advice": "Check BP weekly"}'), -- Amlodipine
+('PRES005', 'MED008', 1, 3, '5 days', '{"advice": "If severe headache persists"}'), -- Ibuprofen for Migraine
+('PRES006', 'MED002', 1, 3, '7 days', '{"advice": "Finish all pills"}'), -- Amoxicillin
+('PRES007', 'MED004', 1, 1, '10 days', '{"advice": "Before breakfast"}'), -- Omeprazole
+('PRES008', 'MED007', 2, 4, 'As needed', '{"advice": "Puffs per use"}'), -- Salbutamol
+('PRES009', 'MED010', 1, 1, '30 days', '{"advice": "Diet control important"}'), -- Simvastatin
+('PRES010', 'MED001', 1, 2, '2 days', '{"advice": "For pain relief"}'); -- Paracetamol for sprain
+-- Menambah beberapa item lagi untuk variasi
+INSERT INTO `PrescriptionItem` (`prescriptionId`, `itemId`, `dosage`, `frequency`, `duration`, `notes`) VALUES
+('PRES001', 'MED007', 1, 1, '3 days', '{"advice": "If cough is severe, 1 puff"}'), -- Salbutamol, assuming cough related to cold
+('PRES004', 'MED005', 1, 2, '30 days', '{"advice": "If patient has comorbid diabetes"}'), -- Metformin if needed
+('PRES006', 'MED001', 1, 2, '5 days', '{"advice": "For fever during infection"}');
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`MedicalRecord` (10 records)
+-- -----------------------------------------------------
+-- `diagnosis` merujuk ke `PrescriptionItem.prescriptionId` (yang unik berdasarkan skema Anda)
+-- Saya akan menggunakan prescriptionId dari tabel Prescription.
+INSERT INTO `MedicalRecord` (`recordId`, `patientId`, `doctorId`, `symptoms`, `diagnosis`, `treatment`, `notes`) VALUES
+('MR001', 'P001', 'D001', 'Fever, cough, runny nose', 'PRES001', 'Prescribed medication as per PRES001. Advised rest.', '{"follow_up_days": 3}'),
+('MR002', 'P002', 'D002', 'Itchy red patches on skin', 'PRES002', 'Topical cream prescribed. Avoid allergens.', '{"skin_test_suggested": true}'),
+('MR003', 'P003', 'D001', 'Sneezing, nasal congestion', 'PRES003', 'Antihistamines given. Identify triggers.', '{"allergy_profile": "pending"}'),
+('MR004', 'P004', 'D003', 'Slightly elevated blood pressure, no other symptoms', 'PRES004', 'Lifestyle modification and medication.', '{"diet_plan": "low sodium"}'),
+('MR005', 'P001', 'D002', 'Severe throbbing headache, sensitivity to light', 'PRES005', 'Pain relief medication prescribed.', '{"trigger_food_diary": "recommended"}'),
+('MR006', 'P002', 'D001', 'Sore throat, fever, swollen glands', 'PRES006', 'Antibiotics course started.', '{"culture_test_sent": true}'),
+('MR007', 'P003', 'D003', 'Burning sensation in stomach, nausea', 'PRES007', 'PPI prescribed, dietary advice given.', '{"avoid_spicy_food": true}'),
+('MR008', 'P004', 'D001', 'Wheezing, shortness of breath after exercise', 'PRES008', 'Inhaler prescribed. Proper use demonstrated.', '{"action_plan_given": true}'),
+('MR009', 'P001', 'D003', 'Routine check found high cholesterol', 'PRES009', 'Statin prescribed. Diet and exercise advised.', '{"lipid_profile_repeat_months": 3}'),
+('MR010', 'P002', 'D002', 'Twisted ankle during sport, swelling and pain', 'PRES010', 'RICE (Rest, Ice, Compression, Elevation). Analgesics given.', '{"xray_done": false, "observe_ swelling": true}');

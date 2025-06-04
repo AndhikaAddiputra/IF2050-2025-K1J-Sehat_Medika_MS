@@ -1,5 +1,10 @@
 package controller;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import model.DatabaseConnection;
 import view.PatientDashboardView;
 
 public class LoginController {
@@ -37,42 +43,54 @@ public class LoginController {
     
     @FXML
     private void handleLoginButtonAction(ActionEvent event) {
-        System.out.println("Login button clicked");
-        
         String username = usernameField.getText();
         String password = passwordField.getText();
-        
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
-        
-        if (username.equals("admin") && password.equals("password")) {
-            // Navigate to main application screen here
-            wrongLogin.setText("Masuk Pak eko"); // Clear any previous error message
-            System.out.println("Login successful - navigating to admin dashboard");
 
-        } else if (username.equals("patient") && password.equals("patient123")) {
-            PatientDashboardView patientView = new PatientDashboardView();
-            try {
-                patientView.start(new javafx.stage.Stage());
-                System.out.println("Login successful - navigating to patient dashboard");
-            } catch (Exception e) {
-                e.printStackTrace();
-                // PegeNotFound realization
-            }
-
-        } else if (username.equals("doctor") && password.equals("doctor123")) {
-            // Navigate to doctor dashboard here
-        } else if (username.equals("receptionist") && password.equals("receptionist123")) {
-            // Navigate to receptionist dashboard here
-        } else if (username.equals("pharmacist") && password.equals("pharmacist123")) {
-            // Navigate to pharmacist dashboard here
-        } else if (username.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty() || password.isEmpty()) {
             wrongLogin.setText("Username dan password tidak boleh kosong");
-            System.out.println("Login failed - empty fields");
+            return;
         }
-        else {
-            wrongLogin.setText("Username atau password salah");
-            System.out.println("Login failed - showing error message");
+
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+
+        String verifyLogin = "SELECT role FROM users WHERE username = ? AND password = ?";
+
+        try {
+            PreparedStatement statement = connectDB.prepareStatement(verifyLogin);
+            statement.setString(1, username);
+            statement.setString(2, password);
+            
+            ResultSet queryResult = statement.executeQuery();
+
+            if (queryResult.next()) {
+                String role = queryResult.getString("role");
+
+                wrongLogin.setText("Login berhasil sebagai " + role);
+                System.out.println("Login successful - role: " + role);
+
+                switch (role) {
+                    case "admin":
+                        break;
+                    case "patient":
+                        PatientDashboardView patientView = new PatientDashboardView();
+                        patientView.start(new Stage());
+                        break;
+                    case "doctor":
+                        break;
+                    case "receptionist":
+                        break;
+                    case "pharmacist":
+                        break;
+                }
+                ((Stage) masukButton.getScene().getWindow()).close();
+            } else {
+                wrongLogin.setText("Username atau password salah");
+                System.out.println("Login failed - incorrect credentials");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            wrongLogin.setText("Terjadi kesalahan saat login");
         }
     }
 }
