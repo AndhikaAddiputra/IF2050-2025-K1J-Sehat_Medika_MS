@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #46D6A9;">
+         <children>
+            <Label text="Buat Janji Temu Baru" textFill="WHITE">
+               <VBox.margin>
+                  <Insets bottom="25.0" left="40.0" right="30.0" top="40.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Arial Bold" size="28.0" />
+               </font>
+            </Label>
+            <Label text="Spesialis" textFill="WHITE">
+               <VBox.margin>
+                  <Insets left="40.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="pilihanSpesialis" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="510.0">
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" />
+               </VBox.margin>
+            </ComboBox>
+            <Label layoutX="50.0" layoutY="107.0" text="Dokter" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" top="30.0" />
+               </VBox.margin>
+            </Label>
+            <ComboBox fx:id="pilihanDokter" layoutX="50.0" layoutY="130.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="510.0">
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" />
+               </VBox.margin>
+            </ComboBox>
+            <Label layoutX="50.0" layoutY="190.0" text="Dokter" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" top="30.0" />
+               </VBox.margin>
+            </Label>
+            <DatePicker fx:id="datePicker" prefHeight="30.0" prefWidth="510.0">
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" />
+               </VBox.margin>
+            </DatePicker>
+            <Label layoutX="50.0" layoutY="190.0" text="Waktu" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" top="30.0" />
+               </VBox.margin>
+            </Label>
+            <ComboBox fx:id="pilihanWaktu" layoutX="50.0" layoutY="213.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="510.0">
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" />
+               </VBox.margin>
+            </ComboBox>
+            <Button fx:id="simpanButton" mnemonicParsing="false" onAction="#handleSimpan" prefHeight="30.0" prefWidth="510.0" style="-fx-background-color: #40C49A;" text="Simpan" textFill="WHITE">
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" top="50.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="simpanButton" layoutX="50.0" layoutY="459.0" mnemonicParsing="false" onAction="#handleBatalkan" prefHeight="30.0" prefWidth="510.0" style="-fx-background-color: #46D6A9; -fx-border-color: white; -fx-border-image-width: 2;" text="Batalkan" textFill="WHITE">
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0" top="20.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

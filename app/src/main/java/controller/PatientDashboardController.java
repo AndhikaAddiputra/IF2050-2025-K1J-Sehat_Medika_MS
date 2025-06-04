@@ -32,10 +32,10 @@ public class PatientDashboardController {
     @FXML
     public void initialize() {
         // Initialize placeholder values
-        if (namePlaceHolder != null) namePlaceHolder.setText("Nama: Jhon");
-        if (janjiTemuAktifPlaceholder != null) janjiTemuAktifPlaceholder.setText("Janji Temu Aktif: 0");
-        if (resepDiprosesPlaceholder != null) resepDiprosesPlaceholder.setText("Resep Diproses: 0");
-        if (catatanMedisPlaceholder != null) catatanMedisPlaceholder.setText("Catatan Medis: 0");
+        if (namePlaceHolder != null) namePlaceHolder.setText("Jhon");
+        if (janjiTemuAktifPlaceholder != null) janjiTemuAktifPlaceholder.setText("0");
+        if (resepDiprosesPlaceholder != null) resepDiprosesPlaceholder.setText("0");
+        if (catatanMedisPlaceholder != null) catatanMedisPlaceholder.setText("0");
         if (datePlaceholder != null) datePlaceholder.setText("Rabu, 12 Mei 2025");
         if (timePlaceholder != null) timePlaceholder.setText("08.00");
         if (doctorNamePlaceholder != null) doctorNamePlaceholder.setText("| Dr. Asep Spakbor");

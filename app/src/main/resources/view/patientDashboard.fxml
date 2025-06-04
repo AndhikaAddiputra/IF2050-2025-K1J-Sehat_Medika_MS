@@ -54,7 +54,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Dashboard.png" />
+                        <Image url="@../icon/Dashboard.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -72,7 +72,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Profil.png" />
+                        <Image url="@../icon/Profil.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -90,7 +90,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Janji%20Temu.png" />
+                        <Image url="@../icon/Janji Temu.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -108,7 +108,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Riwayat%20Medis.png" />
+                        <Image url="@../icon/Riwayat Medis.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -126,7 +126,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Resep%20obat.png" />
+                        <Image url="@../icon/Resep obat.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -144,7 +144,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Notifikasi.png" />
+                        <Image url="@../icon/Notifikasi.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -164,7 +164,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Keluar.png" />
+                        <Image url="@../icon/Keluar.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -225,7 +225,7 @@
                      <graphic>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Buat%20Janji%20Temu.png" />
+                              <Image url="@../icon/Buat Janji Temu.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -252,7 +252,7 @@
                      <graphic>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Lihat%20catatan%20medis.png" />
+                              <Image url="@../icon/Lihat catatan medis.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -273,7 +273,7 @@
                      <graphic>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Resep%20obat.png" />
+                              <Image url="@../icon/Proses obat.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -307,7 +307,7 @@
                      <children>
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="21.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Janji%20Temu.png" />
+                              <Image url="@../icon/Janji Temu.png" />
                            </image>
                         </ImageView>
                         <Label layoutX="58.0" layoutY="13.0" prefHeight="17.0" prefWidth="76.0" text="Janji Temu" textFill="WHITE">
