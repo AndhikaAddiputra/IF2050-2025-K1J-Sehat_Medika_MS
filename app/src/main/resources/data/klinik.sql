@@ -17,16 +17,13 @@ USE `mydb` ;
 DROP TABLE IF EXISTS `mydb`.`User` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`User` (
-  `userId` VARCHAR(10) NOT NULL,
+  `userId` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(50) NOT NULL,
   `password` VARCHAR(50) NOT NULL,
-  `email` VARCHAR(100) NOT NULL,
-  `role` ENUM('DOCTOR', 'PATIENT', 'RECEPTIONIST', 'PHARMACIST') NOT NULL, -- Restricted roles
+  `email` VARCHAR(255) NOT NULL,
+  `phoneNumber` VARCHAR(25) NOT NULL,
+  `role` ENUM('DOCTOR', 'PATIENT', 'RECEPTIONIST', 'PHARMACIST', 'ADMIN') NOT NULL, -- Restricted roles
   `lastLogin` DATETIME NULL,
-  `isAdmin` TINYINT(1) NOT NULL DEFAULT 0,
-  `isActive` TINYINT(1) NOT NULL DEFAULT 1,
-  `passwordExpDate` DATETIME NULL,
-  `dailyNotification` VARCHAR(255) NULL,
   PRIMARY KEY (`userId`),
   UNIQUE INDEX `idx_User_username_unique` (`username` ASC) VISIBLE,
   UNIQUE INDEX `idx_User_email_unique` (`email` ASC) VISIBLE)
@@ -40,8 +37,10 @@ DROP TABLE IF EXISTS `mydb`.`Doctor` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Doctor` (
   `doctorId` VARCHAR(10) NOT NULL,
-  `userId` VARCHAR(10) NOT NULL,
+  `userId` INT NOT NULL,
   `specialization` VARCHAR(100) NULL,
+  `licenseNumber` VARCHAR(50) NULL,
+  `availableDays` VARCHAR(255) NULL,
   `availableHours` VARCHAR(255) NULL,
   PRIMARY KEY (`doctorId`),
   UNIQUE INDEX `idx_Doctor_userId_unique` (`userId` ASC) VISIBLE,
@@ -60,13 +59,12 @@ DROP TABLE IF EXISTS `mydb`.`Patient` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Patient` (
   `patientId` VARCHAR(10) NOT NULL,
-  `userId` VARCHAR(10) NOT NULL,
-  `height` FLOAT NULL,
-  `weight` FLOAT NULL,
-  `bloodType` VARCHAR(5) NULL, 
-  `allergies` JSON NULL,
-  `insuranceInfo` JSON NULL,
+  `userId` INT NOT NULL,
+  `bloodType` ENUM('A', 'B','AB' ,'O') NOT NULL, 
+  `allergies` VARCHAR(255) NULL,
   `emergencyContact` VARCHAR(25) NULL,
+  `insuranceInfo` VARCHAR(255) NULL,
+  `registrationDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`patientId`),
   UNIQUE INDEX `idx_Patient_userId_unique` (`userId` ASC) VISIBLE,
   CONSTRAINT `fk_Patient_User_userId`
@@ -83,13 +81,14 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `mydb`.`Medication` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Medication` (
-  `medicationId` VARCHAR(10) NOT NULL,
-  `name` VARCHAR(100) NOT NULL,
-  `genericName` VARCHAR(100) NULL,
+  `medicationId` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `genericName` VARCHAR(255) NULL,
   `category` VARCHAR(50) NULL,
+  `unit` VARCHAR(50) NULL, -- Optional for unit of measurement
   `stockQuantity` INT NOT NULL DEFAULT 0,
-  `minimumStockLevel` INT NULL DEFAULT 0,
-  `expirationDate` DATETIME NULL,
+  `minStockLevel` INT NULL DEFAULT 0,
+  `expiryDate` DATETIME NOT NULL,
   `sideEffects` VARCHAR(255) NULL,
   `contraindication` VARCHAR(255) NULL,
   PRIMARY KEY (`medicationId`))
@@ -102,12 +101,13 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `mydb`.`Prescription` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Prescription` (
-  `prescriptionId` VARCHAR(10) NOT NULL,
+  `prescriptionId` INT NOT NULL AUTO_INCREMENT,
   `patientId` VARCHAR(10) NOT NULL,
   `doctorId` VARCHAR(10) NOT NULL,
-  `prescriptionDate` DATETIME NOT NULL,
+  `prescriptionDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `medications` VARCHAR(511) NULL,  
   `instructions` VARCHAR(255) NOT NULL,
-  `diagnosis` VARCHAR(255) NULL,
+  `prescriptionStatus` ENUM('CREATED','PROCESSED','COMPLETED','CANCELLED') NOT NULL,
   PRIMARY KEY (`prescriptionId`),
   INDEX `idx_Prescription_patientId` (`patientId` ASC) VISIBLE,
   INDEX `idx_Prescription_doctorId` (`doctorId` ASC) VISIBLE,
@@ -130,12 +130,12 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `mydb`.`PrescriptionItem` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`PrescriptionItem` (
-  `prescriptionId` VARCHAR(10) NOT NULL,
-  `itemId` VARCHAR(10) NOT NULL, 
+  `itemId` INT NOT NULL, 
+  `prescriptionId` INT NOT NULL,
   `dosage` VARCHAR(50) NOT NULL,
   `frequency` VARCHAR(50) NOT NULL,
   `duration` VARCHAR(50) NOT NULL,
-  `notes` JSON NULL,
+  `notes` VARCHAR(511) NOT NULL,
   PRIMARY KEY (`prescriptionId`, `itemId`),
   INDEX `idx_PrescriptionItem_itemId` (`itemId` ASC) VISIBLE,
   CONSTRAINT `fk_PrescriptionItem_Prescription_prescriptionId`
@@ -157,14 +157,14 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `mydb`.`MedicalRecord` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`MedicalRecord` (
-  `recordId` VARCHAR(10) NOT NULL,
+  `recordId` INT NOT NULL AUTO_INCREMENT,
   `patientId` VARCHAR(10) NOT NULL,
   `doctorId` VARCHAR(10) NOT NULL,
-  `recordDate` DATETIME NOT NULL,
-  `symptoms` VARCHAR(255) NOT NULL,
+  `recordDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `diagnosis` VARCHAR(255) NOT NULL,
-  `treatment` VARCHAR(255) NOT NULL,
-  `notes` JSON NULL,
+  `symptoms` VARCHAR(255) NOT NULL,
+  `notes` VARCHAR(255) NULL,
+  `attachments` VARCHAR(511) NOT NULL,
   PRIMARY KEY (`recordId`),
   INDEX `idx_MedicalRecord_patientId` (`patientId` ASC) VISIBLE,
   INDEX `idx_MedicalRecord_doctorId` (`doctorId` ASC) VISIBLE,
@@ -187,13 +187,14 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `mydb`.`Appointment` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Appointment` (
-  `appointmentId` VARCHAR(10) NOT NULL,
+  `appointmentId` INT NOT NULL AUTO_INCREMENT,
   `patientId` VARCHAR(10) NOT NULL,
   `doctorId` VARCHAR(10) NOT NULL,
-  `appointmentDate` DATETIME NOT NULL, -- Renamed from 'date' for clarity
-  `patientIssue` JSON NULL,
-  `queueNumber` INT NULL,
-  `status` VARCHAR(20) NOT NULL, -- Using VARCHAR as per class diagram 'AppointmentStatus' (string representation)
+  `appointmentDate` DATETIME NOT NULL,
+  `duration` INT NOT NULL,
+  `reason` VARCHAR(255) NOT NULL,
+  `appointmentStatus` ENUM('SCHEDULED', 'CANCELLED', 'COMPLETED', 'NOSHOW', 'INPROGRESS') NOT NULL, -- Using VARCHAR as per class diagram 'AppointmentStatus' (string representation)
+  `queueNumber` INT NOT NULL,
   PRIMARY KEY (`appointmentId`),
   INDEX `idx_Appointment_patientId` (`patientId` ASC) VISIBLE,
   INDEX `idx_Appointment_doctorId` (`doctorId` ASC) VISIBLE,
@@ -217,11 +218,8 @@ DROP TABLE IF EXISTS `mydb`.`Pharmacist` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Pharmacist` (
   `pharmacistId` VARCHAR(10) NOT NULL,
-  `userId` VARCHAR(10) NOT NULL,
-  `licenseId` VARCHAR(50) NOT NULL,
-  `yearsOfExperience` INT NULL,
-  `specialization` VARCHAR(100) NULL, -- Changed from speciality to specialization
-  `isAvailable` TINYINT(1) NOT NULL DEFAULT 1,
+  `userId` INT NOT NULL,
+  `licenseNumber` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`pharmacistId`),
   UNIQUE INDEX `idx_Pharmacist_userId_unique` (`userId` ASC) VISIBLE,
   CONSTRAINT `fk_Pharmacist_User_userId`
@@ -239,11 +237,8 @@ DROP TABLE IF EXISTS `mydb`.`Receptionist` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Receptionist` (
   `receptionistId` VARCHAR(10) NOT NULL,
-  `userId` VARCHAR(10) NOT NULL,
-  `station` VARCHAR(50) NULL,
-  `status` VARCHAR(50) NOT NULL, -- Using VARCHAR as per class diagram 'status: string'
-  `officePhoneNumber` VARCHAR(25) NULL,
-  `shift` VARCHAR(255) NULL,
+  `userId` INT NOT NULL,
+  `department` VARCHAR(100) NULL,
   PRIMARY KEY (`receptionistId`),
   UNIQUE INDEX `idx_Receptionist_userId_unique` (`userId` ASC) VISIBLE,
   CONSTRAINT `fk_Receptionist_User_userId`
@@ -262,138 +257,117 @@ SET @current_datetime = NOW();
 SET @current_date = CURDATE();
 SET @future_date_pass_exp = DATE_ADD(@current_datetime, INTERVAL 1 YEAR);
 
--- -----------------------------------------------------
--- Table `mydb`.`User` (10 records)
--- -----------------------------------------------------
-DELETE FROM `User`; -- Hapus data lama jika ada, untuk menghindari konflik PK saat testing
-INSERT INTO `User` (`userId`, `username`, `password`, `email`, `role`, `lastLogin`, `isAdmin`, `isActive`, `passwordExpDate`, `dailyNotification`) VALUES
-('USR0001', 'dr.andi', 'pass_andi', 'andi.r@clinic.com', 'DOCTOR', @current_datetime, 0, 1, @future_date_pass_exp, 'Jadwal operasi besok pagi.'),
-('USR0002', 'dr.bella', 'pass_bella', 'bella.s@clinic.com', 'DOCTOR', @current_datetime, 0, 1, @future_date_pass_exp, 'Rapat tim medis jam 14:00.'),
-('USR0003', 'dr.chandra', 'pass_chandra', 'chandra.w@clinic.com', 'DOCTOR', @current_datetime, 0, 1, @future_date_pass_exp, NULL),
-('USR0004', 'pasien.diana', 'pass_diana', 'diana.k@example.com', 'PATIENT', @current_datetime, 0, 1, @future_date_pass_exp, 'Pengingat janji temu Anda besok.'),
-('USR0005', 'pasien.eko', 'pass_eko', 'eko.p@example.com', 'PATIENT', @current_datetime, 0, 1, @future_date_pass_exp, 'Hasil lab sudah tersedia.'),
-('USR0006', 'pasien.fitri', 'pass_fitri', 'fitri.a@example.com', 'PATIENT', @current_datetime, 0, 1, @future_date_pass_exp, NULL),
-('USR0007', 'apt.gina', 'pass_gina', 'gina.h@clinic.com', 'PHARMACIST', @current_datetime, 0, 1, @future_date_pass_exp, 'Stok obat X menipis.'),
-('USR0008', 'apt.hari', 'pass_hari', 'hari.m@clinic.com', 'PHARMACIST', @current_datetime, 0, 1, @future_date_pass_exp, 'Verifikasi resep baru.'),
-('USR0009', 'rcp.indah', 'pass_indah', 'indah.l@clinic.com', 'RECEPTIONIST', @current_datetime, 0, 1, @future_date_pass_exp, '5 Pendaftaran pasien baru hari ini.'),
-('USR0010', 'sys.admin', 'pass_sysadmin', 'admin@clinic.com', 'RECEPTIONIST', @current_datetime, 1, 1, @future_date_pass_exp, 'Maintenance sistem malam ini.');
+-- Data Dummy
 
--- -----------------------------------------------------
--- Table `mydb`.`Doctor` (3 records, sesuai User dengan role DOCTOR)
--- -----------------------------------------------------
-DELETE FROM `Doctor`;
-INSERT INTO `Doctor` (`doctorId`, `userId`, `specialization`, `availableHours`) VALUES
-('DOC001', 'USR0001', 'Dokter Umum', 'Senin-Jumat, 08:00-16:00'),
-('DOC002', 'USR0002', 'Dokter Anak', 'Senin, Rabu, Jumat, 09:00-17:00'),
-('DOC003', 'USR0003', 'Dokter Jantung', 'Selasa, Kamis, 10:00-15:00 (Dengan Janji)');
+-- 1. User
+INSERT INTO `mydb`.`User` (`username`, `password`, `email`, `phoneNumber`, `role`, `lastLogin`) VALUES
+('dr.adams', 'pass123', 'adams.doc@example.com', '081234567890', 'DOCTOR', NOW()),
+('dr.brown', 'pass123', 'brown.doc@example.com', '081234567891', 'DOCTOR', NOW()),
+('patient.alice', 'pass123', 'alice.pat@example.com', '081234567892', 'PATIENT', NOW()),
+('patient.bob', 'pass123', 'bob.pat@example.com', '081234567893', 'PATIENT', NOW()),
+('patient.charlie', 'pass123', 'charlie.pat@example.com', '081234567894', 'PATIENT', NOW()),
+('reception.diana', 'pass123', 'diana.rec@example.com', '081234567895', 'RECEPTIONIST', NOW()),
+('pharma.edward', 'pass123', 'edward.phm@example.com', '081234567896', 'PHARMACIST', NOW()),
+('admin.frank', 'pass123', 'frank.adm@example.com', '081234567897', 'ADMIN', NOW()),
+('dr.grace', 'pass123', 'grace.doc@example.com', '081234567898', 'DOCTOR', NOW()),
+('patient.hannah', 'pass123', 'hannah.pat@example.com', '081234567899', 'PATIENT', NOW());
 
--- -----------------------------------------------------
--- Table `mydb`.`Patient` (3 records, sesuai User dengan role PATIENT)
--- -----------------------------------------------------
-DELETE FROM `Patient`;
-INSERT INTO `Patient` (`patientId`, `userId`, `height`, `weight`, `bloodType`, `allergies`, `insuranceInfo`, `emergencyContact`) VALUES
-('PAT001', 'USR0004', 160.5, 55.2, 'A+', '{"food": ["Udang"], "medication": ["Penisilin"]}', '{"provider": "Asuransi Sehat Sentosa", "policyNo": "SS12345"}', '08123456001'),
-('PAT002', 'USR0005', 175.0, 70.1, 'B-', NULL, '{"provider": "Proteksi Medika", "policyNo": "PM67890"}', '08123456002'),
-('PAT003', 'USR0006', 155.2, 62.0, 'O+', '{"environment": ["Debu"]}', '{"provider": "BPJS Kesehatan", "policyNo": "BPJS00123"}', '08123456003');
+-- Simpan userId yang relevan untuk kemudahan
+-- Misal userId: 1 (dr.adams), 2 (dr.brown), 3 (patient.alice), 4 (patient.bob), 5 (patient.charlie),
+-- 6 (reception.diana), 7 (pharma.edward), 8 (admin.frank), 9 (dr.grace), 10 (patient.hannah)
 
--- -----------------------------------------------------
--- Table `mydb`.`Pharmacist` (2 records, sesuai User dengan role PHARMACIST)
--- -----------------------------------------------------
-DELETE FROM `Pharmacist`;
-INSERT INTO `Pharmacist` (`pharmacistId`, `userId`, `licenseId`, `yearsOfExperience`, `specialization`, `isAvailable`) VALUES
-('PHM001', 'USR0007', 'SIPA-001/2020', 5, 'Farmasi Klinis', 1),
-('PHM002', 'USR0008', 'SIPA-002/2018', 7, 'Manajemen Farmasi', 1);
+-- 2. Doctor (menggunakan userId dari User dengan role DOCTOR)
+INSERT INTO `mydb`.`Doctor` (`doctorId`, `userId`, `specialization`, `licenseNumber`, `availableDays`, `availableHours`) VALUES
+('DOC001', 1, 'Cardiology', 'LIC-CARD-001', 'Monday, Wednesday, Friday', '09:00-17:00'),
+('DOC002', 2, 'Pediatrics', 'LIC-PED-002', 'Tuesday, Thursday', '10:00-18:00'),
+('DOC003', 9, 'General Practitioner', 'LIC-GP-003', 'Monday-Friday', '08:00-16:00');
+-- Tambahkan 7 dokter lagi jika ada 7 user dokter lagi. Untuk contoh, saya buat 3 dulu berdasarkan user di atas.
 
--- -----------------------------------------------------
--- Table `mydb`.`Receptionist` (2 records, sesuai User dengan role RECEPTIONIST)
--- -----------------------------------------------------
-DELETE FROM `Receptionist`;
-INSERT INTO `Receptionist` (`receptionistId`, `userId`, `station`, `status`, `officePhoneNumber`, `shift`) VALUES
-('RCP001', 'USR0009', 'Meja Depan A', 'Active', '021-7000123 ext. 101', 'Pagi (07:00-15:00)'),
-('RCP002', 'USR0010', 'Meja Informasi', 'Active', '021-7000123 ext. 100', 'Sore (14:00-22:00)');
+-- 3. Patient (menggunakan userId dari User dengan role PATIENT)
+INSERT INTO `mydb`.`Patient` (`patientId`, `userId`, `bloodType`, `allergies`, `emergencyContact`, `insuranceInfo`, `registrationDate`) VALUES
+('PAT001', 3, 'A', 'Pollen, Dust', '081111111111', 'Insurance XYZ Plan A', NOW()),
+('PAT002', 4, 'O', NULL, '082222222222', 'Insurance ABC Plan B', NOW()),
+('PAT003', 5, 'B', 'Peanuts', '083333333333', 'No Insurance', NOW()),
+('PAT004', 10, 'AB', 'Shellfish', '084444444444', 'Insurance QRS Gold', NOW());
+-- Tambahkan 6 pasien lagi jika ada 6 user pasien lagi.
 
--- -----------------------------------------------------
--- Table `mydb`.`Medication` (10 records)
--- -----------------------------------------------------
-DELETE FROM `Medication`;
-INSERT INTO `Medication` (`medicationId`, `name`, `genericName`, `category`, `stockQuantity`, `minimumStockLevel`, `expirationDate`, `sideEffects`, `contraindication`) VALUES
-('MED001', 'Panadol Biru', 'Paracetamol', 'Analgesik', 500, 50, @current_datetime + INTERVAL 2 YEAR, 'Jarang: ruam kulit', 'Penyakit hati berat'),
-('MED002', 'Amoxsan Forte Syrup', 'Amoxicillin', 'Antibiotik', 300, 30, @current_datetime + INTERVAL 1 YEAR, 'Mual, diare', 'Alergi penisilin'),
-('MED003', 'Incidal OD', 'Cetirizine', 'Antihistamin', 400, 40, @current_datetime + INTERVAL 3 YEAR, 'Mengantuk', 'Hipersensitif'),
-('MED004', 'Omeprazole 20mg Kapsul', 'Omeprazole', 'PPI', 250, 25, @current_datetime + INTERVAL 2 YEAR, 'Sakit kepala, diare', 'Penggunaan bersama Nelfinavir'),
-('MED005', 'Glucophage 500mg', 'Metformin', 'Antidiabetik', 350, 35, @current_datetime + INTERVAL 2 YEAR, 'Gangguan GI', 'Asidosis metabolik'),
-('MED006', 'Tensivask 5mg', 'Amlodipine', 'Antihipertensi', 200, 20, @current_datetime + INTERVAL 18 MONTH, 'Edema, pusing', 'Syok kardiogenik'),
-('MED007', 'Ventolin Inhaler', 'Salbutamol', 'Bronkodilator', 100, 10, @current_datetime + INTERVAL 1 YEAR, 'Tremor, palpitasi', 'Ancaman aborsi'),
-('MED008', 'Cataflam 50mg', 'Diclofenac Potassium', 'NSAID', 150, 15, @current_datetime + INTERVAL 2 YEAR, 'Nyeri perut, mual', 'Ulkus peptikum aktif'),
-('MED009', 'Neurobion Forte', 'Vitamin B Complex', 'Vitamin', 600, 60, @current_datetime + INTERVAL 3 YEAR, 'Jarang terjadi', 'Hipersensitif terhadap komponen'),
-('MED010', 'Lipitor 20mg', 'Atorvastatin', 'Statin', 220, 20, @current_datetime + INTERVAL 2 YEAR, 'Nyeri otot', 'Penyakit hati aktif, kehamilan');
+-- 4. Pharmacist (menggunakan userId dari User dengan role PHARMACIST)
+INSERT INTO `mydb`.`Pharmacist` (`pharmacistId`, `userId`, `licenseNumber`) VALUES
+('PHM001', 7, 'LIC-PHM-001');
+-- Tambahkan 9 apoteker lagi jika ada user apoteker lagi.
 
--- -----------------------------------------------------
--- Table `mydb`.`Appointment` (10 records)
--- -----------------------------------------------------
-DELETE FROM `Appointment`;
-INSERT INTO `Appointment` (`appointmentId`, `patientId`, `doctorId`, `appointmentDate`, `patientIssue`, `queueNumber`, `status`) VALUES
-('APP001', 'PAT001', 'DOC001', CONCAT(@current_date, ' 09:00:00'), '{"keluhan": "Demam 2 hari", "detail": "Sakit kepala dan batuk ringan"}', 1, 'SCHEDULED'),
-('APP002', 'PAT002', 'DOC002', CONCAT(@current_date, ' 10:00:00'), '{"keluhan": "Kontrol rutin anak", "vaksinasi": "Campak"}', 2, 'SCHEDULED'),
-('APP003', 'PAT003', 'DOC003', CONCAT(@current_date, ' 11:00:00'), '{"keluhan": "Nyeri dada saat aktivitas"}', 3, 'CONFIRMED'),
-('APP004', 'PAT001', 'DOC002', CONCAT(DATE_ADD(@current_date, INTERVAL 1 DAY), ' 09:30:00'), '{"keluhan": "Anak batuk pilek"}', 1, 'SCHEDULED'),
-('APP005', 'PAT002', 'DOC003', CONCAT(DATE_ADD(@current_date, INTERVAL 1 DAY), ' 14:00:00'), '{"keluhan": "Konsultasi hasil EKG"}', 2, 'SCHEDULED'),
-('APP006', 'PAT003', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 2 DAY), ' 10:30:00'), '{"keluhan": "Pemeriksaan kesehatan umum"}', 1, 'SCHEDULED'),
-('APP007', 'PAT001', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 2 DAY), ' 13:00:00'), '{"keluhan": "Sakit tenggorokan"}', 2, 'SCHEDULED'),
-('APP008', 'PAT002', 'DOC002', CONCAT(DATE_ADD(@current_date, INTERVAL 3 DAY), ' 11:30:00'), '{"keluhan": "Imunisasi DPT lanjutan"}', 1, 'SCHEDULED'),
-('APP009', 'PAT003', 'DOC003', CONCAT(DATE_ADD(@current_date, INTERVAL 3 DAY), ' 15:00:00'), '{"keluhan": "Cek tekanan darah"}', 2, 'CONFIRMED'),
-('APP010', 'PAT001', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 4 DAY), ' 08:00:00'), '{"keluhan": "Pusing berulang"}', 1, 'SCHEDULED');
+-- 5. Receptionist (menggunakan userId dari User dengan role RECEPTIONIST)
+INSERT INTO `mydb`.`Receptionist` (`receptionistId`, `userId`, `department`) VALUES
+('REC001', 6, 'Front Desk');
+-- Tambahkan 9 resepsionis lagi jika ada user resepsionis lagi.
 
--- -----------------------------------------------------
--- Table `mydb`.`Prescription` (10 records)
--- -----------------------------------------------------
-DELETE FROM `Prescription`;
-INSERT INTO `Prescription` (`prescriptionId`, `patientId`, `doctorId`, `prescriptionDate`, `instructions`, `diagnosis`) VALUES
-('PRE001', 'PAT001', 'DOC001', CONCAT(@current_date, ' 09:15:00'), 'Minum setelah makan, habiskan.', 'ISPA Viral'),
-('PRE002', 'PAT002', 'DOC002', CONCAT(@current_date, ' 10:15:00'), 'Berikan sesuai jadwal.', 'Imunisasi Dasar'),
-('PRE003', 'PAT003', 'DOC003', CONCAT(@current_date, ' 11:15:00'), 'Minum 1 jam sebelum makan.', 'Angina Pectoris Stabil'),
-('PRE004', 'PAT001', 'DOC002', CONCAT(DATE_ADD(@current_date, INTERVAL 1 DAY), ' 09:45:00'), 'Jika demam berikan paracetamol.', 'Batuk Pilek Anak'),
-('PRE005', 'PAT002', 'DOC003', CONCAT(DATE_ADD(@current_date, INTERVAL 1 DAY), ' 14:15:00'), 'Lanjutkan pengobatan sebelumnya.', 'Follow up Angina'),
-('PRE006', 'PAT003', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 2 DAY), ' 10:45:00'), 'Vitamin diminum pagi hari.', 'Suplemen Kesehatan'),
-('PRE007', 'PAT001', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 2 DAY), ' 13:15:00'), 'Kumur dengan air garam hangat.', 'Faringitis Akut'),
-('PRE008', 'PAT002', 'DOC002', CONCAT(DATE_ADD(@current_date, INTERVAL 3 DAY), ' 11:45:00'), 'Kompres jika bengkak.', 'Post Imunisasi DPT'),
-('PRE009', 'PAT003', 'DOC003', CONCAT(DATE_ADD(@current_date, INTERVAL 3 DAY), ' 15:15:00'), 'Obat diminum rutin setiap hari.', 'Hipertensi grade 1'),
-('PRE010', 'PAT001', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 4 DAY), ' 08:15:00'), 'Hindari pemicu stres.', 'Vertigo non-spesifik');
+-- 6. Medication
+INSERT INTO `mydb`.`Medication` (`name`, `genericName`, `category`, `unit`, `stockQuantity`, `minStockLevel`, `expiryDate`, `sideEffects`, `contraindication`) VALUES
+('Amoxicillin 250mg', 'Amoxicillin', 'Antibiotic', 'Tablet', 200, 50, DATE_ADD(CURDATE(), INTERVAL 2 YEAR), 'Nausea, Rash', 'Penicillin Allergy'),
+('Paracetamol 500mg', 'Acetaminophen', 'Analgesic', 'Tablet', 500, 100, DATE_ADD(CURDATE(), INTERVAL 3 YEAR), 'Rare liver damage with overdose', 'Severe liver disease'),
+('Ibuprofen 200mg', 'Ibuprofen', 'NSAID', 'Tablet', 300, 70, DATE_ADD(CURDATE(), INTERVAL 2 YEAR), 'Stomach upset', 'Active peptic ulcer'),
+('Loratadine 10mg', 'Loratadine', 'Antihistamine', 'Tablet', 150, 30, DATE_ADD(CURDATE(), INTERVAL 1 YEAR), 'Drowsiness (rare)', 'Hypersensitivity'),
+('Omeprazole 20mg', 'Omeprazole', 'Proton Pump Inhibitor', 'Capsule', 100, 20, DATE_ADD(CURDATE(), INTERVAL 2 YEAR), 'Headache, Diarrhea', 'Clopidogrel co-administration'),
+('Metformin 500mg', 'Metformin', 'Antidiabetic', 'Tablet', 250, 50, DATE_ADD(CURDATE(), INTERVAL 3 YEAR), 'Gastrointestinal upset', 'Renal impairment'),
+('Salbutamol Inhaler', 'Salbutamol', 'Bronchodilator', 'Inhaler', 80, 15, DATE_ADD(CURDATE(), INTERVAL 1 YEAR), 'Tremor, Palpitations', 'Cardiac arrhythmias'),
+('Amlodipine 5mg', 'Amlodipine', 'Calcium Channel Blocker', 'Tablet', 180, 40, DATE_ADD(CURDATE(), INTERVAL 2 YEAR), 'Edema, Dizziness', 'Severe hypotension'),
+('Vitamin C 500mg', 'Ascorbic Acid', 'Vitamin', 'Tablet', 400, 100, DATE_ADD(CURDATE(), INTERVAL 1 YEAR), 'High doses: Diarrhea', 'Kidney stones history'),
+('Cough Syrup DXM', 'Dextromethorphan', 'Antitussive', 'Syrup', 120, 25, DATE_ADD(CURDATE(), INTERVAL 18 MONTH), 'Dizziness, Drowsiness', 'MAOI use');
 
--- -----------------------------------------------------
--- Table `mydb`.`PrescriptionItem` (Contoh 15 items untuk 10 Prescriptions)
--- -----------------------------------------------------
-DELETE FROM `PrescriptionItem`;
-INSERT INTO `PrescriptionItem` (`prescriptionId`, `itemId`, `dosage`, `frequency`, `duration`, `notes`) VALUES
-('PRE001', 'MED001', '1 tablet', '3x sehari', '5 hari', '{"tambahan": "Jika demam > 38.5C"}'),
-('PRE001', 'MED002', '1 sendok takar (5ml)', '3x sehari', '7 hari', '{"tambahan": "Kocok dahulu"}'),
-('PRE003', 'MED010', '1 tablet', '1x sehari malam', '30 hari', NULL),
-('PRE004', 'MED001', '1/2 tablet (anak)', '3x sehari', '3 hari', '{"tambahan": "Jika perlu"}'),
-('PRE005', 'MED010', '1 tablet', '1x sehari malam', 'Lanjutan', '{"tambahan": "Bawa hasil lab kontrol"}'),
-('PRE006', 'MED009', '1 tablet', '1x sehari pagi', '30 hari', NULL),
-('PRE007', 'MED008', '1 tablet', '2x sehari', '3 hari', '{"tambahan": "Untuk nyeri tenggorokan"}'),
-('PRE009', 'MED006', '1 tablet', '1x sehari pagi', '30 hari', '{"tambahan": "Cek tensi rutin"}'),
-('PRE010', 'MED009', '1 tablet', '2x sehari', '7 hari', '{"tambahan": "Jika pusing masih berlanjut"}'),
-('PRE002', 'MED001', 'Sesuai kebutuhan', 'Jika demam', '1 hari', '{"tambahan": "Untuk antisipasi demam pasca imunisasi"}'),
-('PRE003', 'MED008', 'Sesuai kebutuhan', 'Jika nyeri', 'Saat nyeri', '{"tambahan": "Maksimal 3x sehari"}'),
-('PRE007', 'MED003', '1 tablet', '1x sehari', '5 hari', '{"tambahan": "Untuk alergi"}'),
-('PRE008', 'MED001', 'Sesuai kebutuhan', 'Jika demam', '1 hari', NULL),
-('PRE009', 'MED001', 'Sesuai kebutuhan', 'Jika pusing', 'Saat pusing', NULL),
-('PRE010', 'MED007', '1-2 semprot', 'Jika sesak', 'Saat sesak', NULL);
+-- 7. Prescription (menggunakan patientId dan doctorId yang sudah ada)
+-- Asumsi patientId: PAT001, PAT002, PAT003, PAT004
+-- Asumsi doctorId: DOC001, DOC002, DOC003
+INSERT INTO `mydb`.`Prescription` (`patientId`, `doctorId`, `prescriptionDate`, `instructions`, `prescriptionStatus`, `medications`) VALUES
+('PAT001', 'DOC001', NOW(), 'Take one tablet three times a day for 7 days.', 'CREATED', 'Amoxicillin 250mg'),
+('PAT002', 'DOC002', NOW(), 'Take one tablet as needed for pain, max 4 per day.', 'CREATED', 'Paracetamol 500mg'),
+('PAT003', 'DOC001', NOW(), 'Take one tablet twice a day after meals.', 'PROCESSED', 'Ibuprofen 200mg'),
+('PAT001', 'DOC003', DATE_SUB(NOW(), INTERVAL 1 DAY), 'One tablet daily in the morning.', 'COMPLETED', 'Loratadine 10mg'),
+('PAT004', 'DOC002', NOW(), 'One capsule before breakfast for 14 days.', 'CREATED', 'Omeprazole 20mg'),
+('PAT002', 'DOC001', DATE_SUB(NOW(), INTERVAL 2 DAY), 'One tablet with meals, twice daily.', 'COMPLETED', 'Metformin 500mg'),
+('PAT003', 'DOC003', NOW(), 'Inhale two puffs when needed.', 'PROCESSED', 'Salbutamol Inhaler'),
+('PAT004', 'DOC001', DATE_SUB(NOW(), INTERVAL 3 DAY), 'One tablet daily.', 'CANCELLED', 'Amlodipine 5mg'),
+('PAT001', 'DOC002', NOW(), 'One tablet daily for immune support.', 'CREATED', 'Vitamin C 500mg'),
+('PAT002', 'DOC003', DATE_SUB(NOW(), INTERVAL 1 DAY), '10ml every 6 hours as needed for cough.', 'COMPLETED', 'Cough Syrup DXM');
 
+-- Simpan prescriptionId yang relevan: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 
--- -----------------------------------------------------
--- Table `mydb`.`MedicalRecord` (10 records)
--- -----------------------------------------------------
-DELETE FROM `MedicalRecord`;
-INSERT INTO `MedicalRecord` (`recordId`, `patientId`, `doctorId`, `recordDate`, `symptoms`, `diagnosis`, `treatment`, `notes`) VALUES
-('REC001', 'PAT001', 'DOC001', CONCAT(@current_date, ' 09:10:00'), 'Demam, batuk, pilek.', 'ISPA', 'Istirahat, Paracetamol, Amoxicillin.', '{"suhu": "38.2C", "tensi": "110/70"}'),
-('REC002', 'PAT002', 'DOC002', CONCAT(@current_date, ' 10:10:00'), 'Imunisasi campak.', 'Profilaksis Imunisasi', 'Pemberian vaksin campak.', '{"reaksi_lokal": "Tidak ada"}'),
-('REC003', 'PAT003', 'DOC003', CONCAT(@current_date, ' 11:10:00'), 'Nyeri dada kiri menjalar.', 'Angina Pectoris', 'Observasi, ISDN drip, rujuk EKG.', '{"skala_nyeri": "7/10"}'),
-('REC004', 'PAT001', 'DOC002', CONCAT(DATE_ADD(@current_date, INTERVAL 1 DAY), ' 09:40:00'), 'Anak batuk, pilek, tidak demam.', 'Common Cold', 'Istirahat, banyak minum, simptomatik.', '{"kondisi_umum": "Baik"}'),
-('REC005', 'PAT002', 'DOC003', CONCAT(DATE_ADD(@current_date, INTERVAL 1 DAY), ' 14:10:00'), 'Evaluasi hasil EKG.', 'Susp. CAD', 'Atorvastatin, edukasi gaya hidup.', '{"ekg_result": "Non-spesifik T wave changes"}'),
-('REC006', 'PAT003', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 2 DAY), ' 10:40:00'), 'Check up tahunan.', 'Sehat Jasmani', 'Edukasi pola hidup sehat.', '{"lab_result": "Dalam batas normal"}'),
-('REC007', 'PAT001', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 2 DAY), ' 13:10:00'), 'Nyeri menelan, tenggorokan merah.', 'Faringitis Akut Viral', 'Kumur antiseptik, analgesik.', '{"pemeriksaan_fisik": "Faring hiperemis"}'),
-('REC008', 'PAT002', 'DOC002', CONCAT(DATE_ADD(@current_date, INTERVAL 3 DAY), ' 11:40:00'), 'Imunisasi DPT.', 'Profilaksis Imunisasi Lanjutan', 'Pemberian vaksin DPT.', '{"catatan": "Tidak ada KIPI berat"}'),
-('REC009', 'PAT003', 'DOC003', CONCAT(DATE_ADD(@current_date, INTERVAL 3 DAY), ' 15:10:00'), 'Tensi 150/90 mmHg.', 'Hipertensi Stage 1', 'Amlodipine 5mg.', '{"target_tensi": "<140/90"}'),
-('REC010', 'PAT001', 'DOC001', CONCAT(DATE_ADD(@current_date, INTERVAL 4 DAY), ' 08:10:00'), 'Pusing berputar, mual.', 'Vertigo BPPV', 'Manuver Epley, Betahistine.', '{"tes_dix_hallpike": "Positif"}');
+-- 8. PrescriptionItem (menggunakan prescriptionId dan medicationId yang sudah ada)
+-- Asumsi medicationId: 1 (Amox), 2 (Para), 3 (Ibu), 4 (Lora), 5 (Omep), 6 (Metf), 7 (Salb), 8 (Amlo), 9 (VitC), 10 (CoughS)
+INSERT INTO `mydb`.`PrescriptionItem` (`prescriptionId`, `itemId`, `dosage`, `frequency`, `duration`, `notes`) VALUES
+(1, 1, '250mg', '3 times a day', '7 days', 'Finish the course.'),
+(2, 2, '500mg', 'As needed, max 4/day', 'Until pain subsides', 'Do not exceed maximum dose.'),
+(3, 3, '200mg', '2 times a day', '5 days', 'Take with food.'),
+(4, 4, '10mg', '1 time a day', '30 days', 'For allergies.'),
+(5, 5, '20mg', '1 time a day', '14 days', 'Before breakfast.'),
+(6, 6, '500mg', '2 times a day', 'Ongoing', 'Monitor blood sugar.'),
+(7, 7, '2 puffs', 'As needed', 'As needed', 'For asthma attacks.'),
+-- Prescription 8 was cancelled, so no items or items could be marked as not dispensed. For simplicity, not adding items for cancelled one.
+(9, 9, '500mg', '1 time a day', '60 days', 'Boost immunity.'),
+(10, 10, '10ml', 'Every 6 hours', '3 days', 'For dry cough.');
+-- Tambahkan item untuk prescriptionId lainnya jika diperlukan
+
+-- 9. MedicalRecord
+INSERT INTO `mydb`.`MedicalRecord` (`patientId`, `doctorId`, `recordDate`, `diagnosis`, `symptoms`, `notes`, `attachments`) VALUES
+('PAT001', 'DOC001', NOW(), 'Bronchitis', 'Cough, Fever, Shortness of breath', 'Prescribed Amoxicillin.', 'chest_xray_ref_001.url'),
+('PAT002', 'DOC002', NOW(), 'Mild Headache', 'Headache, No fever', 'Advised Paracetamol.', 'none'),
+('PAT003', 'DOC001', DATE_SUB(NOW(), INTERVAL 1 DAY), 'Muscle Strain', 'Pain in shoulder', 'Prescribed Ibuprofen, rest.', 'physio_referral.pdf'),
+('PAT001', 'DOC003', DATE_SUB(NOW(), INTERVAL 2 DAY), 'Allergic Rhinitis', 'Sneezing, Runny nose', 'Prescribed Loratadine.', 'allergy_test_results.url'),
+('PAT004', 'DOC002', NOW(), 'Acid Reflux', 'Heartburn, Indigestion', 'Prescribed Omeprazole.', 'endoscopy_notes_prev.doc'),
+('PAT002', 'DOC001', DATE_SUB(NOW(), INTERVAL 3 DAY), 'Type 2 Diabetes', 'Increased thirst, Frequent urination', 'Continuing Metformin.', 'blood_sugar_chart.xls'),
+('PAT003', 'DOC003', NOW(), 'Asthma Exacerbation', 'Wheezing, Difficulty breathing', 'Salbutamol inhaler provided.', 'spirometry_report.pdf'),
+('PAT004', 'DOC001', DATE_SUB(NOW(), INTERVAL 4 DAY), 'Hypertension Follow-up', 'Slightly elevated BP', 'Monitor BP, lifestyle changes advised.', 'bp_log.csv'),
+('PAT001', 'DOC002', NOW(), 'General Checkup - Advised Vitamins', 'Feeling tired', 'Vitamin C recommended.', 'none'),
+('PAT002', 'DOC003', DATE_SUB(NOW(), INTERVAL 1 DAY), 'Common Cold with Cough', 'Cough, Sore throat', 'Prescribed cough syrup.', 'throat_swab_neg.txt');
+
+-- 10. Appointment
+INSERT INTO `mydb`.`Appointment` (`patientId`, `doctorId`, `appointmentDate`, `duration`, `reason`, `appointmentStatus`, `queueNumber`) VALUES
+('PAT001', 'DOC001', DATE_ADD(NOW(), INTERVAL 1 DAY), 30, 'Follow-up consultation', 'SCHEDULED', 1),
+('PAT002', 'DOC002', DATE_ADD(NOW(), INTERVAL 1 DAY), 20, 'Pediatric checkup', 'SCHEDULED', 2),
+('PAT003', 'DOC001', DATE_ADD(NOW(), INTERVAL 2 DAY), 30, 'Shoulder pain assessment', 'SCHEDULED', 1),
+('PAT001', 'DOC003', DATE_ADD(NOW(), INTERVAL 2 DAY), 15, 'Allergy review', 'SCHEDULED', 3),
+('PAT004', 'DOC002', DATE_ADD(NOW(), INTERVAL 3 DAY), 30, 'Digestive issues', 'SCHEDULED', 1),
+('PAT002', 'DOC001', DATE_SUB(NOW(), INTERVAL 1 DAY), 25, 'Diabetes management', 'COMPLETED', 5),
+('PAT003', 'DOC003', DATE_SUB(NOW(), INTERVAL 1 HOUR), 20, 'Breathing difficulty', 'INPROGRESS', 10),
+('PAT004', 'DOC001', DATE_SUB(NOW(), INTERVAL 2 DAY), 15, 'BP check', 'COMPLETED', 7),
+('PAT001', 'DOC002', DATE_ADD(NOW(), INTERVAL 4 DAY), 30, 'General health query', 'SCHEDULED', 4),
+('PAT002', 'DOC003', DATE_SUB(NOW(), INTERVAL 0 DAY), 20, 'Cough not improving', 'COMPLETED', 12);
