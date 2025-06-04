@@ -59,7 +59,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Dashboard.png" />
+                        <Image url="@../icon/Dashboard.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -77,7 +77,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Profil.png" />
+                        <Image url="@../icon/Profil.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -95,7 +95,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Janji%20Temu.png" />
+                        <Image url="@../icon/Janji%20Temu.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -113,7 +113,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Riwayat%20Medis.png" />
+                        <Image url="@../icon/Riwayat%20Medis.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -131,7 +131,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Resep%20obat.png" />
+                        <Image url="@../icon/Resep%20obat.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -149,7 +149,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Notifikasi.png" />
+                        <Image url="@../icon/Notifikasi.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -169,7 +169,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@Desktop/Sehat_Medika_MS/IF2050-2025-K1J-Sehat_Medika_MS/src/resources/icon/Keluar.png" />
+                        <Image url="@../icon/Keluar.png" />
                      </image>
                   </ImageView>
                </graphic>
