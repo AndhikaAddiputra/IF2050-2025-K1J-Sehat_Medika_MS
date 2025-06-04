@@ -12,5 +12,6 @@
         "javafx-sdk-21.0.7/lib/javafx.swing.jar",
         "javafx-sdk-21.0.7/lib/javafx.web.jar"
     ],
-    "javafx-support.sceneBuilder": "/Applications/SceneBuilder.app/Contents/MacOS/SceneBuilder"
+    "javafx-support.sceneBuilder": "/Applications/SceneBuilder.app/Contents/MacOS/SceneBuilder",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -41,6 +41,10 @@ public class PatientDashboardController {
         if (doctorNamePlaceholder != null) doctorNamePlaceholder.setText("| Dr. Asep Spakbor");
     }
 
+    // @FXML private void handleDashboardClick(ActionEvent event) {
+    //     System.out.println("Dashboard clicked");
+    // }
+
     @FXML private void handleProfilClick(ActionEvent event) {
         System.out.println("Profil clicked");
     }

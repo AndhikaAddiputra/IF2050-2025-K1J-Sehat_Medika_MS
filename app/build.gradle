@@ -1,0 +1,59 @@
+plugins {
+    id 'application' // For creating an executable Java application
+    id 'org.openjfx.javafxplugin' version '0.1.0' // Simplifies JavaFX development, use latest
+}
+
+repositories {
+    mavenCentral() // For downloading dependencies
+}
+
+// Java version configuration
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17) // Or your desired Java version (e.g., 11, 17, 21)
+    }
+}
+
+
+javafx {
+    version = "21.0.7" // Specify your JavaFX version (align with your JDK, e.g., "17", "21")
+    // List the JavaFX modules your application requires
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media', 'javafx.web' ]
+}
+
+dependencies {
+    // MySQL JDBC Connector for database connectivity
+    implementation 'mysql:mysql-connector-java:8.0.33' // Use the latest stable version
+
+    // JUnit Jupiter for testing (optional, but good practice)
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+}
+
+application {
+    // Set the main class for your application
+    // Based on your files, LoginView.java seems to be the entry point for the UI.
+    mainClass = 'view.LoginView'
+    // If you intend App.java to be the entry point and it initializes LoginView,
+    // then it would be 'App' (assuming App.java is in the default package under src/main/java)
+    // or its fully qualified name if it's in a package.
+}
+
+// Optional: Configuration for running the JavaFX application directly via Gradle
+run {
+    // Ensures JavaFX modules are on the module path
+    doFirst {
+        jvmArgs = [
+            '--module-path', classpath.find { it.name.startsWith('javafx-') }.parent, // May need adjustment
+            '--add-modules', javafx.modules.join(',')
+        ]
+        // If you encounter module-related issues, especially with newer JDKs/JavaFX versions,
+        // you might need to be more specific with --module-path or ensure your IDE
+        // and Gradle are correctly configured for JavaFX modules.
+    }
+}
+
+// Test task configuration (optional)
+test {
+    useJUnitPlatform()
+}
