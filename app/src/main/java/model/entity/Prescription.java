@@ -8,7 +8,7 @@ public class Prescription {
     private String medications;
     private String instructions;
 
-    public Prescription(int prescriptionId, int patientId, String doctorId, String prescriptionDate, String medications, String instructions) {
+    public Prescription(int prescriptionId, String patientId, String doctorId, String prescriptionDate, String medications, String instructions) {
         this.prescriptionId = prescriptionId;
         this.patientId = patientId;
         this.doctorId = doctorId;
