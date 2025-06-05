@@ -31,7 +31,7 @@
                         <Insets left="25.0" />
                      </padding>
                   </Label>
-                  <Label layoutY="25.0" prefHeight="17.0" prefWidth="308.0" text="Portal Pasien" textFill="WHITE">
+                  <Label layoutY="25.0" prefHeight="17.0" prefWidth="308.0" text="Portal Resepsionis" textFill="WHITE">
                      <font>
                         <Font name="Arial" size="18.0" />
                      </font>
@@ -103,7 +103,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="riwayatMedisSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" onAction="handleRiwayatMedisClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" text="Riwayat Medis" textFill="WHITE">
+            <Button fx:id="daftarPasienBaruSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" onAction="handleRiwayatMedisClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" text="Daftar Pasien Baru" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -113,7 +113,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Riwayat%20Medis.png" />
+                        <Image url="@icon/Mendaftarkan%20Pasien%20Baru.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -121,7 +121,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="resepObatSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="241.0" mnemonicParsing="false" onAction="handleResepObatClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" text="Resep Obat" textFill="WHITE">
+            <Button fx:id="jadwalDokterSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="241.0" mnemonicParsing="false" onAction="handleJadwalDokterClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" text="Jadwal Dokter" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -131,7 +131,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Resep%20obat.png" />
+                        <Image url="@icon/Mengatur%20Jadwal%20Dokter.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -189,34 +189,34 @@
             <VBox layoutX="27.0" layoutY="90.0" prefHeight="506.0" prefWidth="777.0">
                <children>
                   <TableView fx:id="dataAppointmentTable" prefHeight="509.0" prefWidth="777.0">
-                    <columns>
-                      <TableColumn fx:id="colDoctor" prefWidth="186.76998901367188" style="-fx-font-family: Arial Reguler; -fx-font-fill: #ffffff; -fx-border-width: 2;" text="Dokter" />
-                      <TableColumn fx:id="colSpesialis" prefWidth="167.73001098632812" text="Spesialis" />
-                        <TableColumn fx:id="colDate" prefWidth="143.7994384765625" text="Tanggal" />
-                        <TableColumn fx:id="colTime" prefWidth="119.9599609375" text="Waktu" />
-                        <TableColumn fx:id="colAction" prefWidth="159.06201171875" text="Aksi" />
-                    </columns>
+                     <columns>
+                        <TableColumn fx:id="colDoctor" prefWidth="129.25601196289062" style="-fx-font-family: Arial Reguler; -fx-font-fill: #ffffff; -fx-border-width: 2;" text="Dokter" />
+                        <TableColumn fx:id="colSpesialis" prefWidth="149.000732421875" text="Spesialis" />
+                        <TableColumn fx:id="colDate" prefWidth="155.00067138671875" text="Tanggal" />
+                        <TableColumn fx:id="colTime" prefWidth="118.49932861328125" text="Waktu" />
+                        <TableColumn fx:id="colAction" prefWidth="93.0723876953125" text="Jumlah Pasien" />
+                        <TableColumn fx:id="colTime1" prefWidth="132.0091552734375" text="Aksi" />
+                     </columns>
                   </TableView>
                </children>
             </VBox>
             <HBox layoutX="29.0" layoutY="25.0" prefHeight="48.0" prefWidth="774.0">
                <children>
                   <ToggleButtonGroup fx:id="filterToggleGroup" prefHeight="0.0" prefWidth="134.0" selectionType="SINGLE">
-                      <toggles>
-                          <ToggleButton prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Aktif" textFill="WHITE">
+                     <toggles>
+                        <ToggleButton prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Hari Ini" textFill="WHITE">
                            <font>
                               <Font name="Arial" size="13.0" />
                            </font>
-                          </ToggleButton>
-                          <ToggleButton prefHeight="25.0" prefWidth="100.0" selected="true" style="-fx-background-color: #46D6A9;" text="Selesai" textFill="WHITE" />
-                        <ToggleButton layoutX="110.0" layoutY="10.0" prefHeight="25.0" prefWidth="100.0" selected="true" style="-fx-background-color: #46D6A9;" text="Batal" textFill="WHITE" />
-                      </toggles>
+                        </ToggleButton>
+                        <ToggleButton prefHeight="25.0" prefWidth="100.0" selected="true" style="-fx-background-color: #46D6A9;" text="Akan Datang" textFill="WHITE" />
+                     </toggles>
                      <HBox.margin>
                         <Insets top="10.0" />
                      </HBox.margin>
                   </ToggleButtonGroup>
-                  <Region prefHeight="48.0" prefWidth="313.0" />
-                  <Button fx:id="newAppointmentButton" mnemonicParsing="false" prefHeight="36.0" prefWidth="162.0" style="-fx-background-color: #46D6A9;" stylesheets="@style.css" text="Buat Janji Temu Baru" textFill="WHITE">
+                  <Region prefHeight="48.0" prefWidth="420.0" />
+                  <Button fx:id="addAppointmentButton" mnemonicParsing="false" prefHeight="36.0" prefWidth="162.0" style="-fx-background-color: #46D6A9;" stylesheets="@style.css" text="Atur Janji Temu Baru" textFill="WHITE">
                      <font>
                         <Font name="Arial Bold" size="13.0" />
                      </font>
