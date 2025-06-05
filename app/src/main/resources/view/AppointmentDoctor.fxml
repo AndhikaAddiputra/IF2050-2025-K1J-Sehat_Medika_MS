@@ -190,12 +190,12 @@
                <children>
                   <TableView fx:id="dataAppointmentTable" prefHeight="509.0" prefWidth="777.0">
                      <columns>
-                        <TableColumn fx:id="colDoctor" prefWidth="129.25601196289062" style="-fx-font-family: Arial Reguler; -fx-font-fill: #ffffff; -fx-border-width: 2;" text="Pasien" />
-                        <TableColumn fx:id="colSpesialis" prefWidth="89.75030517578125" text="Tanggal" />
-                        <TableColumn fx:id="colDate" prefWidth="94.54327392578125" text="Waktu" />
-                        <TableColumn fx:id="colTime" prefWidth="156.8841552734375" text="Riwayat Medis" />
-                        <TableColumn fx:id="colAction" prefWidth="153.6158447265625" text="Diagnosis" />
-                        <TableColumn fx:id="colTime1" prefWidth="155.8170166015625" text="Resep Obat" />
+                        <TableColumn fx:id="colPatientName" prefWidth="129.25601196289062" style="-fx-font-family: Arial Reguler; -fx-font-fill: #ffffff; -fx-border-width: 2;" text="Pasien" />
+                        <TableColumn fx:id="colDate" prefWidth="89.75030517578125" text="Tanggal" />
+                        <TableColumn fx:id="colTime" prefWidth="94.54327392578125" text="Waktu" />
+                        <TableColumn fx:id="colMedicalRecord" prefWidth="156.8841552734375" text="Riwayat Medis" />
+                        <TableColumn fx:id="colDiagnose" prefWidth="153.6158447265625" text="Diagnosis" />
+                        <TableColumn fx:id="colPrescribe" prefWidth="155.8170166015625" text="Resep Obat" />
                      </columns>
                   </TableView>
                </children>
@@ -204,12 +204,12 @@
                <children>
                   <ToggleButtonGroup fx:id="filterToggleGroup" prefHeight="0.0" prefWidth="134.0" selectionType="SINGLE">
                      <toggles>
-                        <ToggleButton prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Hari Ini" textFill="WHITE">
+                        <ToggleButton fx:id="todayToggle" onAction="#handleTodayFilter" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Hari Ini" textFill="WHITE">
                            <font>
                               <Font name="Arial" size="13.0" />
                            </font>
                         </ToggleButton>
-                        <ToggleButton prefHeight="25.0" prefWidth="100.0" selected="true" style="-fx-background-color: #46D6A9;" text="Akan Datang" textFill="WHITE" />
+                        <ToggleButton fx:id="soonToggle" onAction="#handleSoonFilter" prefHeight="25.0" prefWidth="100.0" selected="true" style="-fx-background-color: #46D6A9;" text="Akan Datang" textFill="WHITE" />
                      </toggles>
                      <HBox.margin>
                         <Insets top="10.0" />
