@@ -17,7 +17,7 @@ USE `mydb` ;
 DROP TABLE IF EXISTS `mydb`.`User` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`User` (
-  `userId` INT NOT NULL AUTO_INCREMENT,
+  `userId` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(50) NOT NULL,
   `password` VARCHAR(50) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
@@ -37,7 +37,7 @@ DROP TABLE IF EXISTS `mydb`.`Doctor` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Doctor` (
   `doctorId` VARCHAR(10) NOT NULL,
-  `userId` INT NOT NULL,
+  `userId` INT UNSIGNED NOT NULL,
   `salaryDoctor` INT NOT NULL,
   `specialization` VARCHAR(100) NULL,
   `licenseNumber` VARCHAR(50) NULL,
@@ -60,7 +60,7 @@ DROP TABLE IF EXISTS `mydb`.`Patient` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Patient` (
   `patientId` VARCHAR(10) NOT NULL,
-  `userId` INT NOT NULL,
+  `userId` INT UNSIGNED NOT NULL,
   `bloodType` ENUM('A', 'B','AB' ,'O') NOT NULL, 
   `allergies` VARCHAR(255) NULL,
   `emergencyContact` VARCHAR(25) NULL,
@@ -219,7 +219,7 @@ DROP TABLE IF EXISTS `mydb`.`Pharmacist` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Pharmacist` (
   `pharmacistId` VARCHAR(10) NOT NULL,
-  `userId` INT NOT NULL,
+  `userId` INT UNSIGNED NOT NULL,
   `licenseNumber` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`pharmacistId`),
   UNIQUE INDEX `idx_Pharmacist_userId_unique` (`userId` ASC) VISIBLE,
@@ -238,7 +238,7 @@ DROP TABLE IF EXISTS `mydb`.`Receptionist` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Receptionist` (
   `receptionistId` VARCHAR(10) NOT NULL,
-  `userId` INT NOT NULL,
+  `userId` INT UNSIGNED NOT NULL,
   `department` VARCHAR(100) NULL,
   PRIMARY KEY (`receptionistId`),
   UNIQUE INDEX `idx_Receptionist_userId_unique` (`userId` ASC) VISIBLE,
