@@ -5,6 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -134,7 +137,25 @@ public class AppointmentReceptionistController {
 
     @FXML
     private void handleProfilClick(ActionEvent event) {
-        System.out.println("Profile clicked");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PatientProfile.fxml"));
+            Parent root = loader.load();
+            
+            PatientProfileController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage currentStage = (Stage) profilSidebarButton.getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Profil Pasien - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
+        } catch (Exception e) {
+            System.err.println("Error opening profile: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML

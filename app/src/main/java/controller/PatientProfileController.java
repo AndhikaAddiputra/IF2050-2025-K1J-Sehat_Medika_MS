@@ -63,9 +63,14 @@ public class PatientProfileController {
     
     public void setUser(User user) {
         this.currentUser = user;
-        loadUserData();
-        loadMedicalData();
-        loadMedicalRecords();
+        if (this.currentUser != null) {
+            loadUserData();
+            loadMedicalData();
+            loadMedicalRecords();
+        } 
+        else {
+            showAlert("Error", "User data is null");
+        }
     }
     
     @FXML
@@ -299,15 +304,22 @@ public class PatientProfileController {
     @FXML
     private void handleKeluarClick() {
         try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientDashboard.fxml"));
+            Parent root = loader.load();
+            
+            PatientDashboardController controller = loader.getController();
+            controller.setUser(currentUser);
+            
             Stage currentStage = (Stage) namaLengkapField.getScene().getWindow();
             currentStage.close();
             
-            LoginView loginView = new LoginView();
-            Stage loginStage = new Stage();
-            loginView.start(loginStage);
+            Stage newStage = new Stage();
+            newStage.setTitle("Dashboard Pasien - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
             
         } catch (Exception e) {
-            showAlert("Error", "Failed to logout: " + e.getMessage());
+            showAlert("Error", "Failed to return to dashboard: " + e.getMessage());
         }
     }
     

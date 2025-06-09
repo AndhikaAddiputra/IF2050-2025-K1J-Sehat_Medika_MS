@@ -2,6 +2,9 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -17,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.scene.Node;
 
 public class ReceptionistDashboardController {
     
@@ -84,7 +88,25 @@ public class ReceptionistDashboardController {
 
     @FXML
     private void handleProfilClick(ActionEvent event) {
-        System.out.println("Profile clicked");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PatientProfile.fxml"));
+            Parent root = loader.load();
+            
+            PatientProfileController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage currentStage = (Stage) profilSidebarButton.getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Profil Pasien - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
+        } catch (Exception e) {
+            System.err.println("Error opening profile: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -133,5 +155,28 @@ public class ReceptionistDashboardController {
     @FXML
     private void handleMengaturJadwalDokterClick(ActionEvent event) {
         System.out.println("Manage doctor schedule clicked");
+    }
+
+    @FXML
+    private void handleBackToDashboard(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientDashboard.fxml"));
+            Parent root = loader.load();
+            
+            PatientDashboardController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Dashboard Pasien - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
+        } catch (Exception e) {
+            System.err.println("Error returning to dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

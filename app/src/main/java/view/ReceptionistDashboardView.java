@@ -10,7 +10,7 @@ public class ReceptionistDashboardView extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ReceptionistDashboard.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/ReceptionistDashboard.fxml"));
         Scene scene  = new Scene(root, 1200, 800);  
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());     
         primaryStage.setTitle("Receptionist Dashboard - Sistem Informasi dan Manajemen Klinik Sehat Medika");

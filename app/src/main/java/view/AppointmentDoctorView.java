@@ -10,7 +10,7 @@ public class AppointmentDoctorView extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("AppointmentDoctor.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentDoctor.fxml"));
         Scene scene  = new Scene(root, 1200, 800);  
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());     
         primaryStage.setTitle("Appointment for Doctor - Sistem Informasi dan Manajemen Klinik Sehat Medika");

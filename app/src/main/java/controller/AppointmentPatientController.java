@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 public class AppointmentPatientController {
 
+    @FXML private Button dashboardButton;
     @FXML private Button profilSidebarButton;
     @FXML private Button janjiTemuSidebarButton;
     @FXML private Button riwayatMedisSidebarButton;
@@ -37,7 +38,6 @@ public class AppointmentPatientController {
     @FXML private Button newAppointmentButton;
 
     @FXML private TableView<AppointmentTableData> dataAppointmentTable;
-    // Assuming the first column shows the doctor's name (or patient can view a summary)
     @FXML private TableColumn<AppointmentTableData, String> colPatientName;
     @FXML private TableColumn<AppointmentTableData, String> colDate;
     @FXML private TableColumn<AppointmentTableData, String> colTime;
@@ -76,7 +76,6 @@ public class AppointmentPatientController {
     }
 
     private void setupTableColumns() {
-        // According to your FXML, use these column ids
         colPatientName.setCellValueFactory(new PropertyValueFactory<>("doctorName"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
@@ -102,6 +101,7 @@ public class AppointmentPatientController {
             ObservableList<AppointmentTableData> tableData = FXCollections.observableArrayList();
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+            
             for (Appointment appointment : filteredAppointments) {
                 Doctor doctor = doctorDAO.getDoctorById(appointment.getDoctorId());
                 AppointmentTableData data = new AppointmentTableData();
@@ -156,9 +156,16 @@ public class AppointmentPatientController {
     @FXML
     private void handleNewAppointmentClick(ActionEvent event) {
         try {
-            MakeAppointmentView makeAppointmentView = new MakeAppointmentView();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MakeAppointmentPatient.fxml"));
+            Parent root = loader.load();
+            
+            MakeAppointmentController controller = loader.getController();
+            controller.setUser(currentUser);
+            
             Stage stage = new Stage();
-            makeAppointmentView.start(stage);
+            stage.setTitle("Buat Janji Temu - Klinik Sehat Medika");
+            stage.setScene(new Scene(root, 600, 600));
+            stage.show();
             stage.setOnHidden(e -> loadAppointments());
         } catch (Exception e) {
             showError("Error opening appointment form: " + e.getMessage());
@@ -166,13 +173,36 @@ public class AppointmentPatientController {
     }
 
     @FXML
-    private void handleProfilClick(ActionEvent event) {
-        System.out.println("Profile clicked");
+    private void handleDashboardClick(ActionEvent event) {
+        navigateToPatientDashboard();
     }
 
     @FXML
-    private void handleJanjiTemuCLick(ActionEvent event) {
-        System.out.println("Appointment page clicked");
+    private void handleProfilClick(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PatientProfile.fxml"));
+            Parent root = loader.load();
+            
+            PatientProfileController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage currentStage = (Stage) profilSidebarButton.getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Profil Pasien - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
+        } catch (Exception e) {
+            showError("Error opening profile: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleJanjiTemuClick(ActionEvent event) {
+        // Already on appointment page, just refresh
+        loadAppointments();
     }
 
     @FXML
@@ -192,14 +222,27 @@ public class AppointmentPatientController {
 
     @FXML
     private void handleKeluarClick(ActionEvent event) {
+        navigateToPatientDashboard();
+    }
+
+    private void navigateToPatientDashboard() {
         try {
-            Stage stage = (Stage) keluarSidebarButton.getScene().getWindow();
-            stage.close();
-            LoginView loginView = new LoginView();
-            Stage loginStage = new Stage();
-            loginView.start(loginStage);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientDashboard.fxml"));
+            Parent root = loader.load();
+            
+            PatientDashboardController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Dashboard Pasien - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
         } catch (Exception e) {
-            showError("Error logging out: " + e.getMessage());
+            showError("Error returning to dashboard: " + e.getMessage());
         }
     }
 

@@ -127,6 +127,11 @@ public class MakeAppointmentController {
         closeWindow();
     }
 
+    @FXML
+    private void handleCancel(ActionEvent event) {
+        closeWindow();
+    }
+
     private boolean validateInput() {
         if (pilihanSpesialis.getValue() == null) {
             showError("Please select a specialization.");
@@ -180,4 +185,6 @@ public class MakeAppointmentController {
         Stage stage = (Stage) simpanButton.getScene().getWindow();
         stage.close();
     }
+
+
 }

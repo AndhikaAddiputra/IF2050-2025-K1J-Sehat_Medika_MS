@@ -54,6 +54,8 @@ public class PatientDashboardController {
         if (datePlaceholder != null) datePlaceholder.setText("Rabu, 12 Mei 2025");
         if (timePlaceholder != null) timePlaceholder.setText("08.00");
         if (doctorNamePlaceholder != null) doctorNamePlaceholder.setText("| Dr. Asep Spakbor");
+
+        currentUser = null;
     }
 
     public void setUser(User user) {
@@ -130,12 +132,24 @@ public class PatientDashboardController {
         }
     }
 
-    @FXML private void handleJanjiTemuClick(ActionEvent event) {
+    @FXML 
+    private void handleJanjiTemuClick(ActionEvent event) {
         try {
-            AppointmentPatientView appointmentView = new AppointmentPatientView();
-            appointmentView.start(new Stage());
-        } 
-        catch (Exception e) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AppointmentPatient.fxml"));
+            Parent root = loader.load();
+            
+            AppointmentPatientController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage currentStage = (Stage) janjiTemuSidebarButton.getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Janji Temu - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
+        } catch (Exception e) {
             System.err.println("Error opening appointment view: " + e.getMessage());
             e.printStackTrace();
         }
@@ -168,12 +182,21 @@ public class PatientDashboardController {
         }
     }
 
-    @FXML private void handleBuatJanjiTemuClick(ActionEvent event) {
+    @FXML 
+    private void handleBuatJanjiTemuClick(ActionEvent event) {
         try {
-            MakeAppointmentView makeAppointmentView = new MakeAppointmentView();
-            makeAppointmentView.start(new Stage());
-        }
-        catch (Exception e) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MakeAppointmentPatient.fxml"));
+            Parent root = loader.load();
+            
+            MakeAppointmentController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage stage = new Stage();
+            stage.setTitle("Buat Janji Temu - Klinik Sehat Medika");
+            stage.setScene(new Scene(root, 600, 600));
+            stage.show();
+            
+        } catch (Exception e) {
             System.err.println("Error opening make appointment view: " + e.getMessage());
             e.printStackTrace();
         }

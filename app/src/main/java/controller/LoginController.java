@@ -2,6 +2,9 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -59,22 +62,30 @@ public class LoginController {
                     System.out.println("Login successful - role: " + role);
 
                     switch (role) {
-                        case "ADMIN":
-                            break;
+                        // case "ADMIN":
+                        //     break;
                         case "PATIENT":
                             PatientDashboardView patientView = new PatientDashboardView();
                             patientView.start(new Stage());
+
+                            PatientDashboardController patientController = new PatientDashboardController();
+                            patientController.setUser(user);
                             break;
                         case "DOCTOR":
                             break;
                         case "RECEPTIONIST":
                             ReceptionistDashboardView receptionistView = new ReceptionistDashboardView();
                             receptionistView.start(new Stage());
+
+                            ReceptionistDashboardController receptionistController = new ReceptionistDashboardController();
+                            receptionistController.setUser(user);
                             break;
                         case "PHARMACIST":
                             break;
                     }
                     ((Stage) masukButton.getScene().getWindow()).close();
+
+                    
                 } else {
                     wrongLogin.setText("Terjadi kesalahan: Data pengguna tidak ditemukan setelah autentikasi.");
                     System.out.println("Login failed - user data not found after authentication");
