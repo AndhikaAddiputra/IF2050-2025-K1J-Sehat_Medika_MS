@@ -10,7 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement; 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MedicalRecordDAO {
 
@@ -81,6 +83,36 @@ public class MedicalRecordDAO {
                 while (rs.next()) {
                     records.add(mapResultSetToMedicalRecord(rs));
                 }
+            }
+        }
+        return records;
+    }
+
+    public List<Map<String, Object>> getMedicalRecordsForPatient(String patientId) throws SQLException {
+        String sql = """
+            SELECT mr.recordDate, u.username as doctorName, mr.diagnosis, mr.symptoms, mr.notes 
+            FROM MedicalRecord mr 
+            JOIN Doctor d ON mr.doctorId = d.doctorId 
+            JOIN User u ON d.userId = u.userId 
+            WHERE mr.patientId = ? 
+            ORDER BY mr.recordDate DESC""";
+        
+        List<Map<String, Object>> records = new ArrayList<>();
+        
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, patientId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                Map<String, Object> record = new HashMap<>();
+                record.put("recordDate", rs.getTimestamp("recordDate"));
+                record.put("doctorName", rs.getString("doctorName"));
+                record.put("diagnosis", rs.getString("diagnosis"));
+                record.put("symptoms", rs.getString("symptoms"));
+                record.put("notes", rs.getString("notes"));
+                records.add(record);
             }
         }
         return records;

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21.0.7" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PatientProfileController">
+   <children>
+      <VBox layoutX="-6.0" prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #46D6A9;">
+         <children>
+            <Label prefHeight="25.0" prefWidth="265.0" text="Klinik Sehat Medika" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="25.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="25.0" />
+               </VBox.margin>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="308.0" text="Portal Pasien" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="18.0" />
+               </font>
+               <padding>
+                  <Insets left="25.0" />
+               </padding>
+            </Label>
+            
+            <Button fx:id="dashboardButton" onAction="#handleDashboardClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="20.0" />
+               </VBox.margin>
+            </Button>
+            
+            <Button fx:id="profilSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Profil" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <Button fx:id="janjiTemuButton" onAction="#handleJanjiTemuClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Janji Temu" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <Button fx:id="riwayatMedisButton" onAction="#handleRiwayatMedisClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Riwayat Medis" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <Button fx:id="resepObatButton" onAction="#handleResepObatClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <Button fx:id="keluarButton" onAction="#handleKeluarClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="200.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+
+      <ScrollPane layoutX="300.0" prefHeight="800.0" prefWidth="900.0">
+         <content>
+            <VBox prefWidth="880.0" spacing="20.0">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+               
+               <Label text="Pengaturan Profil" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+               
+               <VBox spacing="15.0" style="-fx-border-color: #46D6A9; -fx-border-width: 2; -fx-padding: 20;">
+                  <Label text="Informasi Akun" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                  
+                  <GridPane hgap="20.0" vgap="15.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
+                     </columnConstraints>
+                     
+                     <Label text="Nama Lengkap:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                     <TextField fx:id="namaLengkapField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                     
+                     <Label text="Email:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                     <TextField fx:id="emailField" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                     
+                     <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                     <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     
+                     <Label text="Nomor Telepon:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                     <TextField fx:id="nomorTeleponField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                     
+                     <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                     <HBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <PasswordField fx:id="passwordField" prefWidth="250.0" />
+                        <Button fx:id="showPasswordButton" onAction="#togglePasswordVisibility" text="👁" />
+                     </HBox>
+                  </GridPane>
+                  
+                  <HBox spacing="10.0">
+                     <Button fx:id="editAccountButton" onAction="#enableAccountEdit" text="Edit" style="-fx-background-color: #46D6A9; -fx-text-fill: white;" />
+                     <Button fx:id="saveAccountButton" onAction="#saveAccountInfo" text="Simpan" style="-fx-background-color: #2AC091; -fx-text-fill: white;" visible="false" />
+                     <Button fx:id="cancelAccountButton" onAction="#cancelAccountEdit" text="Batal" style="-fx-background-color: #ff6b6b; -fx-text-fill: white;" visible="false" />
+                  </HBox>
+               </VBox>
+               
+               <VBox spacing="15.0" style="-fx-border-color: #46D6A9; -fx-border-width: 2; -fx-padding: 20;">
+                  <Label text="Informasi Medis" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                  
+                  <GridPane hgap="20.0" vgap="15.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
+                     </columnConstraints>
+                     
+                     <Label text="Golongan Darah:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                     <ComboBox fx:id="golonganDarahCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="200.0" />
+                     
+                     <Label text="Berat Badan (kg):" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                     <TextField fx:id="beratBadanField" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                     
+                     <Label text="Tinggi Badan (cm):" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                     <TextField fx:id="tinggiBadanField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     
+                     <Label text="Riwayat Alergi:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                     <TextField fx:id="riwayatAlergiField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                     
+                     <Label text="Penyedia Asuransi:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                     <ComboBox fx:id="penyediaAsuransiCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="200.0" />
+                     
+                     <Label text="Nomor Asuransi:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                     <TextField fx:id="nomorAsuransiField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  </GridPane>
+                  
+                  <HBox spacing="10.0">
+                     <Button fx:id="editMedicalButton" onAction="#enableMedicalEdit" text="Edit" style="-fx-background-color: #46D6A9; -fx-text-fill: white;" />
+                     <Button fx:id="saveMedicalButton" onAction="#saveMedicalInfo" text="Simpan" style="-fx-background-color: #2AC091; -fx-text-fill: white;" visible="false" />
+                     <Button fx:id="cancelMedicalButton" onAction="#cancelMedicalEdit" text="Batal" style="-fx-background-color: #ff6b6b; -fx-text-fill: white;" visible="false" />
+                  </HBox>
+               </VBox>
+               
+               <VBox spacing="15.0" style="-fx-border-color: #46D6A9; -fx-border-width: 2; -fx-padding: 20;">
+                  <Label text="Catatan Medis" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                  
+                  <TableView fx:id="medicalRecordsTable" prefHeight="300.0">
+                     <columns>
+                        <TableColumn fx:id="recordDateColumn" prefWidth="120.0" text="Tanggal" />
+                        <TableColumn fx:id="doctorNameColumn" prefWidth="150.0" text="Dokter" />
+                        <TableColumn fx:id="diagnosisColumn" prefWidth="200.0" text="Diagnosis" />
+                        <TableColumn fx:id="symptomsColumn" prefWidth="200.0" text="Gejala" />
+                        <TableColumn fx:id="notesColumn" prefWidth="200.0" text="Catatan" />
+                     </columns>
+                  </TableView>
+               </VBox>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

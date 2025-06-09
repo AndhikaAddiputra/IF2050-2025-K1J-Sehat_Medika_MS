@@ -7,6 +7,8 @@ import model.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class PatientDAO {
 
@@ -67,6 +69,39 @@ public class PatientDAO {
             }
         }
         return patient;
+    }
+
+    public Map<String, Object> getPatientMedicalInfo(String patientId) throws SQLException {
+        String sql = "SELECT bloodType, allergies, insuranceInfo FROM Patient WHERE patientId = ?";
+        Map<String, Object> result = new HashMap<>();
+        
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, patientId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                result.put("bloodType", rs.getString("bloodType"));
+                result.put("allergies", rs.getString("allergies"));
+                result.put("insuranceInfo", rs.getString("insuranceInfo"));
+            }
+        }
+        return result;
+    }
+
+    public void updatePatientMedicalInfo(String patientId, String bloodType, String allergies, String insuranceInfo) throws SQLException {
+        String sql = "UPDATE Patient SET bloodType = ?, allergies = ?, insuranceInfo = ? WHERE patientId = ?";
+        
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, bloodType);
+            stmt.setString(2, allergies);
+            stmt.setString(3, insuranceInfo);
+            stmt.setString(4, patientId);
+            stmt.executeUpdate();
+        }
     }
 
 

@@ -2,11 +2,20 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
+import model.dao.AppointmentDAO;
+import model.dao.MedicalRecordDAO;
+import model.dao.PatientDAO;
+import model.dao.UserDAO;
+import model.entity.User;
 import view.LoginView;
+import view.AppointmentPatientView;
+import view.MakeAppointmentView;
 
 public class PatientDashboardController {
     
@@ -29,6 +38,12 @@ public class PatientDashboardController {
     @FXML private Label timePlaceholder;
     @FXML private Label doctorNamePlaceholder;
 
+    private User currentUser;
+    private AppointmentDAO appointmentDAO = new AppointmentDAO();
+    private MedicalRecordDAO medicalRecordDAO = new MedicalRecordDAO();
+    private PatientDAO patientDAO = new PatientDAO();
+    private UserDAO userDAO = new UserDAO();
+
     @FXML
     public void initialize() {
         // Initialize placeholder values
@@ -41,16 +56,89 @@ public class PatientDashboardController {
         if (doctorNamePlaceholder != null) doctorNamePlaceholder.setText("| Dr. Asep Spakbor");
     }
 
+    public void setUser(User user) {
+        this.currentUser = user;
+        updateUserInterface();
+    }
+
+    private void updateUserInterface() {
+        if (currentUser != null && namePlaceHolder != null) {
+            namePlaceHolder.setText(currentUser.getUsername());
+            loadDashboardData();
+        }
+    }
+
+    private void loadDashboardData() {
+        if (currentUser == null) return;
+
+        try {
+            String patientId = patientDAO.getPatientByUserId(currentUser.getUserId()).getPatientId();
+            if (patientId == null) {
+                System.err.println("Could not find patientId for userId: " + currentUser.getUserId());
+                return;
+            }
+
+            int activeAppointments = appointmentDAO.getActiveAppointments(patientId).size();
+            if (janjiTemuAktifPlaceholder != null) {
+                janjiTemuAktifPlaceholder.setText(String.valueOf(activeAppointments));
+            }
+
+            // Get processing prescriptions count
+            // Note: Your PrescriptionDAO needs a method like getProcessingPrescriptionsForPatient
+            // and your Prescription table needs a status column.
+            // int processingPrescriptions = prescriptionDAO.getProcessingPrescriptionsForPatient(patientId);
+            // if (resepDiprosesPlaceholder != null) {
+            //     resepDiprosesPlaceholder.setText(String.valueOf(processingPrescriptions));
+            // }
+
+            // Get medical records count
+            int medicalRecordsCount = medicalRecordDAO.getMedicalRecordsByPatientId(patientId).size();
+            if (catatanMedisPlaceholder != null) {
+                catatanMedisPlaceholder.setText(String.valueOf(medicalRecordsCount));
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error loading dashboard data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     // @FXML private void handleDashboardClick(ActionEvent event) {
     //     System.out.println("Dashboard clicked");
     // }
 
-    @FXML private void handleProfilClick(ActionEvent event) {
-        System.out.println("Profil clicked");
+    @FXML 
+    private void handleProfilClick(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientProfile.fxml"));
+            Parent root = loader.load();
+            
+            PatientProfileController controller = loader.getController();
+            controller.setUser(controller.currentUser);
+            
+            Stage currentStage = (Stage) profilSidebarButton.getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Patient Profile - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
+        } catch (Exception e) {
+            System.err.println("Error opening patient profile: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML private void handleJanjiTemuClick(ActionEvent event) {
-        System.out.println("Janji Temu clicked");
+        try {
+            AppointmentPatientView appointmentView = new AppointmentPatientView();
+            appointmentView.start(new Stage());
+        } 
+        catch (Exception e) {
+            System.err.println("Error opening appointment view: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML private void handleRiwayatMedisClick(ActionEvent event) {
@@ -67,25 +155,28 @@ public class PatientDashboardController {
 
     @FXML private void handleKeluarClick(ActionEvent event) {
         try {
-        // Get current stage from any component (using keluarSidebarButton)
         Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
-        
-        // Close current dashboard window
         currentStage.close();
         
-        // Create and show login view
         LoginView loginView = new LoginView();
         Stage loginStage = new Stage();
-        loginView.start(loginStage);
-        
-    } catch (Exception e) {
-        System.err.println("Error switching to login view: " + e.getMessage());
-        e.printStackTrace();
-    }
+        loginView.start(loginStage);   
+        } 
+        catch (Exception e) {
+            System.err.println("Error switching to login view: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML private void handleBuatJanjiTemuClick(ActionEvent event) {
-        System.out.println("Buat Janji Temu clicked");
+        try {
+            MakeAppointmentView makeAppointmentView = new MakeAppointmentView();
+            makeAppointmentView.start(new Stage());
+        }
+        catch (Exception e) {
+            System.err.println("Error opening make appointment view: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML private void handleLihatCatatanMedisClick(ActionEvent event) {
@@ -95,4 +186,5 @@ public class PatientDashboardController {
     @FXML private void handleCekPembuatanResepObatClick(ActionEvent event) {
         System.out.println("Cek Resep Obat clicked");
     }
+
 }

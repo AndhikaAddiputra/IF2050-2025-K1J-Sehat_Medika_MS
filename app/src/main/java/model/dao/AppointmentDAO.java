@@ -25,7 +25,7 @@ public class AppointmentDAO {
         appointment.setAppointmentDate(appointmentDateTimestamp != null ? appointmentDateTimestamp.toLocalDateTime() : null);
         appointment.setDuration(rs.getInt("duration")); 
         appointment.setReason(rs.getString("reason"));  
-        String statusStr = rs.getString("status");
+        String statusStr = rs.getString("appointmentStatus");
         appointment.setStatus(statusStr != null ? AppointmentStatus.valueOf(statusStr) : null); 
         appointment.setQueueNumber(rs.getInt("queueNumber"));
         appointment.setDoctorConfirmation(rs.getBoolean("doctorConfirmation")); 
@@ -130,6 +130,20 @@ public class AppointmentDAO {
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 appointments.add(mapResultSetToAppointment(rs));
+            }
+        }
+        return appointments;
+    }
+
+    public List<Appointment> getActiveAppointments(String patientId) throws SQLException {
+        List<Appointment> appointments =  new ArrayList<>();
+        String sql = "Select * from Appointment where patientId = ? AND AppointmentStatus = SCHEDULED order by appointmentDate desc";
+        try (Connection conn = new DatabaseConnection().getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, patientId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    appointments.add(mapResultSetToAppointment(rs));
+                }
             }
         }
         return appointments;

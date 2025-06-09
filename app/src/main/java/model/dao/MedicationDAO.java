@@ -35,7 +35,7 @@ public class MedicationDAO {
     }
 
     public Medication getMedicationById(int medicationId) {
-        String sql = "SELECT * FROM medication WHERE medication_id = ?";
+        String sql = "SELECT * FROM medication WHERE medicationId = ?";
 
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -54,7 +54,7 @@ public class MedicationDAO {
     }
 
     public boolean insertMedication(Medication medication) {
-        String sql = "INSERT INTO medication (name, generic_name, category, unit, stock_quantity, min_stock_level, expiry_date, side_effects, contraindication) " +
+        String sql = "INSERT INTO medication (name, genericName, category, unit, stockQuantity, minStockLevel, expiryDate, sideEffects, contraindication) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = new DatabaseConnection().getConnection();
@@ -79,7 +79,7 @@ public class MedicationDAO {
     }
 
     public boolean updateMedication(Medication medication) {
-        String sql = "UPDATE medication SET name=?, generic_name=?, category=?, unit=?, stock_quantity=?, min_stock_level=?, expiry_date=?, side_effects=?, contraindication=? WHERE medication_id=?";
+        String sql = "UPDATE medication SET name=?, genericName=?, category=?, unit=?, stockQuantity=?, minStockLevel=?, expiryDate=?, sideEffects=?, contraindication=? WHERE medicationId=?";
 
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -95,7 +95,7 @@ public class MedicationDAO {
     }
 
     public boolean deleteMedication(int medicationId) {
-        String sql = "DELETE FROM medication WHERE medication_id = ?";
+        String sql = "DELETE FROM medication WHERE medicationId = ?";
 
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -126,15 +126,15 @@ public class MedicationDAO {
 
     private Medication mapResultSetToMedication(ResultSet rs) throws SQLException {
         Medication med = new Medication();
-        med.setMedicationId(rs.getInt("medication_id"));
+        med.setMedicationId(rs.getInt("medicationId"));
         med.setName(rs.getString("name"));
-        med.setGenericName(rs.getString("generic_name"));
+        med.setGenericName(rs.getString("genericName"));
         med.setCategory(rs.getString("category"));
         med.setUnit(rs.getString("unit"));
-        med.setStockQuantity(rs.getInt("stock_quantity"));
-        med.setMinStockLevel(rs.getInt("min_stock_level"));
-        med.setExpiryDate(rs.getTimestamp("expiry_date").toLocalDateTime());
-        med.setSideEffects(rs.getString("side_effects"));
+        med.setStockQuantity(rs.getInt("stockQuantity"));
+        med.setMinStockLevel(rs.getInt("minStockLevel"));
+        med.setExpiryDate(rs.getTimestamp("expiryDate").toLocalDateTime());
+        med.setSideEffects(rs.getString("sideEffects"));
         med.setContraindication(rs.getString("contraindication"));
         return med;
     }

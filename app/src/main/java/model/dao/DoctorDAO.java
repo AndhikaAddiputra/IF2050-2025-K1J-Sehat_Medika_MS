@@ -1,23 +1,26 @@
 package model.dao;
 
+import model.DatabaseConnection;
+import model.entity.Doctor;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Statement; 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.DatabaseConnection;
-import model.entity.Doctor;
-
 public class DoctorDAO {
     private List<DayOfWeek> parseDays(String daysString) {
         List<DayOfWeek> days = new ArrayList<>();
-        if (daysString != null && !daysString.isEmpty())
-            for (String day : daysString.split(",")) days.add(DayOfWeek.valueOf(day.trim().toUpperCase()));
+        if (daysString != null && !daysString.isEmpty()) {
+            for (String day : daysString.split(",")) {
+                days.add(DayOfWeek.valueOf(day.trim().toUpperCase()));
+            }
+        }
         return days;
     }
 
@@ -26,7 +29,9 @@ public class DoctorDAO {
         if (hoursString != null && !hoursString.isEmpty()) {
             for (String range : hoursString.split(",")) {
                 String[] times = range.split("-");
-                if (times.length == 2) hoursList.add(new LocalTime[]{LocalTime.parse(times[0].trim()), LocalTime.parse(times[1].trim())});
+                if (times.length == 2) {
+                    hoursList.add(new LocalTime[]{LocalTime.parse(times[0].trim()), LocalTime.parse(times[1].trim())});
+                }
             }
         }
         return hoursList;
@@ -43,7 +48,7 @@ public class DoctorDAO {
 
     public List<Doctor> getAllDoctors() {
         List<Doctor> doctors = new ArrayList<>();
-        String sql = "SELECT * FROM doctor";
+        String sql = "SELECT * FROM Doctor";
 
         try (Connection conn = new DatabaseConnection().getConnection();
              Statement stmt = conn.createStatement();
@@ -60,7 +65,7 @@ public class DoctorDAO {
     }
 
     public Doctor getDoctorById(String doctorId) {
-        String sql = "SELECT * FROM doctor WHERE doctor_id = ?";
+        String sql = "SELECT * FROM Doctor WHERE doctorId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -77,8 +82,50 @@ public class DoctorDAO {
         return null;
     }
 
+    public List<String> getAllSpecializations() {
+        List<String> specializations = new ArrayList<>();
+        String sql = "SELECT DISTINCT specialization FROM Doctor";
+        try (Connection conn = new DatabaseConnection().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String specialization = rs.getString("specialization");
+                if (specialization != null && !specialization.isEmpty()) {
+                    specializations.add(specialization);
+                }
+            }
+
+        } 
+        catch (SQLException e) {
+            System.err.println("Error retrieving specializations: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return specializations;
+    }
+
+    public List<Doctor> getDoctorsBySpecialization(String specialization) {
+        List<Doctor> doctors = new ArrayList<>();
+        String sql = "SELECT * FROM Doctor WHERE specialization = ?";
+        try (Connection conn = new DatabaseConnection().getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, specialization);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    doctors.add(mapResultSetToDoctor(rs));
+                }
+            }
+
+        } 
+        catch (SQLException e) {
+            System.err.println("Error fetching doctors by specialization: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return doctors;
+    }
+
     public boolean insertDoctor(Doctor doctor) {
-        String sql = "INSERT INTO doctor (doctor_id, user_id, specialization, license_number, available_days, available_hours) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Doctor (doctorId, userId, specialization, licenseNumber, availableDays, availableHours) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -99,7 +146,7 @@ public class DoctorDAO {
     }
 
     public boolean updateDoctor(Doctor doctor) {
-        String sql = "UPDATE doctor SET user_id = ?, specialization = ?, license_number = ?, available_days = ?, available_hours = ? WHERE doctor_id = ?";
+        String sql = "UPDATE Doctor SET userId = ?, specialization = ?, licenseNumber = ?, availableDays = ?, availableHours = ? WHERE doctorId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -120,7 +167,7 @@ public class DoctorDAO {
     }
 
     public boolean deleteDoctor(String doctorId) {
-        String sql = "DELETE FROM doctor WHERE doctor_id = ?";
+        String sql = "DELETE FROM Doctor WHERE doctorId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -136,12 +183,12 @@ public class DoctorDAO {
 
     private Doctor mapResultSetToDoctor(ResultSet rs) throws SQLException {
         Doctor doctor = new Doctor();
-        doctor.setDoctorId(rs.getString("doctor_id"));
-        doctor.setUserId(rs.getInt("user_id"));
+        doctor.setDoctorId(rs.getString("doctorId"));
+        doctor.setUserId(rs.getInt("userId"));
         doctor.setSpecialization(rs.getString("specialization"));
-        doctor.setLicenceNumber(rs.getString("license_number"));
-        doctor.setAvailableDays(parseDays(rs.getString("available_days")));
-        doctor.setAvailableHours(parseHours(rs.getString("available_hours")));
+        doctor.setLicenceNumber(rs.getString("licenseNumber"));
+        doctor.setAvailableDays(parseDays(rs.getString("availableDays")));
+        doctor.setAvailableHours(parseHours(rs.getString("availableHours")));
         return doctor;
     }
 }

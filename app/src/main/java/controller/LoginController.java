@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import model.dao.UserDAO;
 import model.entity.User;
 import view.PatientDashboardView;
+import view.ReceptionistDashboardView;
 
 public class LoginController {
     
@@ -67,6 +68,8 @@ public class LoginController {
                         case "DOCTOR":
                             break;
                         case "RECEPTIONIST":
+                            ReceptionistDashboardView receptionistView = new ReceptionistDashboardView();
+                            receptionistView.start(new Stage());
                             break;
                         case "PHARMACIST":
                             break;
