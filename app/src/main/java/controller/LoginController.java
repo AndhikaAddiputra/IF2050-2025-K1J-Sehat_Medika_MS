@@ -1,9 +1,5 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,7 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.DatabaseConnection;
+import model.dao.UserDAO;
+import model.entity.User;
 import view.PatientDashboardView;
 
 public class LoginController {
@@ -50,39 +47,35 @@ public class LoginController {
             return;
         }
 
-        DatabaseConnection connectNow = new DatabaseConnection();
-        Connection connectDB = connectNow.getConnection();
-
-        String verifyLogin = "SELECT role FROM user WHERE username = ? AND password = ?";
-
+        UserDAO userDAO = new UserDAO();
         try {
-            PreparedStatement statement = connectDB.prepareStatement(verifyLogin);
-            statement.setString(1, username);
-            statement.setString(2, password);
-            
-            ResultSet queryResult = statement.executeQuery();
+            if (userDAO.authenticateUser(username, password)) {
+                User user = userDAO.getUserByUsername(username);
+                if (user != null) {
+                    String role = user.getRole().name();
 
-            if (queryResult.next()) {
-                String role = queryResult.getString("role");
+                    wrongLogin.setText("Login berhasil sebagai " + role);
+                    System.out.println("Login successful - role: " + role);
 
-                wrongLogin.setText("Login berhasil sebagai " + role);
-                System.out.println("Login successful - role: " + role);
-
-                switch (role) {
-                    case "ADMIN":
-                        break;
-                    case "PATIENT":
-                        PatientDashboardView patientView = new PatientDashboardView();
-                        patientView.start(new Stage());
-                        break;
-                    case "DOCTOR":
-                        break;
-                    case "RECEPTIONIST":
-                        break;
-                    case "PHARMACIST":
-                        break;
+                    switch (role) {
+                        case "ADMIN":
+                            break;
+                        case "PATIENT":
+                            PatientDashboardView patientView = new PatientDashboardView();
+                            patientView.start(new Stage());
+                            break;
+                        case "DOCTOR":
+                            break;
+                        case "RECEPTIONIST":
+                            break;
+                        case "PHARMACIST":
+                            break;
+                    }
+                    ((Stage) masukButton.getScene().getWindow()).close();
+                } else {
+                    wrongLogin.setText("Terjadi kesalahan: Data pengguna tidak ditemukan setelah autentikasi.");
+                    System.out.println("Login failed - user data not found after authentication");
                 }
-                ((Stage) masukButton.getScene().getWindow()).close();
             } else {
                 wrongLogin.setText("Username atau password salah");
                 System.out.println("Login failed - incorrect credentials");
