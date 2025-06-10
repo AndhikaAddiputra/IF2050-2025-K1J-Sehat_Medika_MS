@@ -54,7 +54,7 @@
                </VBox.margin>
             </Line>
             
-            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE" onAction="#handleDashboardClick">
+            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>

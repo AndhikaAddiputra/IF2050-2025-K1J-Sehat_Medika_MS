@@ -1,5 +1,9 @@
 package controller;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,7 +12,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.dao.AppointmentDAO;
@@ -20,17 +29,11 @@ import model.entity.Doctor;
 import model.entity.Patient;
 import model.entity.User;
 import view.LoginView;
-import view.MakeAppointmentView;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AppointmentPatientController {
 
-    @FXML private Button dashboardButton;
+    @FXML private Button dashboardSidebarButton;
     @FXML private Button profilSidebarButton;
-    @FXML private Button janjiTemuSidebarButton;
     @FXML private Button riwayatMedisSidebarButton;
     @FXML private Button resepObatSidebarButton;
     @FXML private Button notifikasiSidebarButton;
@@ -38,12 +41,11 @@ public class AppointmentPatientController {
     @FXML private Button newAppointmentButton;
 
     @FXML private TableView<AppointmentTableData> dataAppointmentTable;
-    @FXML private TableColumn<AppointmentTableData, String> colPatientName;
+    @FXML private TableColumn<AppointmentTableData, String> colDoctorName;
+    @FXML private TableColumn<AppointmentTableData, String> colSpesialist;
     @FXML private TableColumn<AppointmentTableData, String> colDate;
     @FXML private TableColumn<AppointmentTableData, String> colTime;
-    @FXML private TableColumn<AppointmentTableData, String> colMedicalRecord;
-    @FXML private TableColumn<AppointmentTableData, String> colDiagnose;
-    @FXML private TableColumn<AppointmentTableData, String> colPrescribe;
+    @FXML private TableColumn<AppointmentTableData, String> colAction;
 
     @FXML private ToggleButton aktifToggle;
     @FXML private ToggleButton selesaiToggle;
@@ -76,12 +78,11 @@ public class AppointmentPatientController {
     }
 
     private void setupTableColumns() {
-        colPatientName.setCellValueFactory(new PropertyValueFactory<>("doctorName"));
-        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        colDoctorName.setCellValueFactory(new PropertyValueFactory<>("doctorName"));
+        colSpesialist.setCellValueFactory(new PropertyValueFactory<>("specialization"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("date")); 
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
-        colMedicalRecord.setCellValueFactory(new PropertyValueFactory<>("medicalRecordInfo"));
-        colDiagnose.setCellValueFactory(new PropertyValueFactory<>("diagnosis"));
-        colPrescribe.setCellValueFactory(new PropertyValueFactory<>("prescriptionInfo"));
+        colAction.setCellValueFactory(new PropertyValueFactory<>("action"));    
     }
 
     private void setupToggleButtons() {
@@ -105,13 +106,15 @@ public class AppointmentPatientController {
             for (Appointment appointment : filteredAppointments) {
                 Doctor doctor = doctorDAO.getDoctorById(appointment.getDoctorId());
                 AppointmentTableData data = new AppointmentTableData();
-                data.setDoctorName(doctor != null ? doctor.getLicenceNumber() : "Unknown");
+                data.setDoctorName(doctor != null ? doctorDAO.getDoctorNameById(doctor.getDoctorId()) : "Unknown");
+                data.setSpecialization(doctor != null ? doctor.getSpecialization() : "Unknown");
                 data.setDate(appointment.getAppointmentDate().format(dateFormat));
                 data.setTime(appointment.getAppointmentDate().format(timeFormat));
-                data.setMedicalRecordInfo("N/A");
-                data.setDiagnosis("N/A");
-                data.setPrescriptionInfo("N/A");
+                data.setMedicalRecordInfo("N/A"); 
+                data.setDiagnosis("N/A"); 
+                data.setPrescriptionInfo("N/A"); 
                 data.setAppointment(appointment);
+
                 tableData.add(data);
             }
             dataAppointmentTable.setItems(tableData);
@@ -200,12 +203,6 @@ public class AppointmentPatientController {
     }
 
     @FXML
-    private void handleJanjiTemuClick(ActionEvent event) {
-        // Already on appointment page, just refresh
-        loadAppointments();
-    }
-
-    @FXML
     private void handleRiwayatMedisClick(ActionEvent event) {
         System.out.println("Medical records clicked");
     }
@@ -222,7 +219,18 @@ public class AppointmentPatientController {
 
     @FXML
     private void handleKeluarClick(ActionEvent event) {
-        navigateToPatientDashboard();
+        try {
+        Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
+        currentStage.close();
+        
+        LoginView loginView = new LoginView();
+        Stage loginStage = new Stage();
+        loginView.start(loginStage);   
+        } 
+        catch (Exception e) {
+            System.err.println("Error switching to login view: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void navigateToPatientDashboard() {
@@ -256,6 +264,7 @@ public class AppointmentPatientController {
 
     public static class AppointmentTableData {
         private SimpleStringProperty doctorName = new SimpleStringProperty();
+        private SimpleStringProperty specialization = new SimpleStringProperty();  // Add this line
         private SimpleStringProperty date = new SimpleStringProperty();
         private SimpleStringProperty time = new SimpleStringProperty();
         private SimpleStringProperty medicalRecordInfo = new SimpleStringProperty();
@@ -266,6 +275,10 @@ public class AppointmentPatientController {
         public String getDoctorName() { return doctorName.get(); }
         public void setDoctorName(String name) { this.doctorName.set(name); }
         public SimpleStringProperty doctorNameProperty() { return doctorName; }
+
+        public String getSpecialization() { return specialization.get(); }
+        public void setSpecialization(String spec) { this.specialization.set(spec); }
+        public SimpleStringProperty specializationProperty() { return specialization; }
 
         public String getDate() { return date.get(); }
         public void setDate(String date) { this.date.set(date); }

@@ -297,8 +297,25 @@ public class PatientProfileController {
     
     @FXML
     private void handleJanjiTemuClick() {
-        // Navigate to appointment page
-        showAlert("Info", "Janji Temu feature will be implemented next.");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AppointmentPatient.fxml"));
+            Parent root = loader.load();
+            
+            AppointmentPatientController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage currentStage = (Stage) janjiTemuSidebarButton.getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Janji Temu - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
+        } catch (Exception e) {
+            System.err.println("Error opening appointment view: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @FXML

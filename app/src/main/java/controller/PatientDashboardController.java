@@ -1,10 +1,13 @@
 package controller;
 
+import java.net.URL;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -131,7 +134,13 @@ public class PatientDashboardController {
     @FXML 
     private void handleJanjiTemuClick(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AppointmentPatient.fxml"));
+            URL fxmlUrl = getClass().getResource("/view/AppointmentPatient.fxml");
+            System.out.println("FXML URL: " + fxmlUrl); // Tambahkan ini
+            if (fxmlUrl == null) {
+                throw new RuntimeException("FXML file not found! Make sure AppointmentPatient.fxml is in src/main/resources/view");
+            }
+
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent root = loader.load();
             
             AppointmentPatientController controller = loader.getController();
@@ -139,27 +148,36 @@ public class PatientDashboardController {
             
             Stage currentStage = (Stage) janjiTemuSidebarButton.getScene().getWindow();
             currentStage.close();
-            
+
             Stage newStage = new Stage();
             newStage.setTitle("Janji Temu - Klinik Sehat Medika");
             newStage.setScene(new Scene(root, 1200, 800));
             newStage.show();
-            
+
         } catch (Exception e) {
             System.err.println("Error opening appointment view: " + e.getMessage());
             e.printStackTrace();
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to load appointment view");
+            alert.setContentText(e.getMessage() + "\n\n" + e.getClass().getName());
+            alert.showAndWait();
         }
     }
 
     @FXML private void handleRiwayatMedisClick(ActionEvent event) {
+        showAlert("Info", "Riwayat Medis feature will be implemented next.");
         System.out.println("Riwayat Medis clicked");
     }
 
     @FXML private void handleResepObatClick(ActionEvent event) {
+        showAlert("Info", "Resep Obat feature will be implemented next.");
         System.out.println("Resep Obat clicked");
     }
 
     @FXML private void handleNotifikasiClick(ActionEvent event) {
+        showAlert("Info", "Notifikasi feature will be implemented next.");
         System.out.println("Notifikasi clicked");
     }
 
@@ -204,6 +222,14 @@ public class PatientDashboardController {
 
     @FXML private void handleCekPembuatanResepObatClick(ActionEvent event) {
         System.out.println("Cek Resep Obat clicked");
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 }

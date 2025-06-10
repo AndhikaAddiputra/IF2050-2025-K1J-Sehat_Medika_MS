@@ -1,8 +1,5 @@
 package model.dao;
 
-import model.DatabaseConnection;
-import model.entity.Doctor;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +9,9 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.DatabaseConnection;
+import model.entity.Doctor;
 
 public class DoctorDAO {
     private List<DayOfWeek> parseDays(String daysString) {
@@ -80,6 +80,24 @@ public class DoctorDAO {
         }
 
         return null;
+    }
+
+    public String getDoctorNameById(String doctorId) {
+        String sql = "SELECT u.username FROM User u JOIN Doctor d ON u.userId = d.userId WHERE d.doctorId = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, doctorId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("username");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching doctor name: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return "Unknown";
     }
 
     public List<String> getAllSpecializations() {
