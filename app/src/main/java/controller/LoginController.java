@@ -12,8 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.dao.UserDAO;
 import model.entity.User;
-import view.PatientDashboardView;
-import view.ReceptionistDashboardView;
 
 public class LoginController {
     
@@ -65,20 +63,40 @@ public class LoginController {
                         // case "ADMIN":
                         //     break;
                         case "PATIENT":
-                            PatientDashboardView patientView = new PatientDashboardView();
-                            patientView.start(new Stage());
-
-                            PatientDashboardController patientController = new PatientDashboardController();
-                            patientController.setUser(user);
+                            try {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientDashboard.fxml"));
+                                Parent root = loader.load();
+                                
+                                PatientDashboardController controller = loader.getController();
+                                controller.setUser(user);
+                                
+                                Stage stage = new Stage();
+                                stage.setTitle("Dashboard Pasien - Klinik Sehat Medika");
+                                stage.setScene(new Scene(root, 1200, 800));
+                                stage.show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                wrongLogin.setText("Error loading dashboard");
+                            }
                             break;
                         case "DOCTOR":
                             break;
                         case "RECEPTIONIST":
-                            ReceptionistDashboardView receptionistView = new ReceptionistDashboardView();
-                            receptionistView.start(new Stage());
-
-                            ReceptionistDashboardController receptionistController = new ReceptionistDashboardController();
-                            receptionistController.setUser(user);
+                            try {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/receptionistDashboard.fxml"));
+                                Parent root = loader.load();
+                                
+                                ReceptionistDashboardController controller = loader.getController();
+                                controller.setUser(user);
+                                
+                                Stage stage = new Stage();
+                                stage.setTitle("Dashboard Receptionist - Klinik Sehat Medika");
+                                stage.setScene(new Scene(root, 1200, 800));
+                                stage.show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                wrongLogin.setText("Error loading dashboard");
+                            }
                             break;
                         case "PHARMACIST":
                             break;

@@ -1,26 +1,30 @@
 package controller;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import model.entity.User;
-import model.entity.BloodType;
-import model.dao.UserDAO;
-import model.dao.PatientDAO;
 import model.dao.MedicalRecordDAO;
+import model.dao.PatientDAO;
+import model.dao.UserDAO;
+import model.entity.User;
 import view.LoginView;
-import view.PatientDashboardView;
-
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 public class PatientProfileController {
     
@@ -45,6 +49,12 @@ public class PatientProfileController {
     @FXML private Button editMedicalButton;
     @FXML private Button saveMedicalButton;
     @FXML private Button cancelMedicalButton;
+    @FXML private Button dashboardSidebarButton;
+    @FXML private Button janjiTemuSidebarButton;
+    @FXML private Button riwayatMedisSidebarButton;
+    @FXML private Button resepObatSidebarButton;
+    @FXML private Button notifikasiSidebarButton;
+    @FXML private Button keluarSidebarButton;
     
     @FXML private TableView<MedicalRecordData> medicalRecordsTable;
     @FXML private TableColumn<MedicalRecordData, String> recordDateColumn;
@@ -75,6 +85,7 @@ public class PatientProfileController {
     
     @FXML
     public void initialize() {
+        // Initialize UI components
         setupComboBoxes();
         setupTableColumns();
         setFieldsEditable(false, false);
@@ -108,7 +119,7 @@ public class PatientProfileController {
     
     private void loadMedicalData() {
         try {
-            String patientId = patientDAO.getPatientById(currentUser.getUserId()).getPatientId();
+            String patientId = patientDAO.getPatientByUserId(currentUser.getUserId()).getPatientId();
             if (patientId != null) {
                 Map<String, Object> patientData = patientDAO.getPatientMedicalInfo(patientId);
                 if (patientData != null) {
@@ -265,21 +276,22 @@ public class PatientProfileController {
     @FXML
     private void handleDashboardClick() {
         try {
-            PatientDashboardView dashboardView = new PatientDashboardView();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientDashboard.fxml"));
+            Parent root = loader.load();
+            
+            PatientDashboardController controller = loader.getController();
+            controller.setUser(currentUser);
+            
             Stage currentStage = (Stage) namaLengkapField.getScene().getWindow();
             currentStage.close();
             
             Stage newStage = new Stage();
-            dashboardView.start(newStage);
-            
-            // Pass user data to dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientDashboard.fxml"));
-            Parent root = loader.load();
-            PatientDashboardController controller = loader.getController();
-            controller.setUser(currentUser);
+            newStage.setTitle("Dashboard Pasien - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
             
         } catch (Exception e) {
-            showAlert("Error", "Failed to open dashboard: " + e.getMessage());
+            showAlert("Error", "Failed to return to dashboard: " + e.getMessage());
         }
     }
     
@@ -304,23 +316,22 @@ public class PatientProfileController {
     @FXML
     private void handleKeluarClick() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientDashboard.fxml"));
-            Parent root = loader.load();
-            
-            PatientDashboardController controller = loader.getController();
-            controller.setUser(currentUser);
-            
-            Stage currentStage = (Stage) namaLengkapField.getScene().getWindow();
-            currentStage.close();
-            
-            Stage newStage = new Stage();
-            newStage.setTitle("Dashboard Pasien - Klinik Sehat Medika");
-            newStage.setScene(new Scene(root, 1200, 800));
-            newStage.show();
-            
-        } catch (Exception e) {
-            showAlert("Error", "Failed to return to dashboard: " + e.getMessage());
+        Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
+        currentStage.close();
+        
+        LoginView loginView = new LoginView();
+        Stage loginStage = new Stage();
+        loginView.start(loginStage);   
+        } 
+        catch (Exception e) {
+            System.err.println("Error switching to login view: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    @FXML private void handleNotifikasiClick(ActionEvent event) {
+        showAlert("Info", "Notifikasi feature will be implemented next.");
+        System.out.println("Notifikasi clicked");
     }
     
     private void showAlert(String title, String message) {

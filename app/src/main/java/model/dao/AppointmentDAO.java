@@ -1,9 +1,5 @@
 package model.dao;
 
-import model.entity.Appointment;      
-import model.entity.AppointmentStatus; 
-import model.DatabaseConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +9,10 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.DatabaseConnection;
+import model.entity.Appointment;
+import model.entity.AppointmentStatus;
 
 public class AppointmentDAO {
 
@@ -137,7 +137,7 @@ public class AppointmentDAO {
 
     public List<Appointment> getActiveAppointments(String patientId) throws SQLException {
         List<Appointment> appointments =  new ArrayList<>();
-        String sql = "Select * from Appointment where patientId = ? AND AppointmentStatus = SCHEDULED order by appointmentDate desc";
+        String sql = "Select * from Appointment where patientId = ? AND AppointmentStatus = 'SCHEDULED' order by appointmentDate desc";
         try (Connection conn = new DatabaseConnection().getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, patientId);
             try (ResultSet rs = pstmt.executeQuery()) {

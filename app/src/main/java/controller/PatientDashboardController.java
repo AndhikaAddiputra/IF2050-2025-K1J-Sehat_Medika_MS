@@ -14,8 +14,6 @@ import model.dao.PatientDAO;
 import model.dao.UserDAO;
 import model.entity.User;
 import view.LoginView;
-import view.AppointmentPatientView;
-import view.MakeAppointmentView;
 
 public class PatientDashboardController {
     
@@ -47,15 +45,13 @@ public class PatientDashboardController {
     @FXML
     public void initialize() {
         // Initialize placeholder values
-        if (namePlaceHolder != null) namePlaceHolder.setText("Jhon");
-        if (janjiTemuAktifPlaceholder != null) janjiTemuAktifPlaceholder.setText("0");
-        if (resepDiprosesPlaceholder != null) resepDiprosesPlaceholder.setText("0");
-        if (catatanMedisPlaceholder != null) catatanMedisPlaceholder.setText("0");
-        if (datePlaceholder != null) datePlaceholder.setText("Rabu, 12 Mei 2025");
-        if (timePlaceholder != null) timePlaceholder.setText("08.00");
-        if (doctorNamePlaceholder != null) doctorNamePlaceholder.setText("| Dr. Asep Spakbor");
-
-        currentUser = null;
+        //if (namePlaceHolder != null) namePlaceHolder.setText("");
+        //if (janjiTemuAktifPlaceholder != null) janjiTemuAktifPlaceholder.setText("0");
+        //if (resepDiprosesPlaceholder != null) resepDiprosesPlaceholder.setText("0");
+        //if (catatanMedisPlaceholder != null) catatanMedisPlaceholder.setText("0");
+        //if (datePlaceholder != null) datePlaceholder.setText("");
+        //if (timePlaceholder != null) timePlaceholder.setText("");
+        //if (doctorNamePlaceholder != null) doctorNamePlaceholder.setText("");
     }
 
     public void setUser(User user) {
@@ -64,8 +60,10 @@ public class PatientDashboardController {
     }
 
     private void updateUserInterface() {
-        if (currentUser != null && namePlaceHolder != null) {
-            namePlaceHolder.setText(currentUser.getUsername());
+        if (currentUser != null) {
+            if (namePlaceHolder != null) {
+                namePlaceHolder.setText(currentUser.getUsername());
+            }
             loadDashboardData();
         }
     }
@@ -74,27 +72,25 @@ public class PatientDashboardController {
         if (currentUser == null) return;
 
         try {
+            System.out.println("Loading dashboard data for user: " + currentUser.getUsername());
+            
             String patientId = patientDAO.getPatientByUserId(currentUser.getUserId()).getPatientId();
             if (patientId == null) {
                 System.err.println("Could not find patientId for userId: " + currentUser.getUserId());
                 return;
             }
+            
+            System.out.println("Found patientId: " + patientId);
 
             int activeAppointments = appointmentDAO.getActiveAppointments(patientId).size();
+            System.out.println("Active appointments count: " + activeAppointments);
             if (janjiTemuAktifPlaceholder != null) {
                 janjiTemuAktifPlaceholder.setText(String.valueOf(activeAppointments));
             }
 
-            // Get processing prescriptions count
-            // Note: Your PrescriptionDAO needs a method like getProcessingPrescriptionsForPatient
-            // and your Prescription table needs a status column.
-            // int processingPrescriptions = prescriptionDAO.getProcessingPrescriptionsForPatient(patientId);
-            // if (resepDiprosesPlaceholder != null) {
-            //     resepDiprosesPlaceholder.setText(String.valueOf(processingPrescriptions));
-            // }
-
             // Get medical records count
             int medicalRecordsCount = medicalRecordDAO.getMedicalRecordsByPatientId(patientId).size();
+            System.out.println("Medical records count: " + medicalRecordsCount);
             if (catatanMedisPlaceholder != null) {
                 catatanMedisPlaceholder.setText(String.valueOf(medicalRecordsCount));
             }
@@ -116,7 +112,7 @@ public class PatientDashboardController {
             Parent root = loader.load();
             
             PatientProfileController controller = loader.getController();
-            controller.setUser(controller.currentUser);
+            controller.setUser(currentUser);
             
             Stage currentStage = (Stage) profilSidebarButton.getScene().getWindow();
             currentStage.close();
