@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`User` (
   `password` VARCHAR(50) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `phoneNumber` VARCHAR(25) NOT NULL,
+  `fullName` VARCHAR(255) NOT NULL,
   `role` ENUM('DOCTOR', 'PATIENT', 'RECEPTIONIST', 'PHARMACIST', 'ADMIN') NOT NULL, -- Restricted roles
   `lastLogin` DATETIME NULL,
   PRIMARY KEY (`userId`),
@@ -63,8 +64,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Patient` (
   `userId` INT UNSIGNED NOT NULL,
   `bloodType` ENUM('A', 'B','AB' ,'O') NOT NULL, 
   `allergies` VARCHAR(255) NULL,
+  `height` INT NOT NULL,
+  `weight`INT NOT NULL,
   `emergencyContact` VARCHAR(25) NULL,
   `insuranceInfo` VARCHAR(255) NULL,
+  `insuranceNumber` INTEGER NOT NULL,
   `registrationDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`patientId`),
   UNIQUE INDEX `idx_Patient_userId_unique` (`userId` ASC) VISIBLE,
@@ -268,17 +272,17 @@ SET @future_date_pass_exp = DATE_ADD(@current_datetime, INTERVAL 1 YEAR);
 -- User 9: DOCTOR (Total 3 dokter)
 -- User 10: PATIENT (Total 4 pasien)
 
-INSERT INTO `User` (`userId`, `username`, `password`, `email`, `phoneNumber`, `role`, `lastLogin`) VALUES
-(1, 'dr.house', 'pass_doc1', 'dr.house@example.com', '081234567001', 'DOCTOR', NOW()),
-(2, 'dr.grey', 'pass_doc2', 'dr.grey@example.com', '081234567002', 'DOCTOR', NOW()),
-(3, 'john.doe', 'pass_pat1', 'john.doe@example.com', '081234567003', 'PATIENT', NOW()),
-(4, 'jane.roe', 'pass_pat2', 'jane.roe@example.com', '081234567004', 'PATIENT', NOW()),
-(5, 'peter.pan', 'pass_pat3', 'peter.pan@example.com', '081234567005', 'PATIENT', NOW()),
-(6, 'susan.staff', 'pass_rec1', 'susan.staff@example.com', '081234567006', 'RECEPTIONIST', NOW()),
-(7, 'walter.white', 'pass_phm1', 'walter.white@example.com', '081234567007', 'PHARMACIST', NOW()),
-(8, 'admin.boss', 'pass_adm1', 'admin.boss@example.com', '081234567008', 'ADMIN', NOW()),
-(9, 'dr.strange', 'pass_doc3', 'dr.strange@example.com', '081234567009', 'DOCTOR', NOW()),
-(10, 'mary.jane', 'pass_pat4', 'mary.jane@example.com', '081234567010', 'PATIENT', NOW());
+INSERT INTO `User` (`userId`, `username`, `password`, `email`, `phoneNumber`,`fullName`, `role`, `lastLogin`) VALUES
+(1, 'dr.house', 'pass_doc1', 'dr.house@example.com', '081234567001','James House' 'DOCTOR', NOW()),
+(2, 'dr.grey', 'pass_doc2', 'dr.grey@example.com', '081234567002', 'Shin Grey','DOCTOR', NOW()),
+(3, 'john.doe', 'pass_pat1', 'john.doe@example.com', '081234567003', 'John Doe', 'PATIENT', NOW()),
+(4, 'jane.roe', 'pass_pat2', 'jane.roe@example.com', '081234567004', 'Jane Roe', 'PATIENT', NOW()),
+(5, 'peter.pan', 'pass_pat3', 'peter.pan@example.com', '081234567005', 'Peter Pan', 'PATIENT', NOW()),
+(6, 'susan.staff', 'pass_rec1', 'susan.staff@example.com', '081234567006', 'Susan Blouse', 'RECEPTIONIST', NOW()),
+(7, 'walter.white', 'pass_phm1', 'walter.white@example.com', '081234567007', 'Walter White', 'PHARMACIST', NOW()),
+(8, 'admin.boss', 'pass_adm1', 'admin.boss@example.com', '081234567008', 'Admin Dhika', 'ADMIN', NOW()),
+(9, 'dr.strange', 'pass_doc3', 'dr.strange@example.com', '081234567009', 'Athar Strange', 'DOCTOR', NOW()),
+(10, 'mary.jane', 'pass_pat4', 'mary.jane@example.com', '081234567010', 'Mary Jane', 'PATIENT', NOW());
 
 -- 2. Doctor (Total 3 Dokter, berdasarkan User ID 1, 2, 9)
 INSERT INTO `Doctor` (`doctorId`, `userId`, `salaryDoctor`, `specialization`, `licenseNumber`, `availableDays`, `availableHours`) VALUES
@@ -287,11 +291,11 @@ INSERT INTO `Doctor` (`doctorId`, `userId`, `salaryDoctor`, `specialization`, `l
 ('DOC003', 9, 95000000, 'Neurosurgery', 'LIC-NEURO-003', 'Monday, Wednesday, Friday', '10:00-18:00');
 
 -- 3. Patient (Total 4 Pasien, berdasarkan User ID 3, 4, 5, 10)
-INSERT INTO `Patient` (`patientId`, `userId`, `bloodType`, `allergies`, `emergencyContact`, `insuranceInfo`, `registrationDate`) VALUES
-('PAT001', 3, 'O', 'Pollen', '081111000001', 'Alpha Insurance Plan Gold', NOW()),
-('PAT002', 4, 'A', 'None', '081111000002', 'Beta Insurance Plan Silver', NOW()),
-('PAT003', 5, 'B', 'Peanuts, Dust Mites', '081111000003', 'Gamma Corp Coverage', NOW()),
-('PAT004', 10, 'AB', 'Shellfish', '081111000004', 'No Insurance', DATE_SUB(NOW(), INTERVAL 5 DAY));
+INSERT INTO `Patient` (`patientId`, `userId`, `bloodType`, `allergies`, `height`, `weight`, `emergencyContact`, `insuranceInfo`, `insuranceNumber`, `registrationDate`) VALUES
+('PAT001', 3, 'O', 'Pollen', '182', '78', '081111000001', 'Alpha Insurance Plan Gold', '102983624825', NOW()),
+('PAT002', 4, 'A', 'None', '155', '45', '081111000002', 'Beta Insurance Plan Silver', '184056244390', NOW()),
+('PAT003', 5, 'B', 'Peanuts, Dust Mites', '168', '59', '081111000003', 'Gamma Corp Coverage', '152066346502', NOW()),
+('PAT004', 10, 'AB', 'Shellfish', '157', '49', '081111000004', 'No Insurance', '1850275638591', NOW());
 
 -- 4. Pharmacist (Total 1 Apoteker, berdasarkan User ID 7)
 INSERT INTO `Pharmacist` (`pharmacistId`, `userId`, `licenseNumber`) VALUES
