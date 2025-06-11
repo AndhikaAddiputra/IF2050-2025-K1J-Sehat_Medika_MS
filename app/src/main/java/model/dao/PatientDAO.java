@@ -118,6 +118,25 @@ public class PatientDAO {
         return patients;
     }
 
+    public String getPatientName(String patientId){
+                String sql = "SELECT u.username FROM User u JOIN Patient p ON u.userId = p.userId WHERE p.patientId = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, patientId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("username");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching patient name: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return "Unknown";
+
+    }
+
     public void updatePatient(Patient patient) throws SQLException {
         String sql = "UPDATE Patient SET userId = ?, bloodType = ?, allergies = ?, emergencyContact = ?, insuranceInfo = ?, registrationDate = ? WHERE patientId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
@@ -142,21 +161,4 @@ public class PatientDAO {
         }
     }
 
-    public String getPatientName(String patientId) {
-    String sql = "SELECT u.username FROM User u JOIN Patient p ON u.userId = p.userId WHERE p.patientId = ?";
-    try (Connection conn = new DatabaseConnection().getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        
-        pstmt.setString(1, patientId);
-        try (ResultSet rs = pstmt.executeQuery()) {
-            if (rs.next()) {
-                return rs.getString("username");
-            }
-        }
-    } catch (SQLException e) {
-        System.err.println("Error fetching patient name: " + e.getMessage());
-        e.printStackTrace();
-    }
-    return "Unknown";
-}
 }

@@ -54,7 +54,7 @@
                </VBox.margin>
             </Line>
             
-            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
+            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -73,7 +73,7 @@
                </VBox.margin>
             </Button>
             
-            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Profil" textFill="WHITE">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Dashboard" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -92,7 +92,7 @@
                </VBox.margin>
             </Button>
             
-            <Button fx:id="janjiTemuSidebarButton" onAction="#handleJanjiTemuClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Janji Temu" textFill="WHITE">
+            <Button fx:id="janjiTemuSidebarButton" onAction="#handleJanjiTemuClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Janji Temu" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -111,7 +111,7 @@
                </VBox.margin>
             </Button>
             
-            <Button fx:id="riwayatMedisSidebarButton" onAction="#handleRiwayatMedisClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Riwayat Medis" textFill="WHITE">
+            <Button fx:id="riwayatMedisSidebarButton" onAction="#handleRiwayatMedisClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Riwayat Medis" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -130,7 +130,7 @@
                </VBox.margin>
             </Button>
             
-            <Button fx:id="resepObatSidebarButton" onAction="#handleResepObatClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
+            <Button fx:id="resepObatSidebarButton" onAction="#handleResepObatClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -149,7 +149,7 @@
                </VBox.margin>
             </Button>
             
-            <Button fx:id="notifikasiSidebarButton" onAction="#handleNotifikasiClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
+            <Button fx:id="notifikasiSidebarButton" onAction="#handleNotifikasiClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -171,7 +171,7 @@
             <AnchorPane prefHeight="292.0" prefWidth="311.0" />
             <Line endX="207.2928924560547" startX="-100.0" stroke="WHITE" />
             
-            <Button fx:id="keluarSidebarButton" onAction="#handleKeluarClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
+            <Button fx:id="keluarSidebarButton" onAction="#handleKeluarClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
