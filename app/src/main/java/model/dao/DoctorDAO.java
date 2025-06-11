@@ -82,6 +82,24 @@ public class DoctorDAO {
         return null;
     }
 
+    public Doctor getDoctorByUserId(int userId) {
+        String sql = "SELECT * FROM Doctor WHERE userId = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) return mapResultSetToDoctor(rs);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error fetching doctor by userId: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public String getDoctorNameById(String doctorId) {
         String sql = "SELECT u.username FROM User u JOIN Doctor d ON u.userId = d.userId WHERE d.doctorId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();

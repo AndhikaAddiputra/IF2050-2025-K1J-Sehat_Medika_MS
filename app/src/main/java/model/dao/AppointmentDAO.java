@@ -199,6 +199,26 @@ public class AppointmentDAO {
         throw new SQLException("Appointment not found for given doctor, date, and time.");
     }
 
+    public List<Appointment> getAppointmentsByDoctorAndDate(String doctorId, LocalDateTime dateTime) throws SQLException {
+        List<Appointment> appointments = new ArrayList<>();
+        String sql = "SELECT * FROM Appointment WHERE doctorId = ? AND DATE(appointmentDate) = DATE(?) ORDER BY appointmentDate ASC";
+        
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, doctorId);
+            pstmt.setTimestamp(2, Timestamp.valueOf(dateTime));
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    appointments.add(mapResultSetToAppointment(rs));
+                }
+            }
+        }
+        
+        return appointments;
+    }
+
     public void updateAppointmentStatus(Appointment appointment) throws SQLException {
         String sql = "UPDATE Appointment SET appointmentStatus = ? WHERE appointmentId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();

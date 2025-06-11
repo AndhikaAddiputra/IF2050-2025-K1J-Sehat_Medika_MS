@@ -80,6 +80,24 @@ public class LoginController {
                             }
                             break;
                         case "DOCTOR":
+                             try {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DoctorDashboard.fxml"));
+                                Parent root = loader.load();
+                                
+                                DoctorDashboardController controller = loader.getController();
+                                controller.setUser(user);
+                                
+                                Stage currentStage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+                                currentStage.close();
+                                
+                                Stage stage = new Stage();
+                                stage.setTitle("Dashboard Dokter - Klinik Sehat Medika");
+                                stage.setScene(new Scene(root, 1200, 800));
+                                stage.show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                wrongLogin.setText("Error loading doctor dashboard: " + e.getMessage());
+                            }
                             break;
                         case "RECEPTIONIST":
                             try {
