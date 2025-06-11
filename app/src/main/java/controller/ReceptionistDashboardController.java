@@ -88,7 +88,8 @@ public class ReceptionistDashboardController {
 
     @FXML
     private void handleProfilClick(ActionEvent event) {
-        try {
+        System.out.println("Opening profile view");
+        /*try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PatientProfile.fxml"));
             Parent root = loader.load();
             
@@ -106,7 +107,7 @@ public class ReceptionistDashboardController {
         } catch (Exception e) {
             System.err.println("Error opening profile: " + e.getMessage());
             e.printStackTrace();
-        }
+        }*/
     }
 
     @FXML
