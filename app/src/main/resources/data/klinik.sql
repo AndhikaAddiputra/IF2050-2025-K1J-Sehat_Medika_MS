@@ -61,14 +61,14 @@ DROP TABLE IF EXISTS `mydb`.`Patient` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Patient` (
   `patientId` VARCHAR(10) NOT NULL,
-  `userId` INT UNSIGNED NOT NULL,
+  `userId` INT UNSIGNED NOT NULL,A
   `bloodType` ENUM('A', 'B','AB' ,'O') NOT NULL, 
   `allergies` VARCHAR(255) NULL,
   `height` INT NOT NULL,
   `weight`INT NOT NULL,
   `emergencyContact` VARCHAR(25) NULL,
   `insuranceInfo` VARCHAR(255) NULL,
-  `insuranceNumber` INTEGER NOT NULL,
+  `insuranceNumber` VARCHAR(15) NOT NULL,
   `registrationDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`patientId`),
   UNIQUE INDEX `idx_Patient_userId_unique` (`userId` ASC) VISIBLE,
@@ -272,7 +272,7 @@ SET @future_date_pass_exp = DATE_ADD(@current_datetime, INTERVAL 1 YEAR);
 -- User 10: PATIENT (Total 4 pasien)
 
 INSERT INTO `User` (`userId`, `username`, `password`, `email`, `phoneNumber`,`fullName`, `role`, `lastLogin`) VALUES
-(1, 'dr.house', 'pass_doc1', 'dr.house@example.com', '081234567001','James House' 'DOCTOR', NOW()),
+(1, 'dr.house', 'pass_doc1', 'dr.house@example.com', '081234567001','James House', 'DOCTOR', NOW()),
 (2, 'dr.grey', 'pass_doc2', 'dr.grey@example.com', '081234567002', 'Shin Grey','DOCTOR', NOW()),
 (3, 'john.doe', 'pass_pat1', 'john.doe@example.com', '081234567003', 'John Doe', 'PATIENT', NOW()),
 (4, 'jane.roe', 'pass_pat2', 'jane.roe@example.com', '081234567004', 'Jane Roe', 'PATIENT', NOW()),
