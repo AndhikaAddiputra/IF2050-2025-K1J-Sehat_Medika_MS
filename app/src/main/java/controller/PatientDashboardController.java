@@ -183,12 +183,12 @@ public class PatientDashboardController {
 
     @FXML private void handleKeluarClick(ActionEvent event) {
         try {
-            Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
-            currentStage.close();
-            
-            LoginView loginView = new LoginView();
-            Stage loginStage = new Stage();
-            loginView.start(loginStage);   
+        Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
+        currentStage.close();
+        
+        LoginView loginView = new LoginView();
+        Stage loginStage = new Stage();
+        loginView.start(loginStage);   
         } 
         catch (Exception e) {
             System.err.println("Error switching to login view: " + e.getMessage());
