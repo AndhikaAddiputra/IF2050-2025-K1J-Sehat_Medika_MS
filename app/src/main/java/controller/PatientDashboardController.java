@@ -65,7 +65,7 @@ public class PatientDashboardController {
     private void updateUserInterface() {
         if (currentUser != null) {
             if (namePlaceHolder != null) {
-                namePlaceHolder.setText(currentUser.getUsername());
+                namePlaceHolder.setText(currentUser.getFullname());
             }
             loadDashboardData();
         }

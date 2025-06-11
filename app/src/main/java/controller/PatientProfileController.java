@@ -124,9 +124,11 @@ public class PatientProfileController {
                 Map<String, Object> patientData = patientDAO.getPatientMedicalInfo(patientId);
                 if (patientData != null) {
                     golonganDarahCombo.setValue((String) patientData.get("bloodType"));
+                    beratBadanField.setText(String.valueOf(patientData.get("weight")));
+                    tinggiBadanField.setText(String.valueOf(patientData.get("height")));
                     riwayatAlergiField.setText((String) patientData.get("allergies"));
-                    nomorAsuransiField.setText((String) patientData.get("insuranceInfo"));
-                    // Note: Weight and height would need to be added to your Patient table
+                    nomorAsuransiField.setText((String) patientData.get("insuranceNumber"));
+                    penyediaAsuransiCombo.setValue((String) patientData.get("insuranceInfo"));
                 }
             }
         } catch (Exception e) {
@@ -226,7 +228,10 @@ public class PatientProfileController {
                 patientDAO.updatePatientMedicalInfo(patientId, 
                     golonganDarahCombo.getValue(),
                     riwayatAlergiField.getText(),
-                    nomorAsuransiField.getText());
+                    beratBadanField.getText(),
+                    tinggiBadanField.getText(),
+                    nomorAsuransiField.getText(),
+                    penyediaAsuransiCombo.getValue());
                 
                 setFieldsEditable(false, false);
                 editMedicalButton.setVisible(true);

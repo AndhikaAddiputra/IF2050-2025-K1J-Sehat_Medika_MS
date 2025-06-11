@@ -63,7 +63,7 @@ public class DoctorDashboardController {
         
         // Set the doctor's name in the UI
         if (namePlaceHolder != null) {
-            namePlaceHolder.setText(user.getUsername());
+            namePlaceHolder.setText(user.getFullname());
         }
         
         // Load the doctor's data

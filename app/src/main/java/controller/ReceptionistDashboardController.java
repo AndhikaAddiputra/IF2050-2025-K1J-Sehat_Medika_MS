@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -52,7 +53,7 @@ public class ReceptionistDashboardController {
     public void setUser(User user) {
         this.currentUser = user;
         if (namePlaceHolder != null) {
-            namePlaceHolder.setText(user.getUsername());
+            namePlaceHolder.setText(user.getFullname());
         }
         loadDashboardData();
     }
@@ -88,25 +89,7 @@ public class ReceptionistDashboardController {
 
     @FXML
     private void handleProfilClick(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PatientProfile.fxml"));
-            Parent root = loader.load();
-            
-            PatientProfileController controller = loader.getController();
-            controller.setUser(currentUser);
-            
-            Stage currentStage = (Stage) profilSidebarButton.getScene().getWindow();
-            currentStage.close();
-            
-            Stage newStage = new Stage();
-            newStage.setTitle("Profil Pasien - Klinik Sehat Medika");
-            newStage.setScene(new Scene(root, 1200, 800));
-            newStage.show();
-            
-        } catch (Exception e) {
-            System.err.println("Error opening profile: " + e.getMessage());
-            e.printStackTrace();
-        }
+        showAlert("Info", "Profile management is not implemented yet.");
     }
 
     @FXML
@@ -135,17 +118,17 @@ public class ReceptionistDashboardController {
 
     @FXML
     private void handleDaftarPasienBaruClick(ActionEvent event) {
-        System.out.println("Patient registration clicked");
+        showAlert("Info", "New patient registration is not implemented yet.");
     }
 
     @FXML
     private void handleJadwalDokterClick(ActionEvent event) {
-        System.out.println("Doctor schedule management clicked");
+        showAlert("Info", "Doctor schedule management is not implemented yet.");
     }
 
     @FXML
     private void handleNotifikasiClick(ActionEvent event) {
-        System.out.println("Notifications clicked");
+        showAlert("Info", "Notification feature is not implemented yet.");
     }
 
     @FXML
@@ -197,5 +180,13 @@ public class ReceptionistDashboardController {
             System.err.println("Error returning to dashboard: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

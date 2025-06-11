@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.DatabaseConnection;
 import model.entity.BloodType;
@@ -153,5 +155,65 @@ public class PatientDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Map<String, Object> getPatientMedicalInfo(String patientId) throws SQLException {
+        String sql = "SELECT bloodType, allergies, height, weight, insuranceInfo, insuranceNumber FROM Patient WHERE patientId = ?";
+        Map<String, Object> result = new HashMap<>();
+        
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, patientId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                result.put("bloodType", rs.getString("bloodType"));
+                result.put("allergies", rs.getString("allergies"));
+                result.put("height", rs.getInt("height"));
+                result.put("weight", rs.getInt("weight"));
+                result.put("insuranceInfo", rs.getString("insuranceInfo"));
+                result.put("insuranceNumber", rs.getString("insuranceNumber"));
+            }
+        }
+        return result;
+    }
+
+    public void updatePatientMedicalInfo(String patientId, String bloodType, String allergies, String height, String weight, String insuranceInfo, String insuranceNumber) throws SQLException {
+        String sql = "UPDATE Patient SET bloodType = ?, allergies = ?, height = ?, weight = ?, insuranceInfo = ?, insuranceNumber = ? WHERE patientId = ?";
+        
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, bloodType);
+            stmt.setString(2, allergies);
+            stmt.setString(3, height);
+            stmt.setString(4, weight);
+            stmt.setString(5, insuranceInfo);
+            stmt.setString(6, insuranceNumber);
+            stmt.setString(7, patientId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error deleting patient: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public String getPatientName(String patientId) {
+        String sql = "SELECT u.fullName FROM User u JOIN Patient p ON u.userId = p.userId WHERE p.patientId = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, patientId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("fullName");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching patient name: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return "Unknown";
     }
 }
