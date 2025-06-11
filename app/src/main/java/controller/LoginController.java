@@ -116,7 +116,25 @@ public class LoginController {
                                 wrongLogin.setText("Error loading dashboard");
                             }
                             break;
-                        case "PHARMACIST":
+                            case "PHARMACIST":
+                                try {
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PharmacistDashboard.fxml"));
+                                    Parent root = loader.load();
+                                    
+                                    PharmacistDashboardController controller = loader.getController();
+                                    controller.setUser(user);
+                                    
+                                    Stage currentStage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+                                    currentStage.close();
+                                    
+                                    Stage stage = new Stage();
+                                    stage.setTitle("Dashboard Apoteker - Klinik Sehat Medika");
+                                    stage.setScene(new Scene(root, 1200, 800));
+                                    stage.show();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    wrongLogin.setText("Error loading pharmacist dashboard: " + e.getMessage());
+                                }
                             break;
                     }
                     ((Stage) masukButton.getScene().getWindow()).close();
