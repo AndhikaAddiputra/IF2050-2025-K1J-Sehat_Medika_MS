@@ -9,7 +9,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
@@ -23,7 +27,9 @@ import model.dao.DoctorDAO;
 import model.entity.Appointment;
 import model.entity.AppointmentStatus;
 import model.entity.Doctor;
+import model.entity.Receptionist;
 import model.entity.User;
+import view.LoginView;
 
 public class AppointmentReceptionistController {
 
@@ -191,8 +197,24 @@ public class AppointmentReceptionistController {
 
     @FXML
     private void handleDashboardClick(ActionEvent event) {
-        System.out.println("Navigating to dashboard");
-        // Implement navigation to dashboard here
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ReceptionistDashboard.fxml"));
+            Parent root = loader.load();
+
+            ReceptionistDashboardController controller = loader.getController();
+            controller.setUser(currentUser);
+
+            Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
+            currentStage.close();
+
+            Stage newStage = new Stage();
+            newStage.setTitle("Dashboard Receptionist - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+
+        } catch (Exception e) {
+            showError("Error returning to dashboard: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -221,6 +243,18 @@ public class AppointmentReceptionistController {
 
     @FXML
     private void handleKeluarClick(ActionEvent event) {
+        try {
+        Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
+        currentStage.close();
+
+        LoginView loginView = new LoginView();
+        Stage loginStage = new Stage();
+        loginView.start(loginStage);
+        }
+        catch (Exception e) {
+            System.err.println("Error switching to login view: " + e.getMessage());
+            e.printStackTrace();
+        }
         System.out.println("Logging out");
         // Implement logout here
     }
