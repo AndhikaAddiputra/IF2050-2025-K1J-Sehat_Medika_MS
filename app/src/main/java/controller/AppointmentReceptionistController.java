@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
@@ -38,7 +39,7 @@ public class AppointmentReceptionistController {
     @FXML private TableColumn<AppointmentTableData, String> colSpesialis;
     @FXML private TableColumn<AppointmentTableData, String> colDate;
     @FXML private TableColumn<AppointmentTableData, String> colTime;
-    @FXML private TableColumn<AppointmentTableData, String> colJumlahPasien;
+    @FXML private TableColumn<AppointmentTableData, String> colStatus;
     @FXML private TableColumn<AppointmentTableData, String> colAction;
 
     @FXML private ToggleButton acceptToggle;
@@ -56,18 +57,22 @@ public class AppointmentReceptionistController {
     }
 
     private void setupTableColumns() {
-        colDoctor.setCellValueFactory(data -> data.getValue().doctorNameProperty());
-        colSpesialis.setCellValueFactory(data -> data.getValue().specializationProperty());
-        colDate.setCellValueFactory(data -> data.getValue().dateProperty());
-        colTime.setCellValueFactory(data -> data.getValue().timeProperty());
-        colJumlahPasien.setCellValueFactory(data -> data.getValue().jumlahPasienProperty());
-
+        colDoctor.setCellValueFactory(new PropertyValueFactory<>("doctorName"));
+        colSpesialis.setCellValueFactory(new PropertyValueFactory<>("specialization"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        
         colAction.setCellFactory(getActionCellFactory());
     }
 
     private Callback<TableColumn<AppointmentTableData, String>, TableCell<AppointmentTableData, String>> getActionCellFactory() {
         return column -> new TableCell<>() {
             private final Button acceptButton = new Button("Terima");
+
+            {
+                acceptButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+            }
 
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -78,21 +83,34 @@ public class AppointmentReceptionistController {
                     return;
                 }
 
-                AppointmentTableData data = getTableView().getItems().get(getIndex());
-                if (acceptToggle.isSelected()) {
-                    setGraphic(acceptButton);
-
-                    acceptButton.setOnAction(event -> {
-                        try {
-                            Appointment appointment = appointmentDAO.getAppointmentByDetails(
-                                data.getDoctorName(), data.getDate(), data.getTime());
-                            appointment.setAppointmentStatus(AppointmentStatus.ACCEPTED);
-                            appointmentDAO.updateAppointmentStatus(appointment);
-                            loadAppointments();
-                        } catch (Exception e) {
-                            showError("Gagal memperbarui status: " + e.getMessage());
-                        }
-                    });
+                // Only show action button for REQUESTED appointments
+                if (getIndex() < getTableView().getItems().size()) {
+                    AppointmentTableData data = getTableView().getItems().get(getIndex());
+                    if (data.getAppointment() != null && 
+                        data.getAppointment().getAppointmentStatus() == AppointmentStatus.REQUESTED) {
+                        
+                        acceptButton.setOnAction(event -> {
+                            try {
+                                Appointment appointment = data.getAppointment();
+                                appointment.setAppointmentStatus(AppointmentStatus.ACCEPTED);
+                                boolean success = appointmentDAO.updateAppointmentStatus(appointment);
+                                
+                                if (success) {
+                                    showSuccess("Janji temu berhasil diterima!");
+                                    loadAppointments(); // Reload to update the UI
+                                } else {
+                                    showError("Gagal memperbarui status: Tidak ada perubahan tercatat");
+                                }
+                            } catch (Exception e) {
+                                showError("Gagal memperbarui status: " + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        });
+                        
+                        setGraphic(acceptButton);
+                    } else {
+                        setGraphic(null);
+                    }
                 } else {
                     setGraphic(null);
                 }
@@ -104,7 +122,13 @@ public class AppointmentReceptionistController {
         ToggleGroup filterGroup = new ToggleGroup();
         acceptToggle.setToggleGroup(filterGroup);
         requestToggle.setToggleGroup(filterGroup);
+        
+        // Set default selection
         requestToggle.setSelected(true);
+        
+        // Add event listeners to toggle buttons
+        requestToggle.setOnAction(event -> loadAppointments());
+        acceptToggle.setOnAction(event -> loadAppointments());
     }
 
     public void setUser(User user) {
@@ -128,14 +152,27 @@ public class AppointmentReceptionistController {
                 data.setSpecialization(doctor != null ? doctor.getSpecialization() : "Unknown");
                 data.setDate(appointment.getAppointmentDate().format(dateFormat));
                 data.setTime(appointment.getAppointmentDate().format(timeFormat));
-                data.setJumlahPasien("N/A");
-                data.setAksi(acceptToggle.isSelected() ? "Terima" : "-");
+                
+                // Set the status display text
+                String statusText;
+                if (appointment.getAppointmentStatus() == AppointmentStatus.REQUESTED) {
+                    statusText = "Diajukan";
+                } else if (appointment.getAppointmentStatus() == AppointmentStatus.ACCEPTED) {
+                    statusText = "Diterima";
+                } else {
+                    statusText = appointment.getAppointmentStatus().toString();
+                }
+                data.setStatus(statusText);
+                
+                // Store the appointment object in the data for use in the action button
+                data.setAppointment(appointment);
 
                 tableData.add(data);
             }
             dataAppointmentTable.setItems(tableData);
         } catch (Exception e) {
             showError("Error loading appointments: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -155,36 +192,50 @@ public class AppointmentReceptionistController {
     @FXML
     private void handleDashboardClick(ActionEvent event) {
         System.out.println("Navigating to dashboard");
+        // Implement navigation to dashboard here
     }
 
     @FXML
     private void handleProfilClick(ActionEvent event) {
         System.out.println("Opening profile");
+        // Implement profile navigation here
     }
 
     @FXML
     private void handleDaftarPasienBaruClick(ActionEvent event) {
         System.out.println("Registering new patient");
+        // Implement new patient registration here
     }
 
     @FXML
     private void handleJadwalDokterClick(ActionEvent event) {
         System.out.println("Managing doctor schedule");
+        // Implement doctor schedule management here
     }
 
     @FXML
     private void handleNotifikasiClick(ActionEvent event) {
         System.out.println("Opening notifications");
+        // Implement notifications here
     }
 
     @FXML
     private void handleKeluarClick(ActionEvent event) {
         System.out.println("Logging out");
+        // Implement logout here
     }
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
@@ -195,8 +246,8 @@ public class AppointmentReceptionistController {
         private final SimpleStringProperty specialization = new SimpleStringProperty();
         private final SimpleStringProperty date = new SimpleStringProperty();
         private final SimpleStringProperty time = new SimpleStringProperty();
-        private final SimpleStringProperty jumlahPasien = new SimpleStringProperty();
-        private final SimpleStringProperty aksi = new SimpleStringProperty();
+        private final SimpleStringProperty status = new SimpleStringProperty();
+        private Appointment appointment;
 
         public String getDoctorName() { return doctorName.get(); }
         public void setDoctorName(String name) { doctorName.set(name); }
@@ -214,12 +265,11 @@ public class AppointmentReceptionistController {
         public void setTime(String timeStr) { time.set(timeStr); }
         public SimpleStringProperty timeProperty() { return time; }
 
-        public String getJumlahPasien() { return jumlahPasien.get(); }
-        public void setJumlahPasien(String jumlah) { jumlahPasien.set(jumlah); }
-        public SimpleStringProperty jumlahPasienProperty() { return jumlahPasien; }
-
-        public String getAksi() { return aksi.get(); }
-        public void setAksi(String aksiStr) { aksi.set(aksiStr); }
-        public SimpleStringProperty aksiProperty() { return aksi; }
+        public String getStatus() { return status.get(); }
+        public void setStatus(String statusStr) { status.set(statusStr); }
+        public SimpleStringProperty statusProperty() { return status; }
+        
+        public Appointment getAppointment() { return appointment; }
+        public void setAppointment(Appointment appointment) { this.appointment = appointment; }
     }
 }

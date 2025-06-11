@@ -193,7 +193,7 @@
                         <TableColumn fx:id="colSpesialis" prefWidth="149.000732421875" text="Spesialis" />
                         <TableColumn fx:id="colDate" prefWidth="155.00067138671875" text="Tanggal" />
                         <TableColumn fx:id="colTime" prefWidth="118.49932861328125" text="Waktu" />
-                        <TableColumn fx:id="colJumlahPasien" prefWidth="93.0723876953125" text="Jumlah Pasien" />
+                        <TableColumn fx:id="colStatus" prefWidth="93.0723876953125" text="Status" />
                         <TableColumn fx:id="colAction" prefWidth="132.0091552734375" text="Aksi" />
                      </columns>
                   </TableView>

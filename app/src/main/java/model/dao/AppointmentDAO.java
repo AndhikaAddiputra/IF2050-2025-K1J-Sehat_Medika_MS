@@ -219,13 +219,14 @@ public class AppointmentDAO {
         return appointments;
     }
 
-    public void updateAppointmentStatus(Appointment appointment) throws SQLException {
+    public boolean updateAppointmentStatus(Appointment appointment) throws SQLException {
         String sql = "UPDATE Appointment SET appointmentStatus = ? WHERE appointmentId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, appointment.getAppointmentStatus().name());
             pstmt.setInt(2, appointment.getAppointmentId());
-            pstmt.executeUpdate();
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0; // Return true if at least one row was updated
         }
     }
 }
