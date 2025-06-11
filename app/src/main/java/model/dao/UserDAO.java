@@ -22,22 +22,24 @@ public class UserDAO {
         user.setEmail(rs.getString("email"));
         user.setPhoneNumber(rs.getString("phoneNumber")); 
         user.setRole(UserRole.valueOf(rs.getString("role"))); 
+        user.setFullname(rs.getString("fullName"));
         Timestamp lastLoginTimestamp = rs.getTimestamp("lastLogin");
         user.setLastlogin(lastLoginTimestamp != null ? lastLoginTimestamp.toLocalDateTime() : null);
         return user;
     }
 
     public void addUser(User user) throws SQLException {
-        String sql = "INSERT INTO User (userId, username, password, email, phoneNumber, role, lastLogin) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO User (userId, username, password, email, phoneNumber, fullName, role, lastLogin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getUserId());
             pstmt.setString(2, user.getUsername());
             pstmt.setString(3, user.getPassword());
             pstmt.setString(4, user.getEmail());
-            pstmt.setString(5, user.getPhoneNumber()); 
-            pstmt.setString(6, user.getRole().name());
-            pstmt.setTimestamp(7, user.getLastlogin() != null ? Timestamp.valueOf(user.getLastlogin()) : null);
+            pstmt.setString(5, user.getPhoneNumber());
+            pstmt.setString(6, user.getFullname()); 
+            pstmt.setString(7, user.getRole().name());
+            pstmt.setTimestamp(8, user.getLastlogin() != null ? Timestamp.valueOf(user.getLastlogin()) : null);
             pstmt.executeUpdate();
         }
     }
@@ -63,6 +65,21 @@ public class UserDAO {
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    user = mapResultSetToUser(rs);
+                }
+            }
+        }
+        return user;
+    }
+
+    public User getUserByFullname(String fullname) throws SQLException {
+        User user = null;
+        String sql = "SELECT * FROM User WHERE fullName = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, fullname);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     user = mapResultSetToUser(rs);
@@ -101,16 +118,17 @@ public class UserDAO {
     }
 
     public void updateUser(User user) throws SQLException {
-        String sql = "UPDATE User SET username = ?, password = ?, email = ?, phoneNumber = ?, role = ?, lastLogin = ? WHERE userId = ?";
+        String sql = "UPDATE User SET username = ?, password = ?, email = ?, phoneNumber = ?, fullName = ?, role = ?, lastLogin = ? WHERE userId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
             pstmt.setString(3, user.getEmail());
-            pstmt.setString(4, user.getPhoneNumber()); 
-            pstmt.setString(5, user.getRole().name());
-            pstmt.setTimestamp(6, user.getLastlogin() != null ? Timestamp.valueOf(user.getLastlogin()) : null);
-            pstmt.setString(7, user.getUserId());
+            pstmt.setString(4, user.getPhoneNumber());
+            pstmt.setString(5, user.getFullname()); 
+            pstmt.setString(6, user.getRole().name());
+            pstmt.setTimestamp(7, user.getLastlogin() != null ? Timestamp.valueOf(user.getLastlogin()) : null);
+            pstmt.setString(8, user.getUserId());
             pstmt.executeUpdate();
         }
     }

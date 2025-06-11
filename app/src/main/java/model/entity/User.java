@@ -9,13 +9,14 @@ public class User {
     private String password;
     private String email;
     private String phoneNumber;
+    private String fullname;
     private UserRole role;
     private LocalDateTime lastlogin;
 
 
     public User() {}
 
-    public User(String userId, String username, String password, String email, String phoneNumber, UserRole role, LocalDateTime lastlogin) {
+    public User(String userId, String username, String password, String email, String phoneNumber, UserRole role, LocalDateTime lastlogin, String fullname) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -23,6 +24,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.lastlogin = lastlogin;
+        this.fullname = fullname;
     }
 
     public String getUserId() {
@@ -66,6 +68,12 @@ public class User {
     }
     public void setLastlogin(LocalDateTime lastlogin) {
         this.lastlogin = lastlogin;
+    }
+    public String getFullname(){
+        return fullname;
+    }
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     @Override

@@ -108,7 +108,7 @@ public class PatientProfileController {
     
     private void loadUserData() {
         if (currentUser != null) {
-            namaLengkapField.setText(currentUser.getUsername());
+            namaLengkapField.setText(currentUser.getFullname());
             emailField.setText(currentUser.getEmail());
             usernameField.setText(currentUser.getUsername());
             nomorTeleponField.setText(currentUser.getPhoneNumber());
