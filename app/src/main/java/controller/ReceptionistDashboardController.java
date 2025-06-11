@@ -1,8 +1,14 @@
 package controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,12 +21,6 @@ import model.entity.Appointment;
 import model.entity.AppointmentStatus;
 import model.entity.User;
 import view.LoginView;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import javafx.scene.Node;
 
 public class ReceptionistDashboardController {
     
@@ -111,7 +111,26 @@ public class ReceptionistDashboardController {
 
     @FXML
     private void handleJanjiTemuClick(ActionEvent event) {
-        System.out.println("Appointment management clicked");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AppointmentReceptionist.fxml"));
+            Parent root = loader.load();
+            
+            // Fix: Change PatientProfileController to AppointmentReceptionistController
+            AppointmentReceptionistController controller = loader.getController();
+            controller.setUser(currentUser);
+            
+            Stage currentStage = (Stage) janjiTemuSidebarButton.getScene().getWindow();
+            currentStage.close();
+            
+            Stage newStage = new Stage();
+            newStage.setTitle("Receptionist Appointment - Klinik Sehat Medika");
+            newStage.setScene(new Scene(root, 1200, 800));
+            newStage.show();
+            
+        } catch (Exception e) {
+            System.err.println("Error opening appointment view: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML

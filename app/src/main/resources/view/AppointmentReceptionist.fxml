@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- <?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?> -->
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
@@ -49,7 +48,7 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Line>
-            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" stylesheets="@style.css" text="Dashboard" textFill="WHITE">
+            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -59,7 +58,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Dashboard.png" />
+                        <Image url="@../icon/Dashboard.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -67,7 +66,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="profilSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="91.0" mnemonicParsing="false" onAction="handleProfilClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button-dashboard" stylesheets="@style.css" text="Profil" textFill="WHITE">
+            <Button fx:id="profilSidebarButton" onAction="#handleProfilClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="91.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -77,7 +76,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Profil.png" />
+                        <Image url="@../icon/Profil.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -85,7 +84,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="janjiTemuSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="141.0" mnemonicParsing="false" onAction="handleJanjiTemuCLick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" styleClass="sidebar-button" text="Janji Temu" textFill="WHITE">
+            <Button fx:id="janjiTemuSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="141.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Janji Temu" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -95,7 +94,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Janji%20Temu.png" />
+                        <Image url="@../icon/Janji Temu.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -103,7 +102,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="daftarPasienBaruSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" onAction="handleRiwayatMedisClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" text="Daftar Pasien Baru" textFill="WHITE">
+            <Button fx:id="daftarPasienBaruSidebarButton" onAction="#handleDaftarPasienBaruClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Daftar Pasien Baru" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -113,7 +112,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Mendaftarkan%20Pasien%20Baru.png" />
+                        <Image url="@../icon/Mendaftarkan Pasien Baru.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -121,7 +120,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="jadwalDokterSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="241.0" mnemonicParsing="false" onAction="handleJadwalDokterClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" text="Jadwal Dokter" textFill="WHITE">
+            <Button fx:id="jadwalDokterSidebarButton" onAction="#handleJadwalDokterClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="241.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Jadwal Dokter" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -131,7 +130,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Mengatur%20Jadwal%20Dokter.png" />
+                        <Image url="@../icon/Mengatur Jadwal Dokter.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -139,7 +138,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="notifikasiSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="291.0" mnemonicParsing="false" onAction="handleNotifikasiClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" text="Notifikasi" textFill="WHITE">
+            <Button fx:id="notifikasiSidebarButton" onAction="#handleNotifikasiClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="291.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -149,7 +148,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Notifikasi.png" />
+                        <Image url="@../icon/Notifikasi.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -159,7 +158,7 @@
             </Button>
             <AnchorPane prefHeight="292.0" prefWidth="311.0" />
             <Line endX="207.2928924560547" startX="-100.0" stroke="WHITE" />
-            <Button fx:id="keluarSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="341.0" mnemonicParsing="false" onAction="#handleKeluarClick" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" styleClass="sidebar-button" text="Keluar" textFill="WHITE">
+            <Button fx:id="keluarSidebarButton" onAction="#handleKeluarClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="341.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -169,7 +168,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icon/Keluar.png" />
+                        <Image url="@../icon/Keluar.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -194,36 +193,21 @@
                         <TableColumn fx:id="colSpesialis" prefWidth="149.000732421875" text="Spesialis" />
                         <TableColumn fx:id="colDate" prefWidth="155.00067138671875" text="Tanggal" />
                         <TableColumn fx:id="colTime" prefWidth="118.49932861328125" text="Waktu" />
-                        <TableColumn fx:id="colAction" prefWidth="93.0723876953125" text="Jumlah Pasien" />
-                        <TableColumn fx:id="colTime1" prefWidth="132.0091552734375" text="Aksi" />
+                        <TableColumn fx:id="colJumlahPasien" prefWidth="93.0723876953125" text="Jumlah Pasien" />
+                        <TableColumn fx:id="colAction" prefWidth="132.0091552734375" text="Aksi" />
                      </columns>
                   </TableView>
                </children>
             </VBox>
             <HBox layoutX="29.0" layoutY="25.0" prefHeight="48.0" prefWidth="774.0">
                <children>
-                  <ToggleButtonGroup fx:id="filterToggleGroup" prefHeight="0.0" prefWidth="134.0" selectionType="SINGLE">
-                     <toggles>
-                        <ToggleButton prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Hari Ini" textFill="WHITE">
-                           <font>
-                              <Font name="Arial" size="13.0" />
-                           </font>
-                        </ToggleButton>
-                        <ToggleButton prefHeight="25.0" prefWidth="100.0" selected="true" style="-fx-background-color: #46D6A9;" text="Akan Datang" textFill="WHITE" />
-                     </toggles>
-                     <HBox.margin>
-                        <Insets top="10.0" />
-                     </HBox.margin>
-                  </ToggleButtonGroup>
-                  <Region prefHeight="48.0" prefWidth="420.0" />
-                  <Button fx:id="addAppointmentButton" mnemonicParsing="false" prefHeight="36.0" prefWidth="162.0" style="-fx-background-color: #46D6A9;" stylesheets="@style.css" text="Atur Janji Temu Baru" textFill="WHITE">
+                  <ToggleButton fx:id="requestToggle" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Diajukan" textFill="WHITE">
                      <font>
-                        <Font name="Arial Bold" size="13.0" />
+                        <Font name="Arial" size="13.0" />
                      </font>
-                     <HBox.margin>
-                        <Insets top="10.0" />
-                     </HBox.margin>
-                  </Button>
+                  </ToggleButton>
+                  <ToggleButton fx:id="acceptToggle" prefHeight="25.0" prefWidth="100.0" selected="true" style="-fx-background-color: #46D6A9;" text="Diterima" textFill="WHITE" />
+                  <Region prefHeight="48.0" prefWidth="420.0" />
                </children>
             </HBox>
          </children>

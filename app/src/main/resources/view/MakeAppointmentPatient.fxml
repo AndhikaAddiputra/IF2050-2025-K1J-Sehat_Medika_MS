@@ -47,7 +47,7 @@
                   <Insets left="40.0" right="40.0" />
                </VBox.margin>
             </ComboBox>
-            <Label layoutX="50.0" layoutY="190.0" text="Dokter" textFill="WHITE">
+            <Label layoutX="50.0" layoutY="190.0" text="Tanggal" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font>

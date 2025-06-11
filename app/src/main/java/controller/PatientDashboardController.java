@@ -135,7 +135,7 @@ public class PatientDashboardController {
     private void handleJanjiTemuClick(ActionEvent event) {
         try {
             URL fxmlUrl = getClass().getResource("/view/AppointmentPatient.fxml");
-            System.out.println("FXML URL: " + fxmlUrl); // Tambahkan ini
+            System.out.println("FXML URL: " + fxmlUrl); 
             if (fxmlUrl == null) {
                 throw new RuntimeException("FXML file not found! Make sure AppointmentPatient.fxml is in src/main/resources/view");
             }

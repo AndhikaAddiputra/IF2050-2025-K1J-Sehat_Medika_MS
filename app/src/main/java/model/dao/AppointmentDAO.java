@@ -174,4 +174,38 @@ public class AppointmentDAO {
             pstmt.executeUpdate();
         }
     }
+
+    public Appointment getAppointmentByDetails(String doctorName, String date, String time) throws SQLException {
+        String sql = """
+            SELECT a.* FROM Appointment a
+            JOIN Doctor d ON a.doctorId = d.doctorId
+            WHERE d.name = ? AND DATE(a.appointmentDate) = STR_TO_DATE(?, '%d-%m-%Y')
+            AND TIME(a.appointmentDate) = STR_TO_DATE(?, '%H:%i')
+            LIMIT 1
+        """;
+
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, doctorName);
+            pstmt.setString(2, date);
+            pstmt.setString(3, time);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToAppointment(rs);
+                }
+            }
+        }
+
+        throw new SQLException("Appointment not found for given doctor, date, and time.");
+    }
+
+    public void updateAppointmentStatus(Appointment appointment) throws SQLException {
+        String sql = "UPDATE Appointment SET appointmentStatus = ? WHERE appointmentId = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, appointment.getStatus().name());
+            pstmt.setInt(2, appointment.getAppointmentId());
+            pstmt.executeUpdate();
+        }
+    }
 }
