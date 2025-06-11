@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PharmacistDashboardController">
    <children>
       <VBox layoutX="-6.0" prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #46D6A9;">
          <children>
@@ -61,7 +61,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="profilSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="91.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
+            <Button fx:id="profilSidebarButton" onAction="#handleProfilClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="91.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -79,7 +79,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="resepObatSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="141.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
+            <Button fx:id="resepObatSidebarButton" onAction="#handleProsesResepObatClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="141.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -97,7 +97,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="persediaanObatSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Persediaan Obat" textFill="WHITE">
+            <Button fx:id="persediaanObatSidebarButton" onAction="#handleMengaturPersediaanObatClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Persediaan Obat" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -115,7 +115,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="notifikasiSIdebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="291.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
+            <Button fx:id="notifikasiSidebarButton" onAction="#handleNotifikasiClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="291.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -135,7 +135,7 @@
             </Button>
             <AnchorPane prefHeight="348.0" prefWidth="311.0" />
             <Line endX="207.2928924560547" startX="-100.0" stroke="WHITE" />
-            <Button fx:id="keluarSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="341.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
+            <Button fx:id="keluarSidebarButton" onAction="#handleKeluarClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="341.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -165,7 +165,7 @@
             <Font name="Arial Bold" size="25.0" />
          </font>
       </Label>
-      <Label layoutX="330.0" layoutY="83.0" prefHeight="30.0" prefWidth="458.0" text="Selamat datang di portal pasien Klini Sehat Medika">
+      <Label layoutX="330.0" layoutY="83.0" prefHeight="30.0" prefWidth="458.0" text="Selamat datang di portal apoteker Klini Sehat Medika">
          <font>
             <Font name="Arial" size="20.0" />
          </font>
