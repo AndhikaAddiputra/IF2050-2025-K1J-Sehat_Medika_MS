@@ -197,9 +197,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Appointment` (
   `appointmentDate` DATETIME NOT NULL,
   `duration` INT NOT NULL,
   `reason` VARCHAR(255) NOT NULL,
-  `appointmentStatus` ENUM('SCHEDULED', 'CANCELLED', 'COMPLETED', 'NOSHOW', 'INPROGRESS') NOT NULL, -- Using VARCHAR as per class diagram 'AppointmentStatus' (string representation)
+  `appointmentStatus` ENUM('REQUESTED', 'ACCEPTED') NOT NULL, -- Using VARCHAR as per class diagram 'AppointmentStatus' (string representation)
   `queueNumber` INT NOT NULL,
-  `doctorConfirmation` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`appointmentId`),
   INDEX `idx_Appointment_patientId` (`patientId` ASC) VISIBLE,
   INDEX `idx_Appointment_doctorId` (`doctorId` ASC) VISIBLE,
@@ -364,14 +363,14 @@ INSERT INTO `MedicalRecord` (`patientId`, `doctorId`, `recordDate`, `diagnosis`,
 ('PAT002', 'DOC002', DATE_SUB(NOW(), INTERVAL 9 DAY), 'Acute Lumbago', 'Severe lower back pain after lifting', 'Prescribed short course of Vicodin. Advised rest.', 'mri_lumbar_request.pdf');
 
 -- 10. Appointment (Maksimal 10, menggunakan dokter dan pasien yang ada. doctorConfirmation diasumsikan TINYINT(1))
-INSERT INTO `Appointment` (`patientId`, `doctorId`, `appointmentDate`, `duration`, `reason`, `appointmentStatus`, `queueNumber`, `doctorConfirmation`) VALUES
-('PAT001', 'DOC001', DATE_ADD(NOW(), INTERVAL 1 DAY), 30, 'Follow-up post-op & bronchitis', 'SCHEDULED', 1, 1),
-('PAT002', 'DOC002', DATE_ADD(NOW(), INTERVAL 1 DAY), 20, 'BP check & Lisinopril review', 'SCHEDULED', 2, 0),
-('PAT003', 'DOC001', DATE_ADD(NOW(), INTERVAL 2 DAY), 45, 'Diabetes & Cholesterol management', 'SCHEDULED', 1, 1),
-('PAT004', 'DOC003', DATE_ADD(NOW(), INTERVAL 2 DAY), 30, 'Asthma action plan review', 'SCHEDULED', 2, 1),
-('PAT001', 'DOC002', DATE_ADD(NOW(), INTERVAL 3 DAY), 20, 'GERD symptom check', 'SCHEDULED', 1, 0),
-('PAT002', 'DOC001', DATE_SUB(NOW(), INTERVAL -1 HOUR), 40, 'Psychiatry follow-up (Sertraline)', 'INPROGRESS', 5, 1),
-('PAT003', 'DOC003', DATE_SUB(NOW(), INTERVAL -2 DAY), 15, 'INR check for Warfarin', 'COMPLETED', 3, 1),
-('PAT004', 'DOC001', DATE_ADD(NOW(), INTERVAL 4 DAY), 30, 'Edema follow-up & cardiac results', 'SCHEDULED', 3, 1),
-('PAT001', 'DOC003', DATE_ADD(NOW(), INTERVAL 5 DAY), 25, 'Sinusitis follow-up', 'SCHEDULED', 4, 0),
-('PAT002', 'DOC002', DATE_SUB(NOW(), INTERVAL -1 DAY), 20, 'Acute back pain evaluation', 'COMPLETED', 6, 1);
+INSERT INTO `Appointment` (`patientId`, `doctorId`, `appointmentDate`, `duration`, `reason`, `appointmentStatus`, `queueNumber`) VALUES
+('PAT001', 'DOC001', DATE_ADD(NOW(), INTERVAL 1 DAY), 30, 'Follow-up post-op & bronchitis', 'REQUESTED', 1),
+('PAT002', 'DOC002', DATE_ADD(NOW(), INTERVAL 1 DAY), 20, 'BP check & Lisinopril review', 'REQUESTED', 2),
+('PAT003', 'DOC001', DATE_ADD(NOW(), INTERVAL 2 DAY), 45, 'Diabetes & Cholesterol management', 'REQUESTED', 1),
+('PAT004', 'DOC003', DATE_ADD(NOW(), INTERVAL 2 DAY), 30, 'Asthma action plan review', 'REQUESTED', 2),
+('PAT001', 'DOC002', DATE_ADD(NOW(), INTERVAL 3 DAY), 20, 'GERD symptom check', 'REQUESTED', 1),
+('PAT002', 'DOC001', DATE_SUB(NOW(), INTERVAL -1 HOUR), 40, 'Psychiatry follow-up (Sertraline)', 'REQUESTED', 5),
+('PAT003', 'DOC003', DATE_SUB(NOW(), INTERVAL -2 DAY), 15, 'INR check for Warfarin', 'ACCEPTED', 3),
+('PAT004', 'DOC001', DATE_ADD(NOW(), INTERVAL 4 DAY), 30, 'Edema follow-up & cardiac results', 'REQUESTED', 1),
+('PAT001', 'DOC003', DATE_ADD(NOW(), INTERVAL 5 DAY), 25, 'Sinusitis follow-up', 'REQUESTED', 1),
+('PAT002', 'DOC002', DATE_SUB(NOW(), INTERVAL -1 DAY), 20, 'Acute back pain evaluation', 'ACCEPTED', 6);
