@@ -86,7 +86,7 @@ public class AppointmentReceptionistController {
                         try {
                             Appointment appointment = appointmentDAO.getAppointmentByDetails(
                                 data.getDoctorName(), data.getDate(), data.getTime());
-                            appointment.setStatus(AppointmentStatus.COMPLETED);
+                            appointment.setAppointmentStatus(AppointmentStatus.ACCEPTED);
                             appointmentDAO.updateAppointmentStatus(appointment);
                             loadAppointments();
                         } catch (Exception e) {
@@ -142,11 +142,11 @@ public class AppointmentReceptionistController {
     private List<Appointment> filterAppointments(List<Appointment> appointments) {
         if (acceptToggle.isSelected()) {
             return appointments.stream()
-                .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED)
+                .filter(a -> a.getAppointmentStatus() == AppointmentStatus.ACCEPTED)
                 .collect(Collectors.toList());
         } else if (requestToggle.isSelected()) {
             return appointments.stream()
-                .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
+                .filter(a -> a.getAppointmentStatus() == AppointmentStatus.REQUESTED)
                 .collect(Collectors.toList());
         }
         return appointments;

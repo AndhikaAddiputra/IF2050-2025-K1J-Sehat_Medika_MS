@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement; 
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,33 +18,32 @@ public class AppointmentDAO {
 
     private Appointment mapResultSetToAppointment(ResultSet rs) throws SQLException {
         Appointment appointment = new Appointment();
-        appointment.setAppointmentId(rs.getInt("appointmentId")); 
+        appointment.setAppointmentId(rs.getInt("appointmentId"));
         appointment.setPatientId(rs.getString("patientId"));
         appointment.setDoctorId(rs.getString("doctorId"));
         Timestamp appointmentDateTimestamp = rs.getTimestamp("appointmentDate");
         appointment.setAppointmentDate(appointmentDateTimestamp != null ? appointmentDateTimestamp.toLocalDateTime() : null);
-        appointment.setDuration(rs.getInt("duration")); 
-        appointment.setReason(rs.getString("reason"));  
-        String statusStr = rs.getString("appointmentStatus");
-        appointment.setStatus(statusStr != null ? AppointmentStatus.valueOf(statusStr) : null); 
+        appointment.setDuration(rs.getInt("duration"));
+        appointment.setReason(rs.getString("reason"));
+        String statusStr = rs.getString("appointmentStatus"); // Pastikan ini 'appointmentStatus'
+        appointment.setAppointmentStatus(statusStr != null ? AppointmentStatus.valueOf(statusStr) : null);
         appointment.setQueueNumber(rs.getInt("queueNumber"));
-        appointment.setDoctorConfirmation(rs.getBoolean("doctorConfirmation")); 
         return appointment;
     }
 
     public void addAppointment(Appointment appointment) throws SQLException {
-        String sql = "INSERT INTO Appointment (patientId, doctorId, appointmentDate, duration, reason, status, queueNumber, doctorConfirmation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // SQL ini hanya menyertakan kolom yang ada di tabel Appointment Anda (7 kolom non-ID)
+        String sql = "INSERT INTO Appointment (patientId, doctorId, appointmentDate, duration, reason, appointmentStatus, queueNumber) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = new DatabaseConnection().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, appointment.getPatientId());
             pstmt.setString(2, appointment.getDoctorId());
             pstmt.setTimestamp(3, appointment.getAppointmentDate() != null ? Timestamp.valueOf(appointment.getAppointmentDate()) : null);
             pstmt.setInt(4, appointment.getDuration());
             pstmt.setString(5, appointment.getReason());
-            pstmt.setString(6, appointment.getStatus() != null ? appointment.getStatus().name() : null);
+            pstmt.setString(6, appointment.getAppointmentStatus() != null ? appointment.getAppointmentStatus().name() : null);
             pstmt.setInt(7, appointment.getQueueNumber());
-            pstmt.setBoolean(8, appointment.isDoctorConfirmed());
-            
+
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {
@@ -53,7 +52,7 @@ public class AppointmentDAO {
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    appointment.setAppointmentId(generatedKeys.getInt(1)); 
+                    appointment.setAppointmentId(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating appointment failed, no ID obtained.");
                 }
@@ -66,7 +65,7 @@ public class AppointmentDAO {
         String sql = "SELECT * FROM Appointment WHERE appointmentId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, appointmentId); 
+            pstmt.setInt(1, appointmentId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     appointment = mapResultSetToAppointment(rs);
@@ -108,7 +107,6 @@ public class AppointmentDAO {
 
     public List<Appointment> getAppointmentsByDate(LocalDateTime date) throws SQLException {
         List<Appointment> appointments = new ArrayList<>();
-        // Query for appointments on a specific date (ignoring time for comparison)
         String sql = "SELECT * FROM Appointment WHERE DATE(appointmentDate) = DATE(?) ORDER BY appointmentDate ASC";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -137,7 +135,9 @@ public class AppointmentDAO {
 
     public List<Appointment> getActiveAppointments(String patientId) throws SQLException {
         List<Appointment> appointments =  new ArrayList<>();
-        String sql = "Select * from Appointment where patientId = ? AND AppointmentStatus = 'SCHEDULED' order by appointmentDate desc";
+        // Menggunakan 'appointmentStatus' bukan 'AppointmentStatus' (case-sensitive)
+        // Dan menggunakan 'REQUESTED' atau 'ACCEPTED' sesuai ENUM DB
+        String sql = "SELECT * FROM Appointment WHERE patientId = ? AND (appointmentStatus = 'REQUESTED' OR appointmentStatus = 'ACCEPTED') ORDER BY appointmentDate DESC";
         try (Connection conn = new DatabaseConnection().getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, patientId);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -150,7 +150,8 @@ public class AppointmentDAO {
     }
 
     public void updateAppointment(Appointment appointment) throws SQLException {
-        String sql = "UPDATE Appointment SET patientId = ?, doctorId = ?, appointmentDate = ?, duration = ?, reason = ?, status = ?, queueNumber = ?, doctorConfirmation = ? WHERE appointmentId = ?";
+        // Menggunakan 'appointmentStatus' dan tidak ada 'doctorConfirmation'
+        String sql = "UPDATE Appointment SET patientId = ?, doctorId = ?, appointmentDate = ?, duration = ?, reason = ?, appointmentStatus = ?, queueNumber = ? WHERE appointmentId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, appointment.getPatientId());
@@ -158,10 +159,9 @@ public class AppointmentDAO {
             pstmt.setTimestamp(3, appointment.getAppointmentDate() != null ? Timestamp.valueOf(appointment.getAppointmentDate()) : null);
             pstmt.setInt(4, appointment.getDuration());
             pstmt.setString(5, appointment.getReason());
-            pstmt.setString(6, appointment.getStatus() != null ? appointment.getStatus().name() : null);
+            pstmt.setString(6, appointment.getAppointmentStatus() != null ? appointment.getAppointmentStatus().name() : null);
             pstmt.setInt(7, appointment.getQueueNumber());
-            pstmt.setBoolean(8, appointment.isDoctorConfirmed());
-            pstmt.setInt(9, appointment.getAppointmentId()); 
+            pstmt.setInt(8, appointment.getAppointmentId()); // Ini adalah parameter untuk WHERE clause
             pstmt.executeUpdate();
         }
     }
@@ -170,23 +170,23 @@ public class AppointmentDAO {
         String sql = "DELETE FROM Appointment WHERE appointmentId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, appointmentId); 
+            pstmt.setInt(1, appointmentId);
             pstmt.executeUpdate();
         }
     }
 
     public Appointment getAppointmentByDetails(String doctorName, String date, String time) throws SQLException {
         String sql = """
-            SELECT a.* FROM Appointment a
-            JOIN Doctor d ON a.doctorId = d.doctorId
-            WHERE d.name = ? AND DATE(a.appointmentDate) = STR_TO_DATE(?, '%d-%m-%Y')
-            AND TIME(a.appointmentDate) = STR_TO_DATE(?, '%H:%i')
-            LIMIT 1
-        """;
+                 SELECT a.* FROM Appointment a
+                 JOIN Doctor d ON a.doctorId = d.doctorId
+                 WHERE d.fullName = ? AND DATE(a.appointmentDate) = STR_TO_DATE(?, '%d-%m-%Y')
+                 AND TIME(a.appointmentDate) = STR_TO_DATE(?, '%H:%i')
+                 LIMIT 1
+             """;
 
         try (Connection conn = new DatabaseConnection().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, doctorName);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, doctorName); // Pastikan ini adalah nama dokter, dari kolom fullName
             pstmt.setString(2, date);
             pstmt.setString(3, time);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -202,28 +202,28 @@ public class AppointmentDAO {
     public List<Appointment> getAppointmentsByDoctorAndDate(String doctorId, LocalDateTime dateTime) throws SQLException {
         List<Appointment> appointments = new ArrayList<>();
         String sql = "SELECT * FROM Appointment WHERE doctorId = ? AND DATE(appointmentDate) = DATE(?) ORDER BY appointmentDate ASC";
-        
+
         try (Connection conn = new DatabaseConnection().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, doctorId);
             pstmt.setTimestamp(2, Timestamp.valueOf(dateTime));
-            
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     appointments.add(mapResultSetToAppointment(rs));
                 }
             }
         }
-        
+
         return appointments;
     }
 
     public void updateAppointmentStatus(Appointment appointment) throws SQLException {
         String sql = "UPDATE Appointment SET appointmentStatus = ? WHERE appointmentId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, appointment.getStatus().name());
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, appointment.getAppointmentStatus().name());
             pstmt.setInt(2, appointment.getAppointmentId());
             pstmt.executeUpdate();
         }

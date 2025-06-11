@@ -30,6 +30,8 @@ import model.entity.Patient;
 import model.entity.User;
 import view.LoginView;
 
+import java.time.LocalDateTime;
+
 public class AppointmentPatientController {
 
     @FXML private Button dashboardSidebarButton;
@@ -80,9 +82,9 @@ public class AppointmentPatientController {
     private void setupTableColumns() {
         colDoctorName.setCellValueFactory(new PropertyValueFactory<>("doctorName"));
         colSpesialist.setCellValueFactory(new PropertyValueFactory<>("specialization"));
-        colDate.setCellValueFactory(new PropertyValueFactory<>("date")); 
+        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
-        colAction.setCellValueFactory(new PropertyValueFactory<>("action"));    
+        colAction.setCellValueFactory(new PropertyValueFactory<>("action"));
     }
 
     private void setupToggleButtons() {
@@ -102,7 +104,7 @@ public class AppointmentPatientController {
             ObservableList<AppointmentTableData> tableData = FXCollections.observableArrayList();
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-            
+
             for (Appointment appointment : filteredAppointments) {
                 Doctor doctor = doctorDAO.getDoctorById(appointment.getDoctorId());
                 AppointmentTableData data = new AppointmentTableData();
@@ -110,15 +112,15 @@ public class AppointmentPatientController {
                 data.setSpecialization(doctor != null ? doctor.getSpecialization() : "Unknown");
                 data.setDate(appointment.getAppointmentDate().format(dateFormat));
                 data.setTime(appointment.getAppointmentDate().format(timeFormat));
-                data.setMedicalRecordInfo("N/A"); 
-                data.setDiagnosis("N/A"); 
-                data.setPrescriptionInfo("N/A"); 
+                data.setMedicalRecordInfo("N/A");
+                data.setDiagnosis("N/A");
+                data.setPrescriptionInfo("N/A");
                 data.setAppointment(appointment);
 
                 tableData.add(data);
             }
             dataAppointmentTable.setItems(tableData);
-        } 
+        }
         catch (Exception e) {
             showError("Error loading appointments: " + e.getMessage());
         }
@@ -127,15 +129,17 @@ public class AppointmentPatientController {
     private List<Appointment> filterAppointments(List<Appointment> appointments) {
         if (aktifToggle.isSelected()) {
             return appointments.stream()
-                    .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED || a.getStatus() == AppointmentStatus.INPROGRESS)
+                    .filter(a -> (a.getAppointmentStatus() == AppointmentStatus.REQUESTED || a.getAppointmentStatus() == AppointmentStatus.ACCEPTED)
+                                 && a.getAppointmentDate().isAfter(LocalDateTime.now()))
                     .collect(Collectors.toList());
         } else if (selesaiToggle.isSelected()) {
             return appointments.stream()
-                    .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED)
+                    .filter(a -> a.getAppointmentStatus() == AppointmentStatus.ACCEPTED
+                                 && a.getAppointmentDate().isBefore(LocalDateTime.now()))
                     .collect(Collectors.toList());
         } else if (batalToggle.isSelected()) {
             return appointments.stream()
-                    .filter(a -> a.getStatus() == AppointmentStatus.CANCELLED || a.getStatus() == AppointmentStatus.NOSHOW)
+                    .filter(a -> false)
                     .collect(Collectors.toList());
         }
         return appointments;
@@ -161,10 +165,10 @@ public class AppointmentPatientController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MakeAppointmentPatient.fxml"));
             Parent root = loader.load();
-            
+
             MakeAppointmentController controller = loader.getController();
             controller.setUser(currentUser);
-            
+
             Stage stage = new Stage();
             stage.setTitle("Buat Janji Temu - Klinik Sehat Medika");
             stage.setScene(new Scene(root, 600, 600));
@@ -185,18 +189,18 @@ public class AppointmentPatientController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PatientProfile.fxml"));
             Parent root = loader.load();
-            
+
             PatientProfileController controller = loader.getController();
             controller.setUser(currentUser);
-            
+
             Stage currentStage = (Stage) profilSidebarButton.getScene().getWindow();
             currentStage.close();
-            
+
             Stage newStage = new Stage();
             newStage.setTitle("Profil Pasien - Klinik Sehat Medika");
             newStage.setScene(new Scene(root, 1200, 800));
             newStage.show();
-            
+
         } catch (Exception e) {
             showError("Error opening profile: " + e.getMessage());
         }
@@ -222,11 +226,11 @@ public class AppointmentPatientController {
         try {
         Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
         currentStage.close();
-        
+
         LoginView loginView = new LoginView();
         Stage loginStage = new Stage();
-        loginView.start(loginStage);   
-        } 
+        loginView.start(loginStage);
+        }
         catch (Exception e) {
             System.err.println("Error switching to login view: " + e.getMessage());
             e.printStackTrace();
@@ -237,18 +241,18 @@ public class AppointmentPatientController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/patientDashboard.fxml"));
             Parent root = loader.load();
-            
+
             PatientDashboardController controller = loader.getController();
             controller.setUser(currentUser);
-            
+
             Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
             currentStage.close();
-            
+
             Stage newStage = new Stage();
             newStage.setTitle("Dashboard Pasien - Klinik Sehat Medika");
             newStage.setScene(new Scene(root, 1200, 800));
             newStage.show();
-            
+
         } catch (Exception e) {
             showError("Error returning to dashboard: " + e.getMessage());
         }
@@ -264,13 +268,13 @@ public class AppointmentPatientController {
 
     public static class AppointmentTableData {
         private SimpleStringProperty doctorName = new SimpleStringProperty();
-        private SimpleStringProperty specialization = new SimpleStringProperty();  // Add this line
+        private SimpleStringProperty specialization = new SimpleStringProperty();
         private SimpleStringProperty date = new SimpleStringProperty();
         private SimpleStringProperty time = new SimpleStringProperty();
         private SimpleStringProperty medicalRecordInfo = new SimpleStringProperty();
         private SimpleStringProperty diagnosis = new SimpleStringProperty();
         private SimpleStringProperty prescriptionInfo = new SimpleStringProperty();
-        private Appointment appointment;
+        private Appointment appointment; // Objek Appointment penuh
 
         public String getDoctorName() { return doctorName.get(); }
         public void setDoctorName(String name) { this.doctorName.set(name); }

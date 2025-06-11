@@ -97,7 +97,7 @@ public class DoctorDashboardController {
             // Get total patients handled
             int totalPatientsHandled = appointmentDAO.getAppointmentsByDoctorId(currentDoctor.getDoctorId())
                 .stream()
-                .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED)
+                .filter(a -> a.getAppointmentStatus() == AppointmentStatus.ACCEPTED)
                 .collect(Collectors.toSet())
                 .size();
             
@@ -108,7 +108,7 @@ public class DoctorDashboardController {
             // Get next appointment
             List<Appointment> upcomingAppointments = appointmentDAO.getAppointmentsByDoctorId(currentDoctor.getDoctorId())
                 .stream()
-                .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED && 
+                .filter(a -> a.getAppointmentStatus() == AppointmentStatus.REQUESTED && 
                        a.getAppointmentDate().isAfter(LocalDate.now().atStartOfDay()))
                 .sorted((a1, a2) -> a1.getAppointmentDate().compareTo(a2.getAppointmentDate()))
                 .collect(Collectors.toList());

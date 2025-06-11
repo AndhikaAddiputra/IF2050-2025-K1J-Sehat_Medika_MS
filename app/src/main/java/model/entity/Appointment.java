@@ -9,22 +9,20 @@ public class Appointment {
     private LocalDateTime appointmentDate;
     private int duration; 
     private String reason;
-    private AppointmentStatus status;
+    private AppointmentStatus appointmentStatus;
     private int queueNumber;
-    private boolean doctorConfirmation;
 
     public Appointment() {}
 
-    public Appointment(int appointmentId, String patientId, String doctorId, LocalDateTime appointmentDate, int duration, String reason, AppointmentStatus status, int queueNumber, boolean doctorConfirmation) {
+    public Appointment(int appointmentId, String patientId, String doctorId, LocalDateTime appointmentDate, int duration, String reason, AppointmentStatus appointmentStatus, int queueNumber, boolean doctorConfirmation) {
         this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.doctorId = doctorId;
         this.appointmentDate = appointmentDate;
         this.duration = duration;
         this.reason = reason;
-        this.status = status;
+        this.appointmentStatus = appointmentStatus;
         this.queueNumber = queueNumber;
-        this.doctorConfirmation = doctorConfirmation;
     }
 
     public int getAppointmentId() {
@@ -63,23 +61,17 @@ public class Appointment {
     public void setReason(String reason) {
         this.reason = reason;
     }
-    public AppointmentStatus getStatus() {
-        return status;
+    public AppointmentStatus getAppointmentStatus() {
+        return appointmentStatus;
     }
-    public void setStatus(AppointmentStatus status) {
-        this.status = status;
+    public void setAppointmentStatus(AppointmentStatus appointmentStatus) {
+        this.appointmentStatus = appointmentStatus;
     }
     public int getQueueNumber() {
         return queueNumber;
     }
     public void setQueueNumber(int queueNumber) {
         this.queueNumber = queueNumber;
-    }
-    public boolean isDoctorConfirmed() {
-        return doctorConfirmation;
-    }
-    public void setDoctorConfirmation(boolean doctorConfirmation) {
-        this.doctorConfirmation = doctorConfirmation;
     }
     @Override
     public String toString() {
@@ -90,9 +82,8 @@ public class Appointment {
                 ", appointmentDate=" + appointmentDate +
                 ", duration=" + duration +
                 ", reason='" + reason + '\'' +
-                ", status=" + status +
+                ", status=" + appointmentStatus +
                 ", queueNumber=" + queueNumber +
-                ", doctorConfirmation=" + doctorConfirmation +
                 '}';
     }
 

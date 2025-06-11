@@ -31,7 +31,7 @@ public class MakeAppointmentController {
     @FXML private DatePicker datePicker;
     @FXML private ComboBox<String> pilihanWaktu;
     @FXML private Button simpanButton;
-    @FXML private Button batalkanButton; // Renamed from duplicate simpanButton in FXML
+    @FXML private Button batalkanButton;
 
     private DoctorDAO doctorDAO = new DoctorDAO();
     private AppointmentDAO appointmentDAO = new AppointmentDAO();
@@ -102,16 +102,16 @@ public class MakeAppointmentController {
             Appointment appointment = new Appointment();
             appointment.setPatientId(patient.getPatientId());
             appointment.setDoctorId(pilihanDokter.getValue().getDoctorId());
-            
+
             LocalDate selectedDate = datePicker.getValue();
             LocalTime selectedTime = LocalTime.parse(pilihanWaktu.getValue());
             appointment.setAppointmentDate(LocalDateTime.of(selectedDate, selectedTime));
-            
-            appointment.setDuration(30); 
-            appointment.setReason("General consultation"); 
-            appointment.setStatus(AppointmentStatus.SCHEDULED);
+
+            appointment.setDuration(30);
+            appointment.setReason("General consultation");
+            appointment.setAppointmentStatus(AppointmentStatus.REQUESTED); // Set status ke REQUESTED
             appointment.setQueueNumber(getNextQueueNumber(selectedDate));
-            appointment.setDoctorConfirmation(false);
+            // Baris 'appointment.setDoctorConfirmation(false);' dihapus karena tidak ada di DB
 
             appointmentDAO.addAppointment(appointment);
 
@@ -161,6 +161,7 @@ public class MakeAppointmentController {
             List<Appointment> appointmentsOnDate = appointmentDAO.getAppointmentsByDate(date.atStartOfDay());
             return appointmentsOnDate.size() + 1;
         } catch (Exception e) {
+            System.err.println("Error getting next queue number: " + e.getMessage());
             return 1;
         }
     }
@@ -185,6 +186,4 @@ public class MakeAppointmentController {
         Stage stage = (Stage) simpanButton.getScene().getWindow();
         stage.close();
     }
-
-
 }

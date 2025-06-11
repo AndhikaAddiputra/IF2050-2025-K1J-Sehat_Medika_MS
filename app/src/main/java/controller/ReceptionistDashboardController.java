@@ -67,7 +67,7 @@ public class ReceptionistDashboardController {
             }
             // Waiting patients: appointments with SCHEDULED status today
             List<Appointment> waitingPatients = todayAppointments.stream()
-                    .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
+                    .filter(a -> a.getAppointmentStatus() == AppointmentStatus.REQUESTED)
                     .collect(Collectors.toList());
             if (pasienMenungguPlaceholder != null) {
                 pasienMenungguPlaceholder.setText(String.valueOf(waitingPatients.size()));
