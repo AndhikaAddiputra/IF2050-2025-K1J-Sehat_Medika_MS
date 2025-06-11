@@ -61,7 +61,7 @@ DROP TABLE IF EXISTS `mydb`.`Patient` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Patient` (
   `patientId` VARCHAR(10) NOT NULL,
-  `userId` INT UNSIGNED NOT NULL,A
+  `userId` INT UNSIGNED NOT NULL,
   `bloodType` ENUM('A', 'B','AB' ,'O') NOT NULL, 
   `allergies` VARCHAR(255) NULL,
   `height` INT NOT NULL,
