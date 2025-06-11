@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 import model.DatabaseConnection;
 import model.entity.Doctor;
-import model.entity.User;
 
 public class DoctorDAO {
 
@@ -24,9 +23,7 @@ public class DoctorDAO {
         doctor.setSalaryDoctor(rs.getInt("salaryDoctor"));
         doctor.setSpecialization(rs.getString("specialization"));
         doctor.setLicenseNumber(rs.getString("licenseNumber"));
-        
         doctor.setFullName(rs.getString("fullName"));
-
         doctor.setAvailableDays(parseDays(rs.getString("availableDays")));
         doctor.setAvailableHours(parseHours(rs.getString("availableHours")));
         return doctor;
