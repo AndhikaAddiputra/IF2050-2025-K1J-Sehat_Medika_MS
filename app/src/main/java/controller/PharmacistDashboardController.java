@@ -1,8 +1,10 @@
 package controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,56 +14,47 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import model.dao.MedicationDAO;
-// import model.dao.PrescriptionDAO;
+import model.dao.PrescriptionDAO;
+import model.dao.UserDAO;
+import model.entity.Medication;
+import model.entity.Prescription;
 import model.entity.User;
 import view.LoginView;
+import javafx.event.ActionEvent;
 
 public class PharmacistDashboardController {
 
-    // Sidebar Buttons from FXML
-    @FXML private Button profilSidebarButton;
+    @FXML private Label namePlaceHolder;
+    @FXML private Label resepDiprosesPlaceholder;
+    @FXML private Label resepSelesaiPlaceholder;
+    @FXML private Label obatTersediaPlaceholder;
+    @FXML private Label doctorNamePlaceholder;
+    @FXML private Label datePlaceholder;
+    @FXML private Label timePlacholder;
+
+    @FXML private Button dashboardSidebarButton;
     @FXML private Button resepObatSidebarButton;
     @FXML private Button persediaanObatSidebarButton;
     @FXML private Button notifikasiSidebarButton;
     @FXML private Button keluarSidebarButton;
-
-    // Aksi Cepat Buttons from FXML
     @FXML private Button prosesResepObatButton;
     @FXML private Button mengaturPersediaanObatButton;
 
-    // Placeholders from FXML
-    @FXML private Label namePlaceHolder;
-    @FXML private Label resepDiprosesPlaceholder;
-    @FXML private Label obatTersediaPlaceholder;
-    @FXML private Label resepSelesaiPlaceholder;
-    @FXML private Label datePlaceholder;
-    @FXML private Label timePlaceholder;
-    @FXML private Label doctorNamePlaceholder;
-
     private User currentUser;
-    // DAOs relevant to the Pharmacist role
-    // private PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-    private MedicationDAO medicineDAO = new MedicationDAO();
+    private PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+    private MedicationDAO medicationDAO = new MedicationDAO();
+    private UserDAO userDAO = new UserDAO();
 
     @FXML
     public void initialize() {
-        // Initialization can be left minimal as data is loaded after setUser is called,
-        // following the pattern in PatientDashboardController.
+        // Initialize any default values if needed
     }
 
-    /**
-     * Sets the current logged-in user and triggers a UI update.
-     * This method should be called from the login controller.
-     * @param user The logged-in user.
-     */
     public void setUser(User user) {
         this.currentUser = user;
         updateUserInterface();
     }
 
-    /**
-     * Updates the user-specific parts of the interface.
-     */
     private void updateUserInterface() {
         if (currentUser != null) {
             if (namePlaceHolder != null) {
@@ -70,78 +63,101 @@ public class PharmacistDashboardController {
             loadDashboardData();
         }
     }
-
-    /**
-     * Fetches data from DAOs and populates the dashboard placeholders.
-     */
+    
     private void loadDashboardData() {
-        if (currentUser == null) return;
-
         try {
-            System.out.println("Loading dashboard data for pharmacist: " + currentUser.getUsername());
-
-            // Fetch prescription counts by status
-            // int resepDiprosesCount = prescriptionDAO.getPrescriptionsByStatus("Diproses").size();
-            // int resepSelesaiCount = prescriptionDAO.getPrescriptionsByStatus("Selesai").size();
-            int obatTersediaCount = medicineDAO.getAllMedications().size();
-
-            // Update placeholders
-            // if (resepDiprosesPlaceholder != null) resepDiprosesPlaceholder.setText(String.valueOf(resepDiprosesCount));
-            // if (resepSelesaiPlaceholder != null) resepSelesaiPlaceholder.setText(String.valueOf(resepSelesaiCount));
-            if (obatTersediaPlaceholder != null) obatTersediaPlaceholder.setText(String.valueOf(obatTersediaCount));
+            // Count prescriptions in process
+            List<Prescription> inProcessPrescriptions = prescriptionDAO.getPrescriptionsByStatus("PROCESSING");
+            if (resepDiprosesPlaceholder != null) {
+                resepDiprosesPlaceholder.setText(String.valueOf(inProcessPrescriptions.size()));
+            }
             
-            // The "Agenda Mendatang" might not be relevant for a pharmacist.
-            // Populating with placeholder text for now.
-            if (datePlaceholder != null) datePlaceholder.setText("Tidak ada agenda");
-            if (timePlaceholder != null) timePlaceholder.setText("");
-            if (doctorNamePlaceholder != null) doctorNamePlaceholder.setText("");
-
-
+            // Count completed prescriptions
+            List<Prescription> completedPrescriptions = prescriptionDAO.getPrescriptionsByStatus("COMPLETED");
+            if (resepSelesaiPlaceholder != null) {
+                resepSelesaiPlaceholder.setText(String.valueOf(completedPrescriptions.size()));
+            }
+            
+            // Count available medications
+            List<Medication> availableMedications = medicationDAO.getAllMedications();
+            if (obatTersediaPlaceholder != null) {
+                obatTersediaPlaceholder.setText(String.valueOf(availableMedications.size()));
+            }
+            
+            // Set upcoming prescription info if available
+            if (!inProcessPrescriptions.isEmpty()) {
+                Prescription nextPrescription = inProcessPrescriptions.get(0);
+                
+                if (datePlaceholder != null) {
+                    LocalDateTime date = nextPrescription.getCreatedAt();
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy");
+                    datePlaceholder.setText(date.format(dateFormatter));
+                }
+                
+                if (timePlacholder != null) {
+                    LocalDateTime time = nextPrescription.getCreatedAt();
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                    timePlacholder.setText(time.format(timeFormatter));
+                }
+                
+                if (doctorNamePlaceholder != null) {
+                    String doctorName = nextPrescription.getDoctorId() != null ? 
+                        userDAO.getUsernameById(nextPrescription.getDoctorId()) : "Unknown";
+                    doctorNamePlaceholder.setText("| " + doctorName);
+                }
+            }
+            
         } catch (Exception e) {
-            System.err.println("Error loading pharmacist dashboard data: " + e.getMessage());
+            showError("Error loading dashboard data: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleDashboardClick(ActionEvent event) {
+        // Since we're already on the dashboard, we don't need to navigate
+        loadDashboardData();
+    }
+
+    @FXML
+    private void handleProsesResepObatClick(ActionEvent event) {
+        try {
+            navigateToPage("/view/PrescriptionPharmacist.fxml", "Proses Resep Obat - Klinik Sehat Medika");
+        } catch (Exception e) {
+            showError("Error opening prescription processing view: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleMengaturPersediaanObatClick(ActionEvent event) {
+        try {
+            navigateToPage("/view/MedicationPharmacist.fxml", "Persediaan Obat - Klinik Sehat Medika");
+        } catch (Exception e) {
+            showError("Error opening medication inventory view: " + e.getMessage());
         }
     }
     
-
-    @FXML
-    private void handleProfilClick(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PharmacistDashboard.fxml"));
-            Parent root = loader.load();
-
-            // Assuming PharmacistProfileController has a setUser method
-            PharmacistDashboardController controller = loader.getController();
-            controller.setUser(currentUser);
-
-            Stage currentStage = (Stage) profilSidebarButton.getScene().getWindow();
-            currentStage.close();
-
-            Stage newStage = new Stage();
-            newStage.setTitle("Profil Apoteker - Klinik Sehat Medika");
-            newStage.setScene(new Scene(root, 1200, 800));
-            newStage.show();
-
-        } catch (Exception e) {
-            System.err.println("Error opening pharmacist profile: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     @FXML
     private void handleResepObatClick(ActionEvent event) {
-        openView("/view/MedicationPharmacist.fxml", "Resep Obat", resepObatSidebarButton);
-    }
-
-    @FXML
-    private void handlePersediaanObatClick(ActionEvent event) {
-        openView("/view/MedicationPharmacist.fxml", "Persediaan Obat", persediaanObatSidebarButton);
+        try {
+            navigateToPage("/view/PrescriptionPharmacist.fxml", "Resep Obat - Klinik Sehat Medika");
+        } catch (Exception e) {
+            showError("Error opening prescription view: " + e.getMessage());
+        }
     }
     
     @FXML
+    private void handlePersediaanObatClick(ActionEvent event) {
+        try {
+            navigateToPage("/view/MedicationPharmacist.fxml", "Persediaan Obat - Klinik Sehat Medika");
+        } catch (Exception e) {
+            showError("Error opening medication inventory view: " + e.getMessage());
+        }
+    }
+
+    @FXML
     private void handleNotifikasiClick(ActionEvent event) {
-        showAlert("Info", "Fitur Notifikasi akan segera diimplementasikan.");
-        System.out.println("Notifikasi clicked");
+        showInfo("Fitur Notifikasi akan segera diimplementasikan.");
     }
 
     @FXML
@@ -149,74 +165,50 @@ public class PharmacistDashboardController {
         try {
             Stage currentStage = (Stage) keluarSidebarButton.getScene().getWindow();
             currentStage.close();
-
+            
             LoginView loginView = new LoginView();
             Stage loginStage = new Stage();
             loginView.start(loginStage);
         } catch (Exception e) {
-            System.err.println("Error switching to login view: " + e.getMessage());
+            showError("Error logging out: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
-    // --- "Aksi Cepat" Handlers ---
-
-    @FXML
-    private void handleProsesResepObatClick(ActionEvent event) {
-        // This button can navigate to the same page as the sidebar button
-        openView("/view/PrescriptionPharmacist.fxml", "Resep Obat", prosesResepObatButton);
+    
+    private void navigateToPage(String fxmlPath, String title) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent root = loader.load();
+        
+        // Set user to the controller if it has a setUser method
+        Object controller = loader.getController();
+        if (controller instanceof MedicationPharmacistController) {
+            ((MedicationPharmacistController) controller).setUser(currentUser);
+        } /*else if (controller instanceof PrescriptionPharmacistController) {
+            ((PrescriptionPharmacistController) controller).setUser(currentUser);
+        }*/
+        
+        Stage currentStage = (Stage) namePlaceHolder.getScene().getWindow();
+        currentStage.close();
+        
+        Stage newStage = new Stage();
+        newStage.setTitle(title);
+        newStage.setScene(new Scene(root, 1200, 800));
+        newStage.show();
     }
 
-    @FXML
-    private void handleMengaturPersediaanObatClick(ActionEvent event) {
-        // This button can navigate to the same page as the sidebar button
-        openView("/view/MedicationPharmacist.fxml", "Persediaan Obat", mengaturPersediaanObatButton);
-    }
-
-    // --- Utility Methods ---
-
-    /**
-     * A helper method to reduce code duplication for view navigation.
-     * @param fxmlPath The path to the FXML file.
-     * @param title The title for the new window.
-     * @param sourceButton The button that triggered the event.
-     */
-    private void openView(String fxmlPath, String title, Button sourceButton) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
-
-            // A generic way to pass the user object if the controller supports it.
-            // This requires a common interface or checking with instanceof.
-            Object loadedController = loader.getController();
-            if (loadedController instanceof UserController) { // Assuming a common interface
-                ((UserController) loadedController).setUser(currentUser);
-            }
-            
-            Stage currentStage = (Stage) sourceButton.getScene().getWindow();
-            currentStage.close();
-            
-            Stage newStage = new Stage();
-            newStage.setTitle(title + " - Klinik Sehat Medika");
-            newStage.setScene(new Scene(root, 1200, 800));
-            newStage.show();
-
-        } catch (Exception e) {
-            System.err.println("Error opening view '" + title + "': " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void showAlert(String title, String message) {
+    private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+        alert.setTitle("Informasi");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
     
-    // Optional: Create a common interface for controllers that need a User object
-    public interface UserController {
-        void setUser(User user);
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

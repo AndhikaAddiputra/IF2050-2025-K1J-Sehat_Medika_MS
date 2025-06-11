@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MedicationPharmacistController">
    <children>
       <VBox layoutX="-6.0" prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #46D6A9;">
          <children>
@@ -175,7 +175,7 @@
                         <TableColumn fx:id="colName" prefWidth="143.8447265625" text="Nama" />
                         <TableColumn fx:id="colCategory" prefWidth="146.30908203125" text="Kategori" />
                         <TableColumn fx:id="colStok" prefWidth="112.91650390625" text="Stok" />
-                        <TableColumn fx:id="colUnit" prefWidth="114.01165771484375" text="Harga/ Unit" />
+                        <TableColumn fx:id="colUnit" prefWidth="114.01165771484375" text="Unit" />
                         <TableColumn fx:id="colAction" prefWidth="144.9884033203125" text="Aksi" />
                      </columns>
                   </TableView>

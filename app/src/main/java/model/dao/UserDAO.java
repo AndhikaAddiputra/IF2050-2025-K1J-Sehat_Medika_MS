@@ -72,6 +72,26 @@ public class UserDAO {
         return user;
     }
 
+    public String getUsernameById(String userId) {
+        String sql = "SELECT username FROM User WHERE userId = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, userId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("username");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting username by ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return "Unknown";
+    }
+
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM User";
