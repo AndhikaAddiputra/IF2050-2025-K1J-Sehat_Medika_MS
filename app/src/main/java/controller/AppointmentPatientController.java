@@ -3,7 +3,6 @@ package controller;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,12 +13,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell; 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback; 
+import javafx.scene.control.cell.PropertyValueFactory; 
+
 import model.dao.AppointmentDAO;
 import model.dao.DoctorDAO;
 import model.dao.PatientDAO;
@@ -29,8 +31,10 @@ import model.entity.Doctor;
 import model.entity.Patient;
 import model.entity.User;
 import view.LoginView;
+import java.sql.SQLException; 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList; 
 
 public class AppointmentPatientController {
 
@@ -47,7 +51,7 @@ public class AppointmentPatientController {
     @FXML private TableColumn<AppointmentTableData, String> colSpesialist;
     @FXML private TableColumn<AppointmentTableData, String> colDate;
     @FXML private TableColumn<AppointmentTableData, String> colTime;
-    @FXML private TableColumn<AppointmentTableData, String> colAction;
+    @FXML private TableColumn<AppointmentTableData, Void> colAction; 
 
     @FXML private ToggleButton aktifToggle;
     @FXML private ToggleButton selesaiToggle;
@@ -59,6 +63,8 @@ public class AppointmentPatientController {
     private User currentUser;
     private Patient currentPatient;
 
+    private List<Appointment> allAppointmentsInMemory = new ArrayList<>();
+
     @FXML
     public void initialize() {
         setupTableColumns();
@@ -68,7 +74,8 @@ public class AppointmentPatientController {
     public void setUser(User user) {
         this.currentUser = user;
         loadPatientData();
-        loadAppointments();
+        loadAllAppointmentsFromDb();
+        loadAppointments(); 
     }
 
     private void loadPatientData() {
@@ -79,12 +86,54 @@ public class AppointmentPatientController {
         }
     }
 
+
+    private void loadAllAppointmentsFromDb() {
+        if (currentPatient == null) return;
+        try {
+            allAppointmentsInMemory = appointmentDAO.getAppointmentsByPatientId(currentPatient.getPatientId());
+        } catch (Exception e) {
+            showError("Error loading all appointments from database: " + e.getMessage());
+        }
+    }
+
     private void setupTableColumns() {
         colDoctorName.setCellValueFactory(new PropertyValueFactory<>("doctorName"));
         colSpesialist.setCellValueFactory(new PropertyValueFactory<>("specialization"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
-        colAction.setCellValueFactory(new PropertyValueFactory<>("action"));
+        colAction.setCellFactory(new Callback<TableColumn<AppointmentTableData, Void>, TableCell<AppointmentTableData, Void>>() {
+            @Override
+            public TableCell<AppointmentTableData, Void> call(final TableColumn<AppointmentTableData, Void> param) {
+                final TableCell<AppointmentTableData, Void> cell = new TableCell<AppointmentTableData, Void>() {
+                    private final Button batalButton = new Button("Batal"); 
+
+                    { 
+                        batalButton.setOnAction(event -> {
+                            AppointmentTableData rowData = getTableView().getItems().get(getIndex());
+                            handleCancelAppointment(rowData.getAppointment());
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) { 
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            AppointmentTableData rowData = getTableView().getItems().get(getIndex());
+                            if (rowData != null && (rowData.getAppointment().getAppointmentStatus() == AppointmentStatus.REQUESTED ||
+                                                    rowData.getAppointment().getAppointmentStatus() == AppointmentStatus.ACCEPTED) &&
+                                                    rowData.getAppointment().getAppointmentDate().isAfter(LocalDateTime.now())) {
+                                setGraphic(batalButton);
+                            } else {
+                                setGraphic(null); 
+                            }
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
     }
 
     private void setupToggleButtons() {
@@ -96,19 +145,17 @@ public class AppointmentPatientController {
     }
 
     private void loadAppointments() {
-        if (currentPatient == null) return;
-        try {
-            List<Appointment> appointments = appointmentDAO.getAppointmentsByPatientId(currentPatient.getPatientId());
-            List<Appointment> filteredAppointments = filterAppointments(appointments);
+        if (currentPatient == null || allAppointmentsInMemory == null) return;
+        List<Appointment> filteredAppointments = filterAppointments(allAppointmentsInMemory);
+        ObservableList<AppointmentTableData> tableData = FXCollections.observableArrayList();
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
 
-            ObservableList<AppointmentTableData> tableData = FXCollections.observableArrayList();
-            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-
-            for (Appointment appointment : filteredAppointments) {
+        for (Appointment appointment : filteredAppointments) {
+            try {
                 Doctor doctor = doctorDAO.getDoctorById(appointment.getDoctorId());
                 AppointmentTableData data = new AppointmentTableData();
-                data.setDoctorName(doctor != null ? doctorDAO.getDoctorNameById(doctor.getDoctorId()) : "Unknown");
+                data.setDoctorName(doctor != null ? doctor.getFullName() : "Unknown");
                 data.setSpecialization(doctor != null ? doctor.getSpecialization() : "Unknown");
                 data.setDate(appointment.getAppointmentDate().format(dateFormat));
                 data.setTime(appointment.getAppointmentDate().format(timeFormat));
@@ -118,12 +165,11 @@ public class AppointmentPatientController {
                 data.setAppointment(appointment);
 
                 tableData.add(data);
+            } catch (Exception e) {
+                System.err.println("Error getting doctor info for appointment: " + appointment.getAppointmentId() + " - " + e.getMessage());
             }
-            dataAppointmentTable.setItems(tableData);
         }
-        catch (Exception e) {
-            showError("Error loading appointments: " + e.getMessage());
-        }
+        dataAppointmentTable.setItems(tableData);
     }
 
     private List<Appointment> filterAppointments(List<Appointment> appointments) {
@@ -159,6 +205,37 @@ public class AppointmentPatientController {
     private void handleBatalFilter(ActionEvent event) {
         loadAppointments();
     }
+    private void handleCancelAppointment(Appointment appointment) {
+        try {
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Konfirmasi Pembatalan");
+            confirmationAlert.setHeaderText(null);
+            
+            String doctorNameForConfirmation = "Unknown";
+            try {
+                Doctor doc = doctorDAO.getDoctorById(appointment.getDoctorId());
+                if(doc != null && doc.getFullName() != null) {
+                    doctorNameForConfirmation = doc.getFullName();
+                }
+            } catch (Exception e) {
+                System.err.println("Error fetching doctor information: " + e.getMessage());
+            }
+
+            confirmationAlert.setContentText("Apakah Anda yakin ingin membatalkan janji temu ini dengan Dr. " + doctorNameForConfirmation + " pada tanggal " + appointment.getAppointmentDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) + "?");
+            
+            confirmationAlert.showAndWait().ifPresent(response -> {
+                if (response == javafx.scene.control.ButtonType.OK) {
+                    appointment.setAppointmentStatus(AppointmentStatus.REQUESTED);
+                    showSuccess("Janji temu berhasil dibatalkan secara visual (sementara).");
+                    loadAppointments(); 
+                }
+            });
+        } catch (Exception e) {
+            showError("Terjadi kesalahan saat mencoba membatalkan janji temu: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     private void handleNewAppointmentClick(ActionEvent event) {
@@ -173,7 +250,10 @@ public class AppointmentPatientController {
             stage.setTitle("Buat Janji Temu - Klinik Sehat Medika");
             stage.setScene(new Scene(root, 600, 600));
             stage.show();
-            stage.setOnHidden(e -> loadAppointments());
+            stage.setOnHidden(e -> {
+                loadAllAppointmentsFromDb(); 
+                loadAppointments(); 
+            });
         } catch (Exception e) {
             showError("Error opening appointment form: " + e.getMessage());
         }
@@ -266,6 +346,14 @@ public class AppointmentPatientController {
         alert.showAndWait();
     }
 
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Sukses");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     public static class AppointmentTableData {
         private SimpleStringProperty doctorName = new SimpleStringProperty();
         private SimpleStringProperty specialization = new SimpleStringProperty();
@@ -274,7 +362,10 @@ public class AppointmentPatientController {
         private SimpleStringProperty medicalRecordInfo = new SimpleStringProperty();
         private SimpleStringProperty diagnosis = new SimpleStringProperty();
         private SimpleStringProperty prescriptionInfo = new SimpleStringProperty();
-        private Appointment appointment; // Objek Appointment penuh
+        private Appointment appointment; 
+
+        public AppointmentTableData() {;
+        }
 
         public String getDoctorName() { return doctorName.get(); }
         public void setDoctorName(String name) { this.doctorName.set(name); }
