@@ -11,7 +11,7 @@ public class LoginView extends Application{
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("loginView.fxml"));
         primaryStage.setTitle("Login - Sistem Informasi dan Manajemen Klinik Sehat Medika");
-        primaryStage.setScene(new Scene(root, 600, 600));
+        primaryStage.setScene(new Scene(root, 800, 500));
         primaryStage.show();
     }
 

@@ -5,66 +5,71 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/21.0.7" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController" prefWidth="600" prefHeight="400" style="-fx-background-color: white;">
+<AnchorPane prefHeight="500" prefWidth="800.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
    <children>
-      <VBox alignment="CENTER" spacing="5" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-         <Label text="Klinik Sehat Medika" textAlignment="CENTER">
-            <font>
-               <Font name="System Bold" size="18.0" />
-            </font>
-         </Label>
-         <Label text="Sistem Manajemen Terintegrasi" textAlignment="CENTER">
-            <font>
-               <Font size="12.0" />
-            </font>
-         </Label>
+      <!-- Logo Klinik -->
+      <VBox alignment="CENTER" layoutX="375.0" layoutY="43.0" prefHeight="413.0" prefWidth="383.0" spacing="5" AnchorPane.leftAnchor="375.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="43.0">
+   
+            <!-- Panel Login -->
+         <AnchorPane prefHeight="428.0" prefWidth="383.0" style="-fx-background-color: #46D6A9; -fx-background-radius: 12;">
+            <children>
+               <VBox alignment="CENTER" layoutY="18.0" prefHeight="390.0" prefWidth="343.0" spacing="15.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
+                  <Label text="Login">
+                     <font>
+                        <Font name="Arial Bold" size="18.0" />
+                     </font>
+                  </Label>
+   
+                     <Label alignment="BASELINE_LEFT" prefHeight="18.0" prefWidth="339.0" text="Username">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="usernameField" prefHeight="35" prefWidth="260" promptText="Masukan Username Anda" />
+   
+                     <Label prefHeight="18.0" prefWidth="342.0" text="Password">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="passwordField" prefHeight="35" prefWidth="260" promptText="Masukan Password Anda" />
+   
+                     <Label fx:id="wrongLogin" textAlignment="CENTER" textFill="#ff4242">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+   
+                     <Button fx:id="masukButton" onAction="#handleLoginButtonAction" prefHeight="26.0" prefWidth="355.0" text="Masuk" />
+   
+                     <!-- Daftar di satu baris -->
+                  <HBox alignment="CENTER" spacing="5">
+                     <Label text="Belum punya akun?">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <Hyperlink text="Daftar di sini">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Hyperlink>
+                  </HBox>
+               </VBox>
+            </children>
+         </AnchorPane>
       </VBox>
-
-      <AnchorPane prefWidth="300" prefHeight="300" style="-fx-background-color: #46D6A9;" AnchorPane.topAnchor="100" AnchorPane.leftAnchor="150" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="50">
-         <children>
-            <VBox alignment="CENTER" spacing="10" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
-               <Label text="Login">
-                  <font>
-                     <Font name="Al Bayan Bold" size="16.0" />
-                  </font>
-               </Label>
-
-               <Label text="Username">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="usernameField" promptText="Username" prefHeight="30" />
-
-               <Label text="Password">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <PasswordField fx:id="passwordField" promptText="Password" prefHeight="30" />
-
-               <Label fx:id="wrongLogin" textFill="#ff4242" textAlignment="CENTER">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-
-               <Button fx:id="masukButton" text="Masuk" prefHeight="30" onAction="#handleLoginButtonAction" />
-
-               <Label text="Belum punya akun?">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-
-               <Hyperlink text="Daftar di sini" />
-            </VBox>
-         </children>
-      </AnchorPane>
+      <ImageView fitHeight="308.0" fitWidth="308.0" layoutX="43.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../icon/logo_klinik.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
