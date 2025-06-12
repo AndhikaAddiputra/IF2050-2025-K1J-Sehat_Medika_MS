@@ -89,8 +89,6 @@ IF2050-2025-K1J-Sehat_Medika_MS/
 │   │   │   └── views/          # View components
 │   │   └── resources/          # Configuration files
 │   └── test/                   # Test files
-├── docs/                       # Documentation
-└── LICENSE                     # License information
 ```
 
 ## 🏥 Healthcare Features
