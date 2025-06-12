@@ -51,7 +51,7 @@
             </Line>
             
             <!-- Dashboard Button -->
-            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
+            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -71,7 +71,7 @@
             </Button>
             
             <!-- Profile Button -->
-            <Button fx:id="profilSidebarButton" onAction="#handleProfilClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
+            <Button fx:id="profilSidebarButton" onAction="#handleProfilClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -111,7 +111,7 @@
             </Button>
             
             <!-- Diagnosis Button -->
-            <Button fx:id="diagnosisSidebarButton" onAction="#handleDiagnosisClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Diagnosis" textFill="WHITE">
+            <Button fx:id="diagnosisSidebarButton" onAction="#handleDiagnosisClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Diagnosis" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -131,7 +131,7 @@
             </Button>
             
             <!-- Resep Obat Button -->
-            <Button fx:id="resepObatSidebarButton" onAction="#handleResepObatClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
+            <Button fx:id="resepObatSidebarButton" onAction="#handleResepObatClick" styleClass="sidebar-button"  stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -151,7 +151,7 @@
             </Button>
             
             <!-- Notifikasi Button -->
-            <Button fx:id="notifikasiSidebarButton" onAction="#handleNotifikasiClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
+            <Button fx:id="notifikasiSidebarButton" onAction="#handleNotifikasiClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -174,7 +174,7 @@
             <Line endX="207.2928924560547" startX="-100.0" stroke="WHITE" />
             
             <!-- Keluar Button -->
-            <Button fx:id="keluarSidebarButton" onAction="#handleKeluarClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
+            <Button fx:id="keluarSidebarButton" onAction="#handleKeluarClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
