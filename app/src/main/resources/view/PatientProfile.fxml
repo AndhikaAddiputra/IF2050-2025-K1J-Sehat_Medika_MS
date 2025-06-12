@@ -73,7 +73,7 @@
                </VBox.margin>
             </Button>
             
-            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Dashboard" textFill="WHITE">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Profil" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
