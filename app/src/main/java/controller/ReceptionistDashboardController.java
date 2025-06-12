@@ -60,20 +60,17 @@ public class ReceptionistDashboardController {
 
     private void loadDashboardData() {
         try {
-            // Get today’s appointments (using appointment date)
             LocalDate today = LocalDate.now();
             List<Appointment> todayAppointments = appointmentDAO.getAppointmentsByDate(today.atStartOfDay());
             if (janjiTemuHariIniPlaceholder != null) {
                 janjiTemuHariIniPlaceholder.setText(String.valueOf(todayAppointments.size()));
             }
-            // Waiting patients: appointments with SCHEDULED status today
             List<Appointment> waitingPatients = todayAppointments.stream()
                     .filter(a -> a.getAppointmentStatus() == AppointmentStatus.REQUESTED)
                     .collect(Collectors.toList());
             if (pasienMenungguPlaceholder != null) {
                 pasienMenungguPlaceholder.setText(String.valueOf(waitingPatients.size()));
             }
-            // New patients registered in the past week
             long newPatientsCount = patientDAO.getAllPatients().stream()
                     .filter(p -> p.getRegistrationDate() != null &&
                         p.getRegistrationDate().isAfter(LocalDateTime.now().minusWeeks(1)))

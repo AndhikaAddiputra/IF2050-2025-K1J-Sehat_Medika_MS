@@ -365,6 +365,33 @@ public class MedicationPharmacistController {
         alert.showAndWait();
     }
 
+    // Buat metode ini tidak private (package-private) agar bisa diakses dari kelas tes
+List<Medication> filterMedicationList(List<Medication> allMedications, String selectedFilter) {
+    // Jika filter null atau "Semua", kembalikan semua data
+    if (selectedFilter == null || "Semua".equals(selectedFilter)) {
+        return allMedications;
+    }
+
+    // Gunakan stream untuk memfilter data, ini lebih bersih
+    return allMedications.stream()
+        .filter(med -> {
+            switch (selectedFilter) {
+                case "Stok Rendah":
+                    return med.getStockQuantity() <= med.getMinStockLevel();
+                case "Hampir Kadaluarsa":
+                    return med.getExpiryDate().isBefore(LocalDateTime.now().plusDays(30));
+                case "Kategori Antibiotik":
+                    return "Antibiotic".equalsIgnoreCase(med.getCategory());
+                case "Kategori Analgesik":
+                    return "Analgesic".equalsIgnoreCase(med.getCategory()) ||
+                           "Opioid Analgesic".equalsIgnoreCase(med.getCategory());
+                default:
+                    return false; // Untuk filter yang tidak dikenal
+            }
+        })
+        .collect(java.util.stream.Collectors.toList());
+}
+
     public static class MedicationTableData {
         private SimpleStringProperty genericName = new SimpleStringProperty();
         private SimpleStringProperty name = new SimpleStringProperty();

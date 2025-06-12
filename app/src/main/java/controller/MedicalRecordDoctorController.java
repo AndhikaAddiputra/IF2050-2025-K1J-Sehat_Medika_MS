@@ -32,8 +32,7 @@ import model.entity.User;
 import view.LoginView;
 
 public class MedicalRecordDoctorController {
-    
-    // Sidebar buttons
+
     @FXML private Button dashboardSidebarButton;
     @FXML private Button profilSidebarButton;
     @FXML private Button janjiTemuSidebarButton;
@@ -41,8 +40,7 @@ public class MedicalRecordDoctorController {
     @FXML private Button resepObatSidebarButton;
     @FXML private Button notifikasiSidebarButton;
     @FXML private Button keluarSidebarButton;
-    
-    // Table and columns
+
     @FXML private TableView<MedicalRecordTableData> medicalRecordsTable;
     @FXML private TableColumn<MedicalRecordTableData, String> colRecordId;
     @FXML private TableColumn<MedicalRecordTableData, String> colPatientName;
@@ -50,15 +48,13 @@ public class MedicalRecordDoctorController {
     @FXML private TableColumn<MedicalRecordTableData, String> colDiagnosis;
     @FXML private TableColumn<MedicalRecordTableData, String> colSymptoms;
     @FXML private TableColumn<MedicalRecordTableData, String> colTreatment;
-    
-    // Form fields
+
     @FXML private TextField patientNameField;
     @FXML private TextField diagnosisField;
     @FXML private TextArea symptomsArea;
     @FXML private TextArea treatmentArea;
     @FXML private TextArea notesArea;
     
-    // Action buttons
     @FXML private Button addRecordButton;
     @FXML private Button updateRecordButton;
     @FXML private Button deleteRecordButton;
@@ -66,13 +62,14 @@ public class MedicalRecordDoctorController {
     @FXML private Button searchButton;
     @FXML private TextField searchField;
     
-    private User currentUser;
-    private Doctor currentDoctor;
+    User currentUser;
+    Doctor currentDoctor;
+    MedicalRecord selectedRecord;
+    
     private MedicalRecordDAO medicalRecordDAO = new MedicalRecordDAO();
     private DoctorDAO doctorDAO = new DoctorDAO();
     private PatientDAO patientDAO = new PatientDAO();
     private ObservableList<MedicalRecordTableData> medicalRecords = FXCollections.observableArrayList();
-    private MedicalRecord selectedRecord = null;
     
     @FXML
     public void initialize() {
@@ -188,7 +185,7 @@ public class MedicalRecordDoctorController {
                     newRecord.setSymptoms(symptomsArea.getText().trim());
                     newRecord.setTreatment(treatmentArea.getText().trim());
                     newRecord.setNotes(notesArea.getText().trim());
-                    newRecord.setAttachments(""); // Set empty string for attachments
+                    newRecord.setAttachments(""); 
                     
                     medicalRecordDAO.addMedicalRecord(newRecord);
                     showSuccess("Rekam medis berhasil ditambahkan untuk " + result.getPatientName() + "!");
@@ -202,7 +199,7 @@ public class MedicalRecordDoctorController {
         }
     }
     
-    @FXML // Added missing annotation
+    @FXML 
     private void handleUpdateRecord(ActionEvent event) {
         if (selectedRecord != null && validateFormForUpdate()) {
             try {
@@ -214,8 +211,7 @@ public class MedicalRecordDoctorController {
                 
                 medicalRecordDAO.updateMedicalRecord(selectedRecord);
                 showSuccess("Rekam medis berhasil diperbarui!");
-                
-                // Refresh table and clear form
+
                 loadMedicalRecords();
                 clearForm();
                 
@@ -319,6 +315,19 @@ public class MedicalRecordDoctorController {
         }
     }
 
+    public String validateFormForAdd(String diagnosis, String symptoms, String treatment) {
+        if (diagnosis == null || diagnosis.trim().isEmpty()) {
+            return "Diagnosis tidak boleh kosong!";
+        }
+        if (symptoms == null || symptoms.trim().isEmpty()) {
+            return "Gejala tidak boleh kosong!";
+        }
+        if (treatment == null || treatment.trim().isEmpty()) {
+            return "Pengobatan tidak boleh kosong!";
+        }
+        return null;
+    }
+
     private boolean validateFormForAdd() {
         if (diagnosisField.getText().trim().isEmpty()) {
             showError("Diagnosis tidak boleh kosong!");
@@ -335,6 +344,17 @@ public class MedicalRecordDoctorController {
         return true;
     }
 
+    public void performUpdate(String diagnosis, String symptoms, String treatment, String notes) throws SQLException {
+        if (selectedRecord != null) {
+            selectedRecord.setDiagnosis(diagnosis);
+            selectedRecord.setSymptoms(symptoms);
+            selectedRecord.setTreatment(treatment);
+            selectedRecord.setNotes(notes);
+            selectedRecord.setRecordDate(LocalDateTime.now());
+            medicalRecordDAO.updateMedicalRecord(selectedRecord);
+        }
+    }
+    
     private boolean validateFormForUpdate() {
         if (patientNameField.getText().trim().isEmpty()) {
             showError("Nama pasien tidak boleh kosong!");
@@ -372,7 +392,6 @@ public class MedicalRecordDoctorController {
         addRecordButton.setDisable(false);
     }
     
-    // Sidebar navigation methods
     @FXML
     private void handleDashboardClick(ActionEvent event) {
         try {

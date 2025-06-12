@@ -213,12 +213,11 @@ public class PatientProfileController {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Password tidak boleh kosong.");
         }
-        // Bisa ditambahkan validasi lain seperti format email, dll.
     }
 
     /**
      * Metode publik untuk validasi data medis.
-     * @throws IllegalArgumentException jika ada input yang tidak valid.
+     * @throws IllegalArgumentException 
      */
     public void validateMedicalInfo(String golonganDarah, String riwayatAlergi, String beratBadan, String tinggiBadan) {
         if (golonganDarah == null || golonganDarah.isBlank()) {
