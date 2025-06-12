@@ -1,8 +1,10 @@
 package controller;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.fxml.FXML;
@@ -58,7 +60,7 @@ public class PharmacistDashboardController {
     private void updateUserInterface() {
         if (currentUser != null) {
             if (namePlaceHolder != null) {
-                namePlaceHolder.setText(currentUser.getUsername());
+                namePlaceHolder.setText(currentUser.getFullname());
             }
             loadDashboardData();
         }
@@ -67,19 +69,33 @@ public class PharmacistDashboardController {
     private void loadDashboardData() {
         try {
             // Count prescriptions in process
-            List<Prescription> inProcessPrescriptions = prescriptionDAO.getPrescriptionsByStatus("PROCESSING");
+            List<Prescription> inProcessPrescriptions = new ArrayList<>();
+            try {
+                inProcessPrescriptions = prescriptionDAO.getPrescriptionsByStatus("PROCESSING");
+            } catch (SQLException e) {
+                System.err.println("Error getting PROCESSING prescriptions: " + e.getMessage());
+            }
+            
             if (resepDiprosesPlaceholder != null) {
                 resepDiprosesPlaceholder.setText(String.valueOf(inProcessPrescriptions.size()));
             }
             
             // Count completed prescriptions
-            List<Prescription> completedPrescriptions = prescriptionDAO.getPrescriptionsByStatus("COMPLETED");
+            List<Prescription> completedPrescriptions = new ArrayList<>();
+            try {
+                completedPrescriptions = prescriptionDAO.getPrescriptionsByStatus("COMPLETED");
+            } catch (SQLException e) {
+                System.err.println("Error getting COMPLETED prescriptions: " + e.getMessage());
+            }
+            
             if (resepSelesaiPlaceholder != null) {
                 resepSelesaiPlaceholder.setText(String.valueOf(completedPrescriptions.size()));
             }
             
             // Count available medications
-            List<Medication> availableMedications = medicationDAO.getAllMedications();
+            List<Medication> availableMedications = new ArrayList<>();
+            availableMedications = medicationDAO.getAllMedications();
+            
             if (obatTersediaPlaceholder != null) {
                 obatTersediaPlaceholder.setText(String.valueOf(availableMedications.size()));
             }
@@ -88,16 +104,20 @@ public class PharmacistDashboardController {
             if (!inProcessPrescriptions.isEmpty()) {
                 Prescription nextPrescription = inProcessPrescriptions.get(0);
                 
-                if (datePlaceholder != null) {
+                if (datePlaceholder != null && nextPrescription.getCreatedAt() != null) {
                     LocalDateTime date = nextPrescription.getCreatedAt();
                     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy");
                     datePlaceholder.setText(date.format(dateFormatter));
+                } else if (datePlaceholder != null) {
+                    datePlaceholder.setText("-");
                 }
                 
-                if (timePlacholder != null) {
+                if (timePlacholder != null && nextPrescription.getCreatedAt() != null) {
                     LocalDateTime time = nextPrescription.getCreatedAt();
                     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
                     timePlacholder.setText(time.format(timeFormatter));
+                } else if (timePlacholder != null) {
+                    timePlacholder.setText("-");
                 }
                 
                 if (doctorNamePlaceholder != null) {
@@ -105,6 +125,11 @@ public class PharmacistDashboardController {
                         userDAO.getUsernameById(nextPrescription.getDoctorId()) : "Unknown";
                     doctorNamePlaceholder.setText("| " + doctorName);
                 }
+            } else {
+                // No prescriptions in process
+                if (datePlaceholder != null) datePlaceholder.setText("-");
+                if (timePlacholder != null) timePlacholder.setText("-");
+                if (doctorNamePlaceholder != null) doctorNamePlaceholder.setText("| -");
             }
             
         } catch (Exception e) {

@@ -200,6 +200,7 @@ public class PatientProfileController {
     private void saveAccountInfo() {
         try {
             currentUser.setUsername(usernameField.getText());
+            currentUser.setFullname(namaLengkapField.getText());
             currentUser.setEmail(emailField.getText());
             currentUser.setPhoneNumber(nomorTeleponField.getText());
             

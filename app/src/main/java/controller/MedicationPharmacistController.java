@@ -25,7 +25,7 @@ import view.LoginView;
 public class MedicationPharmacistController {
 
     // Sidebar buttons (as defined in your FXML)
-    @FXML private Button profileSidebarButton;
+    @FXML private Button dashboardSidebarButton;
     @FXML private Button resepObatSidebarButton;
     @FXML private Button keluarSidebarButton;
     @FXML private Button persediaanSidebarButton;
@@ -301,9 +301,11 @@ public class MedicationPharmacistController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PharmacistDashboard.fxml"));
             Parent root = loader.load();
+
             PharmacistDashboardController controller = loader.getController();
             controller.setUser(currentUser);
-            Stage currentStage = (Stage) profileSidebarButton.getScene().getWindow();
+
+            Stage currentStage = (Stage) dashboardSidebarButton.getScene().getWindow();
             currentStage.close();
             Stage newStage = new Stage();
             newStage.setTitle("Dashboard Apoteker - Klinik Sehat Medika");
@@ -312,6 +314,11 @@ public class MedicationPharmacistController {
         } catch (Exception e) {
             showError("Error returning to dashboard: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleProfilClick(ActionEvent event){
+        showInfo("Info", "Fitur Profil akan segera diimplementasikan.");
     }
 
     @FXML

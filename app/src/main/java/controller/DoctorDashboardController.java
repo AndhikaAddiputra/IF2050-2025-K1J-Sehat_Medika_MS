@@ -109,7 +109,7 @@ public class DoctorDashboardController {
             List<Appointment> upcomingAppointments = appointmentDAO.getAppointmentsByDoctorId(currentDoctor.getDoctorId())
                 .stream()
                 .filter(a -> a.getAppointmentStatus() == AppointmentStatus.REQUESTED && 
-                       a.getAppointmentDate().isAfter(LocalDate.now().atStartOfDay()))
+                    a.getAppointmentDate().isAfter(LocalDate.now().atStartOfDay()))
                 .sorted((a1, a2) -> a1.getAppointmentDate().compareTo(a2.getAppointmentDate()))
                 .collect(Collectors.toList());
             

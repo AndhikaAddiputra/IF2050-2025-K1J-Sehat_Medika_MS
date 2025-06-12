@@ -56,22 +56,66 @@ public class PrescriptionDAO {
 
     public List<Prescription> getPrescriptionsByStatus(String status) throws SQLException {
         List<Prescription> prescriptions = new ArrayList<>();
-        String sql = "SELECT * FROM Prescription WHERE status = ?";
-        try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, status);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    Prescription prescription = new Prescription();
-                    prescription.setPrescriptionId(rs.getInt("prescriptionId"));
-                    prescription.setDoctorId(rs.getString("doctorId"));
-                    prescription.setPatientId(rs.getString("patientId"));
-                    prescription.setStatus(rs.getString("status"));
-                    prescription.setCreatedAt(rs.getTimestamp("createdAt").toLocalDateTime());
-                    prescriptions.add(prescription);
+        
+        try (Connection conn = new DatabaseConnection().getConnection()) {
+            // First check if the status column exists
+            boolean statusColumnExists = false;
+            try {
+                DatabaseMetaData metaData = conn.getMetaData();
+                ResultSet rs = metaData.getColumns(null, null, "Prescription", "status");
+                statusColumnExists = rs.next();
+            } catch (Exception e) {
+                System.err.println("Error checking for status column: " + e.getMessage());
+            }
+            
+            if (statusColumnExists) {
+                // If status column exists, query by status
+                String sql = "SELECT * FROM Prescription WHERE status = ?";
+                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    pstmt.setString(1, status);
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        while (rs.next()) {
+                            prescriptions.add(mapResultSetToPrescription(rs));
+                        }
+                    }
+                }
+            } else {
+                // If status column doesn't exist, add it
+                try {
+                    Statement stmt = conn.createStatement();
+                    stmt.executeUpdate("ALTER TABLE Prescription ADD COLUMN status VARCHAR(20) DEFAULT 'PENDING'");
+                    stmt.executeUpdate("UPDATE Prescription SET status = 'PENDING'");
+                    stmt.close();
+                    
+                    // Return all prescriptions as PENDING for first-time setup
+                    if (status.equals("PENDING")) {
+                        String sql = "SELECT * FROM Prescription";
+                        try (Statement statement = conn.createStatement();
+                            ResultSet rs = statement.executeQuery(sql)) {
+                            while (rs.next()) {
+                                prescriptions.add(mapResultSetToPrescription(rs));
+                            }
+                        }
+                    }
+                    // For PROCESSING or COMPLETED, return empty list on first run
+                } catch (SQLException e) {
+                    System.err.println("Error adding status column: " + e.getMessage());
+                    // Return all prescriptions if we couldn't add the column
+                    if (status.equals("PENDING")) {
+                        String sql = "SELECT * FROM Prescription";
+                        try (Statement statement = conn.createStatement();
+                            ResultSet rs = statement.executeQuery(sql)) {
+                            while (rs.next()) {
+                                Prescription p = mapResultSetToPrescription(rs);
+                                p.setStatus("PENDING");
+                                prescriptions.add(p);
+                            }
+                        }
+                    }
                 }
             }
         }
+        
         return prescriptions;
     }
 
@@ -124,5 +168,52 @@ public class PrescriptionDAO {
         } catch (SQLException e) {
             System.out.println("Error deleting prescription: " + e.getMessage());
         }
+    }
+
+    private Prescription mapResultSetToPrescription(ResultSet rs) throws SQLException {
+        Prescription prescription = new Prescription();
+        prescription.setPrescriptionId(rs.getInt("prescriptionId"));
+        
+        try {
+            prescription.setPatientId(rs.getString("patientId"));
+        } catch (SQLException e) {
+            prescription.setPatientId(null);
+        }
+        
+        try {
+            prescription.setDoctorId(rs.getString("doctorId"));
+        } catch (SQLException e) {
+            prescription.setDoctorId(null);
+        }
+        
+        try {
+            Timestamp timestamp = rs.getTimestamp("prescriptionDate");
+            if (timestamp != null) {
+                prescription.setCreatedAt(timestamp.toLocalDateTime());
+            }
+        } catch (SQLException e) {
+            // Handle missing column
+        }
+        
+        try {
+            prescription.setMedications(rs.getString("medications"));
+        } catch (SQLException e) {
+            prescription.setMedications("");
+        }
+        
+        try {
+            prescription.setInstructions(rs.getString("instructions"));
+        } catch (SQLException e) {
+            prescription.setInstructions("");
+        }
+        
+        try {
+            prescription.setStatus(rs.getString("status"));
+        } catch (SQLException e) {
+            // If status column doesn't exist, default to PENDING
+            prescription.setStatus("PENDING");
+        }
+        
+        return prescription;
     }
 }

@@ -55,7 +55,6 @@ public class AppointmentPatientController {
 
     @FXML private ToggleButton aktifToggle;
     @FXML private ToggleButton selesaiToggle;
-    @FXML private ToggleButton batalToggle;
 
     private AppointmentDAO appointmentDAO = new AppointmentDAO();
     private DoctorDAO doctorDAO = new DoctorDAO();
@@ -112,7 +111,9 @@ public class AppointmentPatientController {
                             AppointmentTableData rowData = getTableView().getItems().get(getIndex());
                             handleCancelAppointment(rowData.getAppointment());
                         });
+                        batalButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
                     }
+                    
 
                     @Override
                     public void updateItem(Void item, boolean empty) { 
@@ -140,7 +141,6 @@ public class AppointmentPatientController {
         ToggleGroup filterGroup = new ToggleGroup();
         aktifToggle.setToggleGroup(filterGroup);
         selesaiToggle.setToggleGroup(filterGroup);
-        batalToggle.setToggleGroup(filterGroup);
         aktifToggle.setSelected(true);
     }
 
@@ -183,11 +183,7 @@ public class AppointmentPatientController {
                     .filter(a -> a.getAppointmentStatus() == AppointmentStatus.ACCEPTED
                                  && a.getAppointmentDate().isBefore(LocalDateTime.now()))
                     .collect(Collectors.toList());
-        } else if (batalToggle.isSelected()) {
-            return appointments.stream()
-                    .filter(a -> false)
-                    .collect(Collectors.toList());
-        }
+        } 
         return appointments;
     }
 
@@ -225,9 +221,19 @@ public class AppointmentPatientController {
             
             confirmationAlert.showAndWait().ifPresent(response -> {
                 if (response == javafx.scene.control.ButtonType.OK) {
-                    appointment.setAppointmentStatus(AppointmentStatus.REQUESTED);
-                    showSuccess("Janji temu berhasil dibatalkan secara visual (sementara).");
-                    loadAppointments(); 
+                    try {
+                        // Delete the appointment from the database
+                        appointmentDAO.deleteAppointment(appointment.getAppointmentId());
+                        
+                        // Remove the appointment from the in-memory list
+                        allAppointmentsInMemory.removeIf(a -> a.getAppointmentId() == appointment.getAppointmentId());
+                        
+                        showSuccess("Janji temu berhasil dibatalkan.");
+                        loadAppointments();
+                    } catch (SQLException e) {
+                        showError("Gagal menghapus janji temu: " + e.getMessage());
+                        e.printStackTrace();
+                    }
                 }
             });
         } catch (Exception e) {

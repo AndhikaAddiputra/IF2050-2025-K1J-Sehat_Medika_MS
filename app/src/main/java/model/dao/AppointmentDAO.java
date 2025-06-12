@@ -201,10 +201,12 @@ public class AppointmentDAO {
 
     public List<Appointment> getAppointmentsByDoctorAndDate(String doctorId, LocalDateTime dateTime) throws SQLException {
         List<Appointment> appointments = new ArrayList<>();
-        String sql = "SELECT * FROM Appointment WHERE doctorId = ? AND DATE(appointmentDate) = DATE(?) ORDER BY appointmentDate ASC";
+        
+        // Use DATE function to compare only the date part
+        String sql = "SELECT * FROM Appointment WHERE doctorId = ? AND DATE(appointmentDate) = DATE(?) AND appointmentStatus = 'ACCEPTED' ORDER BY appointmentDate ASC";
 
         try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, doctorId);
             pstmt.setTimestamp(2, Timestamp.valueOf(dateTime));

@@ -212,7 +212,6 @@
                            </toggleGroup>
                         </ToggleButton>
                         <ToggleButton fx:id="selesaiToggle" onAction="#handleSelesaiFilter" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Selesai" textFill="WHITE" toggleGroup="$filterToggleGroup" />
-                        <ToggleButton fx:id="batalToggle" onAction="#handleBatalFilter" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Batal" textFill="WHITE" toggleGroup="$filterToggleGroup" />
                      </children>
                      <HBox.margin>
                         <Insets top="10.0" />
