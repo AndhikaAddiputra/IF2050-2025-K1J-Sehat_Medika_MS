@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import controller.PatientProfileController.MedicalRecordData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -195,28 +196,73 @@ public class PatientProfileController {
         saveMedicalButton.setVisible(true);
         cancelMedicalButton.setVisible(true);
     }
-    
+
+    public void validateAccountInfo(String username, String fullname, String email, String phone, String password) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("Username tidak boleh kosong.");
+        }
+        if (fullname == null || fullname.isBlank()) {
+            throw new IllegalArgumentException("Nama lengkap tidak boleh kosong.");
+        }
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email tidak boleh kosong.");
+        }
+        if (phone == null || phone.isBlank()) {
+            throw new IllegalArgumentException("Nomor telepon tidak boleh kosong.");
+        }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("Password tidak boleh kosong.");
+        }
+        // Bisa ditambahkan validasi lain seperti format email, dll.
+    }
+
+    /**
+     * Metode publik untuk validasi data medis.
+     * @throws IllegalArgumentException jika ada input yang tidak valid.
+     */
+    public void validateMedicalInfo(String golonganDarah, String riwayatAlergi, String beratBadan, String tinggiBadan) {
+        if (golonganDarah == null || golonganDarah.isBlank()) {
+            throw new IllegalArgumentException("Golongan darah harus dipilih.");
+        }
+        if (riwayatAlergi == null || riwayatAlergi.isBlank()) {
+            throw new IllegalArgumentException("Riwayat alergi tidak boleh kosong.");
+        }
+        if (beratBadan == null || beratBadan.isBlank()) {
+            throw new IllegalArgumentException("Berat badan tidak boleh kosong.");
+        }
+        if (tinggiBadan == null || tinggiBadan.isBlank()) {
+            throw new IllegalArgumentException("Tinggi badan tidak boleh kosong.");
+        }
+    }
+
     @FXML
     private void saveAccountInfo() {
         try {
-            currentUser.setUsername(usernameField.getText());
-            currentUser.setFullname(namaLengkapField.getText());
-            currentUser.setEmail(emailField.getText());
-            currentUser.setPhoneNumber(nomorTeleponField.getText());
-            
+            // Ambil semua data dari field
+            String username = usernameField.getText();
+            String fullname = namaLengkapField.getText();
+            String email = emailField.getText();
+            String phone = nomorTeleponField.getText();
             String newPassword = passwordVisible ? passwordVisibleField.getText() : passwordField.getText();
+
+            // 1. Lakukan validasi terlebih dahulu
+            validateAccountInfo(username, fullname, email, phone, newPassword);
+
+            // 2. Jika validasi berhasil, lanjutkan proses penyimpanan
+            currentUser.setUsername(username);
+            currentUser.setFullname(fullname);
+            currentUser.setEmail(email);
+            currentUser.setPhoneNumber(phone);
             currentUser.setPassword(newPassword);
-            
+
             userDAO.updateUser(currentUser);
-            
+
             setFieldsEditable(false, false);
-            editAccountButton.setVisible(true);
-            saveAccountButton.setVisible(false);
-            cancelAccountButton.setVisible(false);
-            
+            // ... (sisa logika UI)
             showAlert("Success", "Account information updated successfully!");
-            
-        } catch (SQLException e) {
+
+        } catch (IllegalArgumentException | SQLException e) {
+            // Tangkap error validasi (IllegalArgumentException) dan error database (SQLException)
             showAlert("Error", "Failed to update account information: " + e.getMessage());
         }
     }
@@ -224,24 +270,32 @@ public class PatientProfileController {
     @FXML
     private void saveMedicalInfo() {
         try {
+            String golonganDarah = golonganDarahCombo.getValue();
+            String riwayatAlergi = riwayatAlergiField.getText();
+            String beratBadan = beratBadanField.getText();
+            String tinggiBadan = tinggiBadanField.getText();
+            String nomorAsuransi = nomorAsuransiField.getText();
+            String penyediaAsuransi = penyediaAsuransiCombo.getValue();
+
+            // 1. Lakukan validasi
+            validateMedicalInfo(golonganDarah, riwayatAlergi, beratBadan, tinggiBadan);
+            
+            // 2. Lanjutkan proses penyimpanan
             String patientId = patientDAO.getPatientByUserId(currentUser.getUserId()).getPatientId();
             if (patientId != null) {
-                patientDAO.updatePatientMedicalInfo(patientId, 
-                    golonganDarahCombo.getValue(),
-                    riwayatAlergiField.getText(),
-                    beratBadanField.getText(),
-                    tinggiBadanField.getText(),
-                    nomorAsuransiField.getText(),
-                    penyediaAsuransiCombo.getValue());
-                
+                patientDAO.updatePatientMedicalInfo(patientId,
+                        golonganDarah,
+                        riwayatAlergi,
+                        beratBadan,
+                        tinggiBadan,
+                        nomorAsuransi, // Asumsi field ini opsional, jadi tidak divalidasi
+                        penyediaAsuransi); // Asumsi field ini opsional
+
                 setFieldsEditable(false, false);
-                editMedicalButton.setVisible(true);
-                saveMedicalButton.setVisible(false);
-                cancelMedicalButton.setVisible(false);
-                
+                // ... (sisa logika UI)
                 showAlert("Success", "Medical information updated successfully!");
             }
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | SQLException e) {
             showAlert("Error", "Failed to update medical information: " + e.getMessage());
         }
     }
