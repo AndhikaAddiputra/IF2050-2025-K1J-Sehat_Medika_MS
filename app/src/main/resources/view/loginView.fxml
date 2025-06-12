@@ -25,7 +25,7 @@
          </Label>
       </VBox>
 
-      <AnchorPane prefWidth="300" prefHeight="300" style="-fx-background-color: #66C7D9;" AnchorPane.topAnchor="100" AnchorPane.leftAnchor="150" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="50">
+      <AnchorPane prefWidth="300" prefHeight="300" style="-fx-background-color: #46D6A9;" AnchorPane.topAnchor="100" AnchorPane.leftAnchor="150" AnchorPane.rightAnchor="150" AnchorPane.bottomAnchor="50">
          <children>
             <VBox alignment="CENTER" spacing="10" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
                <Label text="Login">
