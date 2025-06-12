@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MedicalRecordDoctorController">
+   <children>
+      <!-- Sidebar -->
+      <VBox layoutX="-6.0" prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #46D6A9;">
+         <children>
+            <Group>
+               <children>
+                  <Label prefHeight="25.0" prefWidth="265.0" text="Klinik Sehat Medika" textFill="WHITE">
+                     <font>
+                        <Font name="Arial Bold" size="24.0" />
+                     </font>
+                     <padding>
+                        <Insets left="25.0" />
+                     </padding>
+                  </Label>
+                  <Label layoutY="25.0" prefHeight="17.0" prefWidth="308.0" text="Portal Dokter" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                     <padding>
+                        <Insets left="25.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets top="25.0" />
+               </VBox.margin>
+            </Group>
+            <Line endX="208.7928924560547" endY="-1.8639612197875977" startX="-100.0" stroke="WHITE">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Line>
+            
+            <!-- Dashboard Button -->
+            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icon/Dashboard.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <!-- Profile Button -->
+            <Button fx:id="profilSidebarButton" onAction="#handleProfilClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icon/Profil.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <!-- Janji Temu Button (Current Page) -->
+            <Button fx:id="janjiTemuSidebarButton" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Janji Temu" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icon/Janji%20Temu.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <!-- Diagnosis Button -->
+            <Button fx:id="diagnosisSidebarButton" onAction="#handleDiagnosisClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Diagnosis" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icon/Mendaftarkan%20Pasien%20Baru.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <!-- Resep Obat Button -->
+            <Button fx:id="resepObatSidebarButton" onAction="#handleResepObatClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icon/Resep%20obat.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <!-- Notifikasi Button -->
+            <Button fx:id="notifikasiSidebarButton" onAction="#handleNotifikasiClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icon/Notifikasi.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <AnchorPane prefHeight="292.0" prefWidth="311.0" />
+            <Line endX="207.2928924560547" startX="-100.0" stroke="WHITE" />
+            
+            <!-- Keluar Button -->
+            <Button fx:id="keluarSidebarButton" onAction="#handleKeluarClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="25.0" />
+               </padding>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icon/Keluar.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="20.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      
+      <!-- Main Content -->
+      <Label layoutX="330.0" layoutY="30.0" prefHeight="30.0" prefWidth="400.0" text="Kelola Rekam Medis" style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+      
+      <!-- Search Section -->
+      <HBox layoutX="330.0" layoutY="80.0" spacing="10.0" alignment="CENTER_LEFT">
+         <children>
+            <TextField fx:id="searchField" promptText="Cari berdasarkan nama pasien, diagnosis, atau gejala..." prefWidth="300.0" />
+            <Button fx:id="searchButton" onAction="#handleSearch" text="Cari" styleClass="action-button" />
+         </children>
+      </HBox>
+      
+      <!-- Medical Records Table -->
+      <TableView fx:id="medicalRecordsTable" layoutX="330.0" layoutY="120.0" prefHeight="300.0" prefWidth="850.0">
+         <columns>
+            <TableColumn fx:id="colRecordId" prefWidth="80.0" text="ID Rekam" />
+            <TableColumn fx:id="colPatientName" prefWidth="150.0" text="Nama Pasien" />
+            <TableColumn fx:id="colDate" prefWidth="120.0" text="Tanggal" />
+            <TableColumn fx:id="colDiagnosis" prefWidth="200.0" text="Diagnosis" />
+            <TableColumn fx:id="colSymptoms" prefWidth="150.0" text="Gejala" />
+            <TableColumn fx:id="colTreatment" prefWidth="150.0" text="Pengobatan" />
+         </columns>
+      </TableView>
+      
+      <!-- Form Section -->
+      <VBox layoutX="330.0" layoutY="440.0" spacing="15.0" prefWidth="850.0">
+         <children>
+            <Label text="Form Rekam Medis" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+            
+            <HBox spacing="15.0">
+               <children>
+                  <VBox spacing="5.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Nama Pasien:" />
+                        <TextField fx:id="patientNameField" promptText="Pilih pasien..." editable="false" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="5.0" prefWidth="300.0">
+                     <children>
+                        <Label text="Diagnosis:" />
+                        <TextField fx:id="diagnosisField" promptText="Masukkan diagnosis..." />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            
+            <HBox spacing="15.0">
+               <children>
+                  <VBox spacing="5.0" prefWidth="250.0">
+                     <children>
+                        <Label text="Gejala:" />
+                        <TextArea fx:id="symptomsArea" promptText="Deskripsikan gejala pasien..." prefRowCount="3" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="5.0" prefWidth="250.0">
+                     <children>
+                        <Label text="Pengobatan:" />
+                        <TextArea fx:id="treatmentArea" promptText="Deskripsikan pengobatan yang diberikan..." prefRowCount="3" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="5.0" prefWidth="250.0">
+                     <children>
+                        <Label text="Catatan Tambahan:" />
+                        <TextArea fx:id="notesArea" promptText="Catatan tambahan (opsional)..." prefRowCount="3" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            
+            <!-- Action Buttons -->
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+               <children>
+                  <Button fx:id="addRecordButton" onAction="#handleAddRecord" text="Tambah Rekam Medis" styleClass="action-button" />
+                  <Button fx:id="updateRecordButton" onAction="#handleUpdateRecord" text="Update Rekam Medis" styleClass="action-button" />
+                  <Button fx:id="deleteRecordButton" onAction="#handleDeleteRecord" text="Hapus Rekam Medis" style="-fx-background-color: #dc3545; -fx-text-fill: white;" />
+                  <Button fx:id="clearFormButton" onAction="#handleClearForm" text="Bersihkan Form" style="-fx-background-color: #6c757d; -fx-text-fill: white;" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

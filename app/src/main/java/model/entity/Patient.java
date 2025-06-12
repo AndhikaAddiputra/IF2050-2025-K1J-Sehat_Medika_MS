@@ -3,7 +3,7 @@ package model.entity;
 import java.time.LocalDateTime;
 
 
-public class Patient {
+public class Patient extends User {
     private String patientId;
     private String userId;
     private String fullname;
@@ -118,6 +118,14 @@ public class Patient {
 
     public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public String getEmail() {
+        return super.getEmail();
+    }
+
+    public String getPhoneNumber() {
+        return super.getPhoneNumber();
     }
 
     @Override

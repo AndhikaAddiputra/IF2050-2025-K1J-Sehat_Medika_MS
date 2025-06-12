@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`MedicalRecord` (
   `recordDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `diagnosis` VARCHAR(255) NOT NULL,
   `symptoms` VARCHAR(255) NOT NULL,
+  `treatment` VARCHAR(255) NULL, 
   `notes` VARCHAR(255) NULL,
   `attachments` VARCHAR(511) NOT NULL,
   PRIMARY KEY (`recordId`),
@@ -350,17 +351,17 @@ INSERT INTO `PrescriptionItem` (`prescriptionId`, `itemId`, `dosage`, `frequency
 
 
 -- 9. MedicalRecord (Maksimal 10, menggunakan dokter dan pasien yang ada)
-INSERT INTO `MedicalRecord` (`patientId`, `doctorId`, `recordDate`, `diagnosis`, `symptoms`, `notes`, `attachments`) VALUES
-('PAT001', 'DOC001', NOW(), 'Acute Bronchitis with Post-Operative Pain', 'Cough, chest pain, surgical site pain', 'Prescribed Vicodin for pain, Amoxicillin for suspected infection.', 'post_op_summary.pdf, chest_scan.dicom'),
-('PAT002', 'DOC002', DATE_SUB(NOW(), INTERVAL 1 DAY), 'Hypertension Stage 2', 'Headaches, high BP readings', 'Started Lisinopril. Lifestyle modification advised.', 'bp_chart.png, ecg_report.pdf'),
-('PAT003', 'DOC001', DATE_SUB(NOW(), INTERVAL 2 DAY), 'Type 2 Diabetes, Hyperlipidemia', 'Fatigue, high blood sugar & cholesterol', 'Metformin and Atorvastatin initiated.', 'lab_results_full.pdf'),
-('PAT004', 'DOC003', DATE_SUB(NOW(), INTERVAL 3 DAY), 'Asthma, Moderate Persistent', 'Wheezing, shortness of breath episodes', 'Albuterol inhaler for rescue. Discussed controller meds.', 'spirometry.pdf'),
-('PAT001', 'DOC002', DATE_SUB(NOW(), INTERVAL 4 DAY), 'GERD', 'Heartburn, regurgitation', 'Prescribed Omeprazole. Dietary advice given.', 'gastroscopy_notes.txt'),
-('PAT002', 'DOC001', DATE_SUB(NOW(), INTERVAL 5 DAY), 'Major Depressive Disorder', 'Low mood, anhedonia, sleep disturbance', 'Started Sertraline. Therapy referral.', 'phq9_score.pdf'),
-('PAT003', 'DOC003', DATE_SUB(NOW(), INTERVAL 6 DAY), 'Atrial Fibrillation - Anticoagulation Mngmt', 'Irregular heartbeat, starting Warfarin', 'Counseled on Warfarin, INR schedule.', 'echo_report.pdf, inr_target.doc'),
-('PAT004', 'DOC001', DATE_SUB(NOW(), INTERVAL 7 DAY), 'Edema, Suspected Heart Failure', 'Swollen ankles, shortness of breath', 'Prescribed Furosemide. Further cardiac workup.', 'cardiac_referral.pdf'),
-('PAT001', 'DOC003', DATE_SUB(NOW(), INTERVAL 8 DAY), 'Recurrent Sinusitis', 'Facial pain, nasal congestion', 'Repeat course of Amoxicillin.', 'ct_sinus_prev.dicom'),
-('PAT002', 'DOC002', DATE_SUB(NOW(), INTERVAL 9 DAY), 'Acute Lumbago', 'Severe lower back pain after lifting', 'Prescribed short course of Vicodin. Advised rest.', 'mri_lumbar_request.pdf');
+INSERT INTO `MedicalRecord` (`patientId`, `doctorId`, `recordDate`, `diagnosis`, `symptoms`, `treatment`, `notes`, `attachments`) VALUES
+('PAT001', 'DOC001', NOW(), 'Acute Bronchitis with Post-Operative Pain', 'Cough, chest pain, surgical site pain','Prescription', 'Prescribed Vicodin for pain, Amoxicillin for suspected infection.', 'post_op_summary.pdf, chest_scan.dicom'),
+('PAT002', 'DOC002', DATE_SUB(NOW(), INTERVAL 1 DAY), 'Hypertension Stage 2', 'Headaches, high BP readings','Prescription' ,'Started Lisinopril. Lifestyle modification advised.', 'bp_chart.png, ecg_report.pdf'),
+('PAT003', 'DOC001', DATE_SUB(NOW(), INTERVAL 2 DAY), 'Type 2 Diabetes, Hyperlipidemia', 'Fatigue, high blood sugar & cholesterol', 'Prescription', 'Metformin and Atorvastatin initiated.', 'lab_results_full.pdf'),
+('PAT004', 'DOC003', DATE_SUB(NOW(), INTERVAL 3 DAY), 'Asthma, Moderate Persistent', 'Wheezing, shortness of breath episodes','CT-Scan, Prescription', 'Albuterol inhaler for rescue. Discussed controller meds.', 'spirometry.pdf'),
+('PAT001', 'DOC002', DATE_SUB(NOW(), INTERVAL 4 DAY), 'GERD', 'Heartburn, regurgitation','Prescription, Bedrest', 'Prescribed Omeprazole. Dietary advice given.', 'gastroscopy_notes.txt'),
+('PAT002', 'DOC001', DATE_SUB(NOW(), INTERVAL 5 DAY), 'Major Depressive Disorder', 'Low mood, anhedonia, sleep disturbance','Prescription', 'Started Sertraline. Therapy referral.', 'phq9_score.pdf'),
+('PAT003', 'DOC003', DATE_SUB(NOW(), INTERVAL 6 DAY), 'Atrial Fibrillation - Anticoagulation Mngmt', 'Irregular heartbeat, starting Warfarin','Prescription', 'Counseled on Warfarin, INR schedule.', 'echo_report.pdf, inr_target.doc'),
+('PAT004', 'DOC001', DATE_SUB(NOW(), INTERVAL 7 DAY), 'Edema, Suspected Heart Failure', 'Swollen ankles, shortness of breath', 'Prescription','Prescribed Furosemide. Further cardiac workup.', 'cardiac_referral.pdf'),
+('PAT001', 'DOC003', DATE_SUB(NOW(), INTERVAL 8 DAY), 'Recurrent Sinusitis', 'Facial pain, nasal congestion', 'Prescription','Repeat course of Amoxicillin.', 'ct_sinus_prev.dicom'),
+('PAT002', 'DOC002', DATE_SUB(NOW(), INTERVAL 9 DAY), 'Acute Lumbago', 'Severe lower back pain after lifting', 'Prescription','Prescribed short course of Vicodin. Advised rest.', 'mri_lumbar_request.pdf');
 
 -- 10. Appointment (Maksimal 10, menggunakan dokter dan pasien yang ada. doctorConfirmation diasumsikan TINYINT(1))
 INSERT INTO `Appointment` (`patientId`, `doctorId`, `appointmentDate`, `duration`, `reason`, `appointmentStatus`, `queueNumber`) VALUES

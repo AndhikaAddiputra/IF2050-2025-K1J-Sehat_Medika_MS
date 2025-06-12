@@ -183,26 +183,26 @@ public class DoctorDashboardController {
     
     @FXML
     private void handleJanjiTemuClick(ActionEvent event) {
-        System.out.println("Janj Temu Clicked");
-        showAlert("Info", "Janji Temu feature will be implemented soon.");
-        /*try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AppointmentDoctor.fxml"));
+        System.out.println("Janji Temu Clicked - Opening Medical Records Management");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MedicalRecordDoctor.fxml"));
             Parent root = loader.load();
             
-            AppointmentDoctorController controller = loader.getController();
+            MedicalRecordDoctorController controller = loader.getController();
             controller.setUser(currentUser);
             
             Stage currentStage = (Stage) janjiTemuSidebarButton.getScene().getWindow();
             currentStage.close();
             
             Stage newStage = new Stage();
-            newStage.setTitle("Appointments - Klinik Sehat Medika");
+            newStage.setTitle("Kelola Rekam Medis - Klinik Sehat Medika");
             newStage.setScene(new Scene(root, 1200, 800));
             newStage.show();
             
         } catch (Exception e) {
-            showAlert("Error", "Failed to open appointments: " + e.getMessage());
-        }*/
+            showAlert("Error", "Failed to open medical records management: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @FXML

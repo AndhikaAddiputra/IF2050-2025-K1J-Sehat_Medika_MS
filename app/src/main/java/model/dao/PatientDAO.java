@@ -105,21 +105,23 @@ public class PatientDAO {
 
     public List<Patient> getAllPatients() {
         List<Patient> patients = new ArrayList<>();
-        String sql = "SELECT p.*, u.fullName FROM Patient p JOIN User u ON p.userId = u.userId";
+        String sql = "SELECT p.*, u.fullName, u.email, u.phoneNumber FROM Patient p " + "JOIN User u ON p.userId = u.userId";
+        
         try (Connection conn = new DatabaseConnection().getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery()) {
+            
             while (rs.next()) {
-                patients.add(mapResultSetToPatient(rs));
+                Patient patient = mapResultSetToPatient(rs);
+                patients.add(patient);
             }
-
         } catch (SQLException e) {
-            System.err.println("Error retrieving all patients: " + e.getMessage());
+            System.err.println("Error fetching all patients: " + e.getMessage());
             e.printStackTrace();
         }
+        
         return patients;
-    }
+    } 
 
     public Patient getPatientById(String patientId) {
         String sql = "SELECT p.*, u.fullName FROM Patient p JOIN User u ON p.userId = u.userId WHERE p.patientId = ?";

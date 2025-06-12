@@ -25,22 +25,25 @@ public class MedicalRecordDAO {
         record.setRecordDate(recordDateTimestamp != null ? recordDateTimestamp.toLocalDateTime() : null);
         record.setDiagnosis(rs.getString("diagnosis"));
         record.setSymptoms(rs.getString("symptoms"));
+        record.setTreatment(rs.getString("treatment"));
         record.setNotes(rs.getString("notes"));
         record.setAttachments(rs.getString("attachments")); 
         return record;
     }
 
     public void addMedicalRecord(MedicalRecord record) throws SQLException {
-        String sql = "INSERT INTO MedicalRecord (patientId, doctorId, recordDate, diagnosis, symptoms, notes, attachments) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO MedicalRecord (patientId, doctorId, recordDate, diagnosis, symptoms, treatment, notes, attachments) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = new DatabaseConnection().getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            
             pstmt.setString(1, record.getPatientId());
             pstmt.setString(2, record.getDoctorId());
             pstmt.setTimestamp(3, record.getRecordDate() != null ? Timestamp.valueOf(record.getRecordDate()) : null);
             pstmt.setString(4, record.getDiagnosis());
             pstmt.setString(5, record.getSymptoms());
-            pstmt.setString(6, record.getNotes());
-            pstmt.setString(7, record.getAttachments()); 
+            pstmt.setString(6, record.getTreatment()); 
+            pstmt.setString(7, record.getNotes());
+            pstmt.setString(8, record.getAttachments()); 
             
             int affectedRows = pstmt.executeUpdate();
 
@@ -90,7 +93,7 @@ public class MedicalRecordDAO {
 
     public List<Map<String, Object>> getMedicalRecordsForPatient(String patientId) throws SQLException {
         String sql = """
-            SELECT mr.recordDate, u.username as doctorName, mr.diagnosis, mr.symptoms, mr.notes 
+            SELECT mr.recordDate, u.fullName as doctorName, mr.diagnosis, mr.symptoms, mr.treatment, mr.notes 
             FROM MedicalRecord mr 
             JOIN Doctor d ON mr.doctorId = d.doctorId 
             JOIN User u ON d.userId = u.userId 
@@ -111,6 +114,7 @@ public class MedicalRecordDAO {
                 record.put("doctorName", rs.getString("doctorName"));
                 record.put("diagnosis", rs.getString("diagnosis"));
                 record.put("symptoms", rs.getString("symptoms"));
+                record.put("treatment", rs.getString("treatment"));
                 record.put("notes", rs.getString("notes"));
                 records.add(record);
             }
@@ -147,7 +151,7 @@ public class MedicalRecordDAO {
     }
 
     public void updateMedicalRecord(MedicalRecord record) throws SQLException {
-        String sql = "UPDATE MedicalRecord SET patientId = ?, doctorId = ?, recordDate = ?, diagnosis = ?, symptoms = ?, notes = ?, attachments = ? WHERE recordId = ?";
+        String sql = "UPDATE MedicalRecord SET patientId = ?, doctorId = ?, recordDate = ?, diagnosis = ?, symptoms = ?, treatment = ?, notes = ?, attachments = ? WHERE recordId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, record.getPatientId());
@@ -155,9 +159,10 @@ public class MedicalRecordDAO {
             pstmt.setTimestamp(3, record.getRecordDate() != null ? Timestamp.valueOf(record.getRecordDate()) : null);
             pstmt.setString(4, record.getDiagnosis());
             pstmt.setString(5, record.getSymptoms());
-            pstmt.setString(6, record.getNotes());
-            pstmt.setString(7, record.getAttachments()); 
-            pstmt.setInt(8, record.getRecordID()); 
+            pstmt.setString(6, record.getTreatment());
+            pstmt.setString(7, record.getNotes());
+            pstmt.setString(8, record.getAttachments()); 
+            pstmt.setInt(9, record.getRecordID()); 
             pstmt.executeUpdate();
         }
     }
