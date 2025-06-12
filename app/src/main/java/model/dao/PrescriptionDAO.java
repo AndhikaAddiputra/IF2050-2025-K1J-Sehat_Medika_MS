@@ -54,6 +54,27 @@ public class PrescriptionDAO {
         return null;
     }
 
+    public List<Prescription> getPrescriptionsByStatus(String status) throws SQLException {
+        List<Prescription> prescriptions = new ArrayList<>();
+        String sql = "SELECT * FROM Prescription WHERE status = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, status);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Prescription prescription = new Prescription();
+                    prescription.setPrescriptionId(rs.getInt("prescriptionId"));
+                    prescription.setDoctorId(rs.getString("doctorId"));
+                    prescription.setPatientId(rs.getString("patientId"));
+                    prescription.setStatus(rs.getString("status"));
+                    prescription.setCreatedAt(rs.getTimestamp("createdAt").toLocalDateTime());
+                    prescriptions.add(prescription);
+                }
+            }
+        }
+        return prescriptions;
+    }
+
     // Get all prescriptions
     public List<Prescription> getAllPrescriptions() {
         List<Prescription> prescriptions = new ArrayList<>();

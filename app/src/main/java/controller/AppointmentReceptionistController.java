@@ -3,6 +3,7 @@ package controller;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -13,7 +14,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.util.Callback;
+import java.util.stream.Collectors;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import model.dao.AppointmentDAO;
+import model.dao.DoctorDAO;
 import model.dao.PatientDAO;
 import model.dao.UserDAO;
 import model.entity.Appointment;
@@ -40,6 +45,8 @@ public class AppointmentReceptionistController {
 
     @FXML private ToggleButton acceptToggle;
     @FXML private ToggleButton requestToggle;
+    @FXML private ToggleButton todayToggle;
+    @FXML private ToggleButton soonToggle;
 
     private final AppointmentDAO appointmentDAO = new AppointmentDAO();
     private final DoctorDAO doctorDAO = new DoctorDAO();
@@ -52,10 +59,7 @@ public class AppointmentReceptionistController {
         loadAppointments();
     }
 
-    public void setUser(User user) {
-        this.currentUser = user;
-        loadAppointments();
-    }
+    // Removed duplicate method definition
 
     private void setupTableColumns() {
         colDoctor.setCellValueFactory(data -> data.getValue().doctorNameProperty());
@@ -88,7 +92,7 @@ public class AppointmentReceptionistController {
                         try {
                             Appointment appointment = appointmentDAO.getAppointmentByDetails(
                                 data.getDoctorName(), data.getDate(), data.getTime());
-                            appointment.setStatus(AppointmentStatus.COMPLETED);
+                            appointment.setAppointmentStatus(AppointmentStatus.ACCEPTED);
                             appointmentDAO.updateAppointmentStatus(appointment);
                             loadAppointments();
                         } catch (Exception e) {
@@ -127,11 +131,11 @@ public class AppointmentReceptionistController {
                         .filter(a -> a.getAppointmentDate().toLocalDate().isAfter(LocalDate.now()))
                         .collect(Collectors.toList());
             }
-            ObservableList<ReceptionistAppointmentTableData> tableData = FXCollections.observableArrayList();
+            ObservableList<AppointmentTableData> tableData = FXCollections.observableArrayList();
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
 
-            for (Appointment appointment : filteredAppointments) {
+            for (Appointment appointment : filterAppointments(appointments)) {
                 Doctor doctor = doctorDAO.getDoctorById(appointment.getDoctorId());
                 AppointmentTableData data = new AppointmentTableData();
                 data.setDoctorName(doctor != null ? doctorDAO.getDoctorNameById(doctor.getDoctorId()) : "Unknown");
@@ -153,11 +157,11 @@ public class AppointmentReceptionistController {
     private List<Appointment> filterAppointments(List<Appointment> appointments) {
         if (acceptToggle.isSelected()) {
             return appointments.stream()
-                .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED)
+                .filter(a -> a.getAppointmentStatus() == AppointmentStatus.ACCEPTED)
                 .collect(Collectors.toList());
         } else if (requestToggle.isSelected()) {
             return appointments.stream()
-                .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
+                .filter(a -> a.getAppointmentStatus() == AppointmentStatus.REQUESTED)
                 .collect(Collectors.toList());
         }
         return appointments;
@@ -176,6 +180,11 @@ public class AppointmentReceptionistController {
     @FXML
     private void handleDaftarPasienBaruClick(ActionEvent event) {
         System.out.println("Registering new patient");
+    }
+    @FXML
+    private void handleJanjiTemuClick(ActionEvent event) {
+        System.out.println("Opening Janji Temu (current view)");
+        // No action needed as this is the current view
     }
 
     @FXML
@@ -221,9 +230,9 @@ public class AppointmentReceptionistController {
         public void setDoctorName(String name) { doctorName.set(name); }
         public SimpleStringProperty doctorNameProperty() { return doctorName; }
 
-        public String getPatientName() { return patientName.get(); }
-        public void setPatientName(String name) { this.patientName.set(name); }
-        public SimpleStringProperty patientNameProperty() { return patientName; }
+        public String getSpecialization() { return specialization.get(); }
+        public void setSpecialization(String specialization) { this.specialization.set(specialization); }
+        public SimpleStringProperty specializationProperty() { return specialization; }
 
         public String getDate() { return date.get(); }
         public void setDate(String date) { this.date.set(date); }

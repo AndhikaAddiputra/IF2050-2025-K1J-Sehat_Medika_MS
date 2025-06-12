@@ -197,43 +197,6 @@ public class PatientDAO {
     }
 
 
-    public List<Patient> getAllPatients() throws SQLException {
-        List<Patient> patients = new ArrayList<>();
-        String sql = "SELECT * FROM Patient";
-        try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                patients.add(mapResultSetToPatient(rs));
-            }
-        }
-        return patients;
-    }
-
-    public void updatePatient(Patient patient) throws SQLException {
-        String sql = "UPDATE Patient SET userId = ?, bloodType = ?, allergies = ?, emergencyContact = ?, insuranceInfo = ?, registrationDate = ? WHERE patientId = ?";
-        try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, patient.getUserId());
-             pstmt.setString(2, patient.getBloodType() != null ? patient.getBloodType().name() : null);
-            pstmt.setString(3, patient.getAllergies());
-            pstmt.setString(4, patient.getEmergencyContact());
-            pstmt.setString(5, patient.getInsuranceInfo());
-            pstmt.setTimestamp(6, patient.getRegistrationDate() != null ? Timestamp.valueOf(patient.getRegistrationDate()) : null);
-            pstmt.setString(7, patient.getPatientId());
-            pstmt.executeUpdate();
-        }
-    }
-
-    public void deletePatient(String patientId) throws SQLException {
-        String sql = "DELETE FROM Patient WHERE patientId = ?";
-        try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, patientId);
-            pstmt.executeUpdate();
-        }
-    }
-
     public String getPatientName(String patientId) {
         String sql = "SELECT u.fullName FROM User u JOIN Patient p ON u.userId = p.userId WHERE p.patientId = ?";
         try (Connection conn = new DatabaseConnection().getConnection();

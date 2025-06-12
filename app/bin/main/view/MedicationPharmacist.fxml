@@ -3,10 +3,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppointmentReceptionistController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MedicationPharmacistController">
    <children>
       <VBox layoutX="-6.0" prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #46D6A9;">
          <children>
@@ -30,7 +30,7 @@
                         <Insets left="25.0" />
                      </padding>
                   </Label>
-                  <Label layoutY="25.0" prefHeight="17.0" prefWidth="308.0" text="Portal Resepsionis" textFill="WHITE">
+                  <Label layoutY="25.0" prefHeight="17.0" prefWidth="308.0" text="Portal Apoteker" textFill="WHITE">
                      <font>
                         <Font name="Arial" size="18.0" />
                      </font>
@@ -48,7 +48,7 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Line>
-            <Button fx:id="dashboardSidebarButton" onAction="#handleDashboardClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Dashboard" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -66,7 +66,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="profilSidebarButton" onAction="#handleProfilClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="91.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
+            <Button fx:id="profilSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="91.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -84,7 +84,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="janjiTemuSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="141.0" mnemonicParsing="false" onAction="#handleJanjiTemuClick" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Janji Temu" textFill="WHITE">
+         <Button fx:id="resepObatSidebarButton" onAction="#handleResepObatClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="141.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -94,7 +94,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icon/Janji Temu.png" />
+                        <Image url="@../icon/Resep%20obat.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -102,7 +102,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="daftarPasienBaruSidebarButton" onAction="#handleDaftarPasienBaruClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Daftar Pasien Baru" textFill="WHITE">
+            <Button fx:id= "persediaanObatSidebarButton" onAction="#handlePersediaanObatClick" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #2AC091;" text="Persediaan Obat" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -112,7 +112,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icon/Mendaftarkan Pasien Baru.png" />
+                        <Image url="@../icon/Persediaan%20Obat.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -120,25 +120,7 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="jadwalDokterSidebarButton" onAction="#handleJadwalDokterClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="241.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Jadwal Dokter" textFill="WHITE">
-               <font>
-                  <Font name="Arial Bold" size="14.0" />
-               </font>
-               <padding>
-                  <Insets left="30.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icon/Mengatur Jadwal Dokter.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <VBox.margin>
-                  <Insets left="20.0" right="10.0" top="10.0" />
-               </VBox.margin>
-            </Button>
-            <Button fx:id="notifikasiSidebarButton" onAction="#handleNotifikasiClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="291.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
+            <Button fx:id="notifikasiSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="291.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Notifikasi" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -156,9 +138,9 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <AnchorPane prefHeight="292.0" prefWidth="311.0" />
+            <AnchorPane prefHeight="348.0" prefWidth="311.0" />
             <Line endX="207.2928924560547" startX="-100.0" stroke="WHITE" />
-            <Button fx:id="keluarSidebarButton" onAction="#handleKeluarClick" stylesheets="@style.css" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="341.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
+            <Button fx:id="keluarSidebarButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="341.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="281.0" style="-fx-background-color: #46D6A9;" text="Keluar" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -178,36 +160,36 @@
             </Button>
          </children>
       </VBox>
-      <Label layoutX="330.0" layoutY="51.0" prefHeight="30.0" prefWidth="174.0" text="Janji Temu">
+      <Label layoutX="340.0" layoutY="61.0" prefHeight="32.0" prefWidth="262.0" text="Persediaan Obat">
          <font>
             <Font name="Arial Bold" size="28.0" />
          </font>
       </Label>
-      <AnchorPane layoutX="330.0" layoutY="95.0" prefHeight="649.0" prefWidth="836.0" style="-fx-border-color: #46D6A9; -fx-border-width: 3;">
+      <AnchorPane layoutX="340.0" layoutY="105.0" prefHeight="649.0" prefWidth="836.0" style="-fx-border-color: #46D6A9; -fx-border-width: 3;">
          <children>
             <VBox layoutX="27.0" layoutY="90.0" prefHeight="506.0" prefWidth="777.0">
                <children>
                   <TableView fx:id="dataAppointmentTable" prefHeight="509.0" prefWidth="777.0">
                      <columns>
-                        <TableColumn fx:id="colDoctor" prefWidth="129.25601196289062" style="-fx-font-family: Arial Reguler; -fx-font-fill: #ffffff; -fx-border-width: 2;" text="Dokter" />
-                        <TableColumn fx:id="colSpesialis" prefWidth="149.000732421875" text="Spesialis" />
-                        <TableColumn fx:id="colDate" prefWidth="155.00067138671875" text="Tanggal" />
-                        <TableColumn fx:id="colTime" prefWidth="118.49932861328125" text="Waktu" />
-                        <TableColumn fx:id="colStatus" prefWidth="93.0723876953125" text="Status" />
-                        <TableColumn fx:id="colAction" prefWidth="132.0091552734375" text="Aksi" />
+                        <TableColumn fx:id="colGenerik" prefWidth="119.66619873046875" style="-fx-font-family: Arial Reguler; -fx-font-fill: #ffffff; -fx-border-width: 2;" text="Generik" />
+                        <TableColumn fx:id="colName" prefWidth="143.8447265625" text="Nama" />
+                        <TableColumn fx:id="colCategory" prefWidth="146.30908203125" text="Kategori" />
+                        <TableColumn fx:id="colStok" prefWidth="112.91650390625" text="Stok" />
+                        <TableColumn fx:id="colUnit" prefWidth="114.01165771484375" text="Unit" />
+                        <TableColumn fx:id="colAction" prefWidth="144.9884033203125" text="Aksi" />
                      </columns>
                   </TableView>
                </children>
             </VBox>
             <HBox layoutX="29.0" layoutY="25.0" prefHeight="48.0" prefWidth="774.0">
                <children>
-                  <ToggleButton fx:id="requestToggle" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #46D6A9;" text="Diajukan" textFill="WHITE">
+                  <ComboBox fx:id="filterToggle" onAction="#handleFilter" prefHeight="35.0" prefWidth="136.0" promptText="Filter" style="-fx-background-color: #46D6A9;" />
+                  <Region prefHeight="48.0" prefWidth="492.0" />
+                  <Button fx:id="addMedicationButton" mnemonicParsing="false" onAction="#handleAddMedicationClick" prefHeight="39.0" prefWidth="174.0" style="-fx-background-color: #46D6A9;" text="Tambah Data Baru" textFill="WHITE">
                      <font>
-                        <Font name="Arial" size="13.0" />
+                        <Font name="Arial Bold" size="14.0" />
                      </font>
-                  </ToggleButton>
-                  <ToggleButton fx:id="acceptToggle" prefHeight="25.0" prefWidth="100.0" selected="true" style="-fx-background-color: #46D6A9;" text="Diterima" textFill="WHITE" />
-                  <Region prefHeight="48.0" prefWidth="420.0" />
+                  </Button>
                </children>
             </HBox>
          </children>
