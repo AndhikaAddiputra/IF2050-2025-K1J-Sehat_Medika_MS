@@ -62,11 +62,8 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-<<<<<<< HEAD
+
             <Button fx:id="profilSidebarButton" onAction="#handleProfilClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="91.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
-=======
-            <Button fx:id="profilSidebarButton" onAction="#handleProfilClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="91.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Profil" textFill="WHITE">
->>>>>>> main
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -84,11 +81,8 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-<<<<<<< HEAD
+
             <Button fx:id="janjiTemuSidebarButton" onAction="#handleJanjiTemuClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="141.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Janji Temu" textFill="WHITE">
-=======
-            <Button fx:id="janjiTemuSidebarButton" onAction="#handleJanjiTemuClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="141.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Janji Temu" textFill="WHITE">
->>>>>>> main
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -106,11 +100,8 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-<<<<<<< HEAD
+
             <Button fx:id="riwayatMedisSidebarButton" onAction="#handleRiwayatMedisClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Riwayat Medis" textFill="WHITE">
-=======
-            <Button fx:id="riwayatMedisSidebarButton" onAction="#handleRiwayatMedisClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Riwayat Medis" textFill="WHITE">
->>>>>>> main
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -128,11 +119,8 @@
                   <Insets left="20.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-<<<<<<< HEAD
+
             <Button fx:id="resepObatSidebarButton" onAction="#handleResepObatClick" styleClass="sidebar-button" stylesheets="@style.css" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="241.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
-=======
-            <Button fx:id="resepObatSidebarButton" onAction="#handleResepObatClick" styleClass="sidebar-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="241.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="305.0" style="-fx-background-color: #46D6A9;" text="Resep Obat" textFill="WHITE">
->>>>>>> main
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
