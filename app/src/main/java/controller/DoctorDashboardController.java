@@ -68,21 +68,41 @@ public class DoctorDashboardController {
         
         // Load the doctor's data
         try {
-            currentDoctor = doctorDAO.getDoctorById(user.getUserId());
+            // Convert the userId from String to int
+            int userId = Integer.parseInt(user.getUserId());
+            currentDoctor = doctorDAO.getDoctorByUserId(userId);
+            
+            // Debug print
+            System.out.println("Loaded doctor: " + currentDoctor.getDoctorId() + 
+                            " for user: " + user.getUserId());
+            
             loadDashboardData();
+        } catch (NumberFormatException e) {
+            showAlert("Error", "Invalid user ID format: " + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
             showAlert("Error", "Failed to load doctor data: " + e.getMessage());
+            e.printStackTrace(); // Add stack trace for better debugging
         }
     }
     
     private void loadDashboardData() {
-        if (currentDoctor == null) return;
+        if (currentDoctor == null) {
+            System.out.println("Ga bisa kebuka");
+            return;
+        };
         
         try {
+            System.out.println("Loading dashboard data for doctor ID: " + currentDoctor.getDoctorId());
+        
             // Get today's appointments
             LocalDate today = LocalDate.now();
             List<Appointment> todayAppointments = appointmentDAO.getAppointmentsByDoctorAndDate(
                 currentDoctor.getDoctorId(), today.atStartOfDay());
+            
+            System.out.println("Doctor ID: " + currentDoctor.getDoctorId());
+            System.out.println("Today: " + today);
+            System.out.println("Appointments found: " + todayAppointments.size());
             
             if (pasienHariIniPlaceholder != null) {
                 pasienHariIniPlaceholder.setText(String.valueOf(todayAppointments.size()));
@@ -242,5 +262,27 @@ public class DoctorDashboardController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void handleDebugAppointmentsClick(ActionEvent event) {
+        if (currentDoctor == null) {
+            showAlert("Error", "Doctor data not loaded");
+            return;
+        }
+        
+        try {
+            // First try to accept all pending appointments
+            int updated = appointmentDAO.acceptAllPendingAppointmentsForDoctor(currentDoctor.getDoctorId());
+            System.out.println("Updated " + updated + " appointments to ACCEPTED status");
+            
+            // Then reload the dashboard
+            loadDashboardData();
+            
+            showAlert("Debug", "Updated " + updated + " appointments and reloaded dashboard");
+        } catch (Exception e) {
+            showAlert("Error", "Failed to debug appointments: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

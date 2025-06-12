@@ -202,22 +202,65 @@ public class AppointmentDAO {
     public List<Appointment> getAppointmentsByDoctorAndDate(String doctorId, LocalDateTime dateTime) throws SQLException {
         List<Appointment> appointments = new ArrayList<>();
         
-        // Use DATE function to compare only the date part
-        String sql = "SELECT * FROM Appointment WHERE doctorId = ? AND DATE(appointmentDate) = DATE(?) AND appointmentStatus = 'ACCEPTED' ORDER BY appointmentDate ASC";
-
+        // Get the date in YYYY-MM-DD format
+        String dateStr = dateTime.toLocalDate().toString();
+        
+        // Add more detailed logging
+        System.out.println("Querying appointments for doctor: " + doctorId + " on date: " + dateStr);
+        
+        // Modified SQL to properly compare only the date part
+        String sql = "SELECT * FROM Appointment WHERE doctorId = ? AND DATE(appointmentDate) = ? AND appointmentStatus = 'ACCEPTED'";
+        
         try (Connection conn = new DatabaseConnection().getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+            
             pstmt.setString(1, doctorId);
-            pstmt.setTimestamp(2, Timestamp.valueOf(dateTime));
-
+            pstmt.setString(2, dateStr);
+            
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    appointments.add(mapResultSetToAppointment(rs));
+                    Appointment appointment = mapResultSetToAppointment(rs);
+                    appointments.add(appointment);
+                    System.out.println("Found appointment: ID=" + appointment.getAppointmentId() + 
+                                    ", Date=" + appointment.getAppointmentDate() + 
+                                    ", Status=" + appointment.getAppointmentStatus());
                 }
             }
         }
-
+        
+        // If no results, run a broader query to help debug
+        if (appointments.isEmpty()) {
+            System.out.println("No ACCEPTED appointments found. Checking if any appointments exist for this doctor...");
+            String debugSql = "SELECT COUNT(*) as count FROM Appointment WHERE doctorId = ?";
+            try (Connection conn = new DatabaseConnection().getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(debugSql)) {
+                
+                pstmt.setString(1, doctorId);
+                
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        int count = rs.getInt("count");
+                        System.out.println("Total appointments for doctor " + doctorId + ": " + count);
+                        
+                        // If appointments exist, check their statuses
+                        if (count > 0) {
+                            debugSql = "SELECT appointmentId, appointmentDate, appointmentStatus FROM Appointment WHERE doctorId = ?";
+                            try (PreparedStatement pstmt2 = conn.prepareStatement(debugSql)) {
+                                pstmt2.setString(1, doctorId);
+                                try (ResultSet rs2 = pstmt2.executeQuery()) {
+                                    while (rs2.next()) {
+                                        System.out.println("Appointment ID: " + rs2.getInt("appointmentId") + 
+                                                        ", Date: " + rs2.getTimestamp("appointmentDate") + 
+                                                        ", Status: " + rs2.getString("appointmentStatus"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         return appointments;
     }
 
@@ -231,4 +274,15 @@ public class AppointmentDAO {
             return rowsAffected > 0; // Return true if at least one row was updated
         }
     }
+
+    public int acceptAllPendingAppointmentsForDoctor(String doctorId) throws SQLException {
+    String sql = "UPDATE Appointment SET appointmentStatus = 'ACCEPTED' WHERE doctorId = ? AND appointmentStatus = 'REQUESTED'";
+    
+    try (Connection conn = new DatabaseConnection().getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setString(1, doctorId);
+        return pstmt.executeUpdate();
+    }
+}
 }
