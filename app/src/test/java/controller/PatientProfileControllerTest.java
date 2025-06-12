@@ -1,4 +1,4 @@
-package controller; // Sesuaikan dengan nama package Anda
+package controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -93,8 +93,43 @@ class ProfileControllerTest {
             assertEquals("Email tidak boleh kosong.", exception.getMessage());
         }
         
-        // --- (Lanjutkan pola yang sama untuk 'phone' dan 'password') ---
+        // --- Tes Kegagalan untuk Phone ---
+        @Test
+        @DisplayName("Gagal: Melempar exception jika phone null")
+        void testValidateAccountInfo_WhenPhoneIsNull_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateAccountInfo("userValid", "Nama Valid", "valid@email.com", null, "password");
+            });
+            assertEquals("Nomor telepon tidak boleh kosong.", exception.getMessage());
+        }
 
+        @Test
+        @DisplayName("Gagal: Melempar exception jika phone kosong")
+        void testValidateAccountInfo_WhenPhoneIsBlank_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateAccountInfo("userValid", "Nama Valid", "valid@email.com", "  ", "password");
+            });
+            assertEquals("Nomor telepon tidak boleh kosong.", exception.getMessage());
+        }
+
+        // --- Tes Kegagalan untuk Password ---
+        @Test
+        @DisplayName("Gagal: Melempar exception jika password null")
+        void testValidateAccountInfo_WhenPasswordIsNull_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateAccountInfo("userValid", "Nama Valid", "valid@email.com", "08123", null);
+            });
+            assertEquals("Password tidak boleh kosong.", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Gagal: Melempar exception jika password kosong")
+        void testValidateAccountInfo_WhenPasswordIsBlank_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateAccountInfo("userValid", "Nama Valid", "valid@email.com", "08123", "  ");
+            });
+            assertEquals("Password tidak boleh kosong.", exception.getMessage());
+        }
     }
 
     @Nested
@@ -126,7 +161,25 @@ class ProfileControllerTest {
             assertEquals("Golongan darah harus dipilih.", exception.getMessage());
         }
 
+        @Test
+        @DisplayName("Gagal: Melempar exception jika golongan darah kosong")
+        void testValidateMedicalInfo_WhenGolonganDarahIsBlank_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateMedicalInfo("  ", "Debu", "75", "180");
+            });
+            assertEquals("Golongan darah harus dipilih.", exception.getMessage());
+        }
+
         // --- Tes Kegagalan untuk Riwayat Alergi ---
+        @Test
+        @DisplayName("Gagal: Melempar exception jika riwayat alergi null")
+        void testValidateMedicalInfo_WhenRiwayatAlergiIsNull_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateMedicalInfo("A", null, "75", "180");
+            });
+            assertEquals("Riwayat alergi tidak boleh kosong.", exception.getMessage());
+        }
+
         @Test
         @DisplayName("Gagal: Melempar exception jika riwayat alergi kosong")
         void testValidateMedicalInfo_WhenRiwayatAlergiIsBlank_ShouldThrowException() {
@@ -136,7 +189,42 @@ class ProfileControllerTest {
             assertEquals("Riwayat alergi tidak boleh kosong.", exception.getMessage());
         }
         
-        // --- (Lanjutkan pola yang sama untuk 'beratBadan' dan 'tinggiBadan') ---
+        // --- Tes Kegagalan untuk Berat Badan ---
+        @Test
+        @DisplayName("Gagal: Melempar exception jika berat badan null")
+        void testValidateMedicalInfo_WhenBeratBadanIsNull_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateMedicalInfo("A", "Debu", null, "180");
+            });
+            assertEquals("Berat badan tidak boleh kosong.", exception.getMessage());
+        }
 
+        @Test
+        @DisplayName("Gagal: Melempar exception jika berat badan kosong")
+        void testValidateMedicalInfo_WhenBeratBadanIsBlank_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateMedicalInfo("A", "Debu", "  ", "180");
+            });
+            assertEquals("Berat badan tidak boleh kosong.", exception.getMessage());
+        }
+
+        // --- Tes Kegagalan untuk Tinggi Badan ---
+        @Test
+        @DisplayName("Gagal: Melempar exception jika tinggi badan null")
+        void testValidateMedicalInfo_WhenTinggiBadanIsNull_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateMedicalInfo("A", "Debu", "75", null);
+            });
+            assertEquals("Tinggi badan tidak boleh kosong.", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Gagal: Melempar exception jika tinggi badan kosong")
+        void testValidateMedicalInfo_WhenTinggiBadanIsBlank_ShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                profileController.validateMedicalInfo("A", "Debu", "75", "  ");
+            });
+            assertEquals("Tinggi badan tidak boleh kosong.", exception.getMessage());
+        }
     }
 }

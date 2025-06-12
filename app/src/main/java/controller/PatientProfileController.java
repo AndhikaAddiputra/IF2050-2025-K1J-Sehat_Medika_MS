@@ -418,6 +418,7 @@ public class PatientProfileController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     
     // Inner class for TableView data
     public static class MedicalRecordData {

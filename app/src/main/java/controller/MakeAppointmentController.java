@@ -132,6 +132,25 @@ public class MakeAppointmentController {
         closeWindow();
     }
 
+    public String validateInput(String specialization, Doctor doctor, LocalDate date, String time) {
+        if (specialization == null) {
+            return "Please select a specialization.";
+        }
+        if (doctor == null) {
+            return "Please select a doctor.";
+        }
+        if (date == null) {
+            return "Please select a date.";
+        }
+        if (date.isBefore(LocalDate.now())) {
+            return "Please select a future date.";
+        }
+        if (time == null) {
+            return "Please select a time.";
+        }
+        return null;
+    }
+
     private boolean validateInput() {
         if (pilihanSpesialis.getValue() == null) {
             showError("Please select a specialization.");
@@ -156,7 +175,7 @@ public class MakeAppointmentController {
         return true;
     }
 
-    private int getNextQueueNumber(LocalDate date) {
+    public int getNextQueueNumber(LocalDate date) {
         try {
             List<Appointment> appointmentsOnDate = appointmentDAO.getAppointmentsByDate(date.atStartOfDay());
             return appointmentsOnDate.size() + 1;

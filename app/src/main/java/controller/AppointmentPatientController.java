@@ -172,7 +172,8 @@ public class AppointmentPatientController {
         dataAppointmentTable.setItems(tableData);
     }
 
-    private List<Appointment> filterAppointments(List<Appointment> appointments) {
+    // Change access modifier from private to package-private (default)
+    List<Appointment> filterAppointments(List<Appointment> appointments) {
         if (aktifToggle.isSelected()) {
             return appointments.stream()
                     .filter(a -> (a.getAppointmentStatus() == AppointmentStatus.REQUESTED || a.getAppointmentStatus() == AppointmentStatus.ACCEPTED)
